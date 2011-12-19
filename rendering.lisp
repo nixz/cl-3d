@@ -243,24 +243,24 @@ are specified in nodes derived from this abstract node type.
 
 ;; -----------------------------------------------------------------------class
 (defclass  clip-plane (x3d-child-node)
-  ((enabled :initarg :enabled 
-         :initform (error ":enabled must be specified")
-         :accessor enabled 
-         :type sf-bool
-         :allocation :instance
-         :documentation "")
-   (plane :initarg :plane 
-         :initform (error ":plane must be specified")
-         :accessor plane 
-         :type sf-vect4f
-         :allocation :instance
-         :documentation ""))
+  ((enabled :initarg :enabled
+            :initform (error ":enabled must be specified")
+            :accessor enabled
+            :type sf-bool
+            :allocation :instance
+            :documentation "")
+   (plane :initarg :plane
+          :initform (error ":plane must be specified")
+          :accessor plane
+          :type sf-vect4f
+          :allocation :instance
+          :documentation ""))
   (:documentation "
 ISO/IEC 19775-1:2008
 
 11.4.1 ClipPlane
 
-ClipPlane : X3DChildNode { 
+ClipPlane : X3DChildNode {
   SFBool  [in,out] enabled  TRUE
   SFNode  [in,out] metadata NULL    [X3DMetadataObject]
   SFVec4f [in,out] plane    0 1 0 0 [0,1]
