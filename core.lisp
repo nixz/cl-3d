@@ -31,6 +31,7 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
+(in-package #:x3d)
 
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-metadata-object ()
@@ -43,17 +44,17 @@
    (reference :initarg :reference
               :initform (error ":reference must be specified")
               :accessor reference
-              :type
+              :type sf-string
               :allocation :instance
               :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (See NOTICE.txt)
 
 7.3.4 X3DMetadataObject
 
 X3DMetadataObject {
-  SFString [in,out] name      ""
-  SFString [in,out] reference ""
+  SFString [in,out] name      \"\"
+  SFString [in,out] reference \"\"
 }
 
 This abstract interface is the basis for all metadata nodes. The interface is
@@ -70,13 +71,11 @@ considered implicit to the characters in the string.
   ((metadata :initarg :metadata
              :initform (error ":metadata must be specified")
              :accessor metadata
-             :reader metadata
-             :writer metadata
              :type x3d-metadata-object
              :allocation :instance
              :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 7.3.5 X3DNode
 
@@ -91,7 +90,7 @@ This abstract node type is the base type for all nodes in the X3D system.
 (defclass  x3d-child-node (x3d-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 7.3.2 X3DChildNode
 
@@ -127,7 +126,7 @@ found in 10.2.1 Grouping and children node types.
              :allocation :instance
              :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 7.3.1 X3DBindableNode
 
@@ -147,7 +146,7 @@ complete discussion of bindable behaviors, see 7.2.2 Bindable children nodes.
 (defclass  x3d-info-node (x3d-child-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 7.3.3 X3DInfoNode
 
@@ -174,7 +173,7 @@ visual semantics.
               :allocation :instance
               :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 7.3.7 X3DSensorNode
 
@@ -191,7 +190,7 @@ This abstract node type is the base type for all sensors.
 (defclass  x3d-prototype-instance (x3d-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 7.3.6 X3DPrototypeInstance
 

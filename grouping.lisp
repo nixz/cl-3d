@@ -31,6 +31,7 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
+(in-package #:x3d)
 
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-bounded-object ()
@@ -47,7 +48,7 @@
               :allocation :instance
               :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 10.3.1 X3DBoundedObject
 
@@ -77,7 +78,7 @@ bboxSize fields is contained in 10.2.2 Bounding boxes.
              :allocation :instance
              :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 10.3.2 X3DGroupingNode
 
@@ -98,18 +99,18 @@ found in 10.2.1 Grouping and children node types.
 "))
 
 ;; ---------------------------------------------------------------------generic
-(defgeneric add-children((self x3d-grouping-node)
+(defmethod add-children((self x3d-grouping-node)
                          (children x3d-grouping-node)))
 
 ;; ---------------------------------------------------------------------generic
-(defgeneric remove-children((self x3d-grouping-node)
+(defmethod remove-children((self x3d-grouping-node)
                             (children x3d-grouping-node)))
 
 ;; -----------------------------------------------------------------------class
 (defclass  group (x3d-grouping-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 10.4.1 Group
 
@@ -171,7 +172,7 @@ bboxSize fields is contained in 10.2.2 Bounding boxes.
          :allocation :instance
          :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 10.4.4 Transform
 

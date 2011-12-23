@@ -31,12 +31,13 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
+(in-package #:x3d)
 
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-appearance-child-node (x3d-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 12.3.1 X3DAppearanceChildNode
 
@@ -51,7 +52,7 @@ This is the base node type for the child nodes of the X3DAppearanceNode type.
 (defclass  x3d-appearance-node (x3d-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 12.3.2 X3DAppearanceNode
 
@@ -66,7 +67,7 @@ This is the base node type for all Appearance nodes.
 (defclass  x3d-material-node (x3d-appearance-child-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 12.3.3 X3DMaterialNode
 
@@ -92,7 +93,7 @@ This is the base node type for all Material nodes.
              :allocation :instance
              :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 12.3.4 X3DShapeNode
 
@@ -111,7 +112,7 @@ This is the base node type for all Shape nodes.
 (defclass  shape (x3d-shape-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 12.4.5 Shape
 

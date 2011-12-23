@@ -31,12 +31,13 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
+(in-package #:x3d)
 
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-geometric-property-node (x3d-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 11.3.4 X3DGeometricPropertyNode
 
@@ -51,7 +52,7 @@ This is the base node type for all geometric property node types defined in X3D
 (defclass  x3d-geometry-node (x3d-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 11.3.5 X3DGeometryNode
 
@@ -66,7 +67,7 @@ This is the base node type for all geometry in X3D.
 (defclass  x3d-normal-node (x3d-geometric-property-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 11.3.6 X3DNormalNode
 
@@ -82,7 +83,7 @@ specified in nodes derived from this abstract node type.
 (defclass  x3d-color-node (x3d-geometric-property-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 11.3.1 X3DColorNode
 
@@ -103,7 +104,7 @@ This is the base node type for color specifications in X3D.
            :documentation "")
    (color :initarg :color
           :initform (error ":color must be specified")
-          :accessor color
+          ;; :accessor color
           :type sf-node
           :allocation :instance
           :documentation "")
@@ -115,19 +116,22 @@ This is the base node type for color specifications in X3D.
           :documentation "")
    (fog-coord :initarg :fog-coord
               :initform (error ":fog-coord must be specified")
-              :accessor fog-coord
+              ;; :accessor fog-coord
               :type sf-node
               :allocation :instance
               :documentation "")
    (normal :initarg :normal
            :initform (error ":normal must be specified")
-           :accessor normal
+           :reader normal-changed
+           :writer set-tex-coord
            :type sf-node
            :allocation :instance
            :documentation "")
    (tex-coord :initarg :tex-coord
               :initform (error ":tex-coord must be specified")
-              :accessor tex-coord
+              :reader tex-coord-changed
+              :writer set-tex-coord
+              ;; :accessor tex-coord
               :type sf-node
               :allocation :instance
               :documentation "")
@@ -140,29 +144,23 @@ This is the base node type for color specifications in X3D.
    (color-per-vertex :initarg :color-per-vertex
                      :initform (error ":color-per-vertex must be specified")
                      :accessor color-per-vertex
-                     :reader color-per-vertex
-                     :writer color-per-vertex
                      :type sf-bool
                      :allocation :instance
                      :documentation "")
    (normal-per-vertex :initarg :normal-per-vertex
                       :initform (error ":normal-per-vertex must be specified")
                       :accessor normal-per-vertex
-                      :reader normal-per-vertex
-                      :writer normal-per-vertex
                       :type sf-bool
                       :allocation :instance
                       :documentation "")
    (solid :initarg :solid
           :initform (error ":solid must be specified")
           :accessor solid
-          :reader solid
-          :writer solid
           :type sf-bool
           :allocation :instance
           :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 11.3.2 X3DComposedGeometryNode
 
@@ -229,7 +227,7 @@ calculation.
 (defclass  x3d-coordinate-node (x3d-geometric-property-node)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 11.3.3 X3DCoordinateNode
 
@@ -256,7 +254,7 @@ are specified in nodes derived from this abstract node type.
           :allocation :instance
           :documentation ""))
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 11.4.1 ClipPlane
 
