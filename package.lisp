@@ -37,4 +37,4 @@
   (:nicknames #:x3d)
   (:use #:cl #:cl-opengl #:sb-cga)
   (:shadow #:rotate #:translate #:scale)
-  (:export #:somthing))
+  (:export #:transform))
