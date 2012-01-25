@@ -100,11 +100,11 @@ found in 10.2.1 Grouping and children node types.
 
 ;; ---------------------------------------------------------------------generic
 (defmethod add-children((self x3d-grouping-node)
-                         (children x3d-grouping-node)))
+                        (children x3d-grouping-node)))
 
 ;; ---------------------------------------------------------------------generic
 (defmethod remove-children((self x3d-grouping-node)
-                            (children x3d-grouping-node)))
+                           (children x3d-grouping-node)))
 
 ;; -----------------------------------------------------------------------class
 (defclass  group (x3d-grouping-node)
