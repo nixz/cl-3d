@@ -36,13 +36,13 @@
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-bounded-object ()
   ((bbox-center :initarg :bbox-center
-                :initform (error ":bbox-center must be specified")
+                :initform (sf-vec3f 0 0 0)
                 :accessor bbox-center
                 :type sf-vec3f
                 :allocation :instance
                 :documentation "")
    (bbox-size :initarg :bbox-size
-              :initform (error ":bbox-size must be specified")
+              :initform (sf-vec3f -1 -1 -1)
               :accessor bbox-size
               :type sf-vec3f
               :allocation :instance
@@ -72,7 +72,7 @@ bboxSize fields is contained in 10.2.2 Bounding boxes.
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-grouping-node (x3d-child-node x3d-bounded-object)
   ((children :initarg :children
-             :initform (error ":children must be specified")
+             :initform ()
              :accessor children
              :type mf-node
              :allocation :instance
@@ -142,35 +142,35 @@ bboxSize fields is contained in 10.2.2 Bounding boxes.
 ;; -----------------------------------------------------------------------class
 (defclass  transform  (x3d-grouping-node)
   ((center :initarg :center
-         :initform (error ":center must be specified")
-         :accessor center
-         :type sf-vec3f
-         :allocation :instance
-         :documentation "")
+           :initform (sf-vec3f 0 0 0)
+           :accessor center
+           :type sf-vec3f
+           :allocation :instance
+           :documentation "")
    (rotation :initarg :rotation
-         :initform (error ":rotation must be specified")
-         :accessor rotation
-         :type sf-rotation
-         :allocation :instance
-         :documentation "")
+             :initform (sf-rotation 0 0 1 0)
+             :accessor rotation
+             :type sf-rotation
+             :allocation :instance
+             :documentation "")
    (scale :initarg :scale
-         :initform (error ":scale must be specified")
-         :accessor scale
-         :type sf-vec3f
-         :allocation :instance
-         :documentation "")
-   (sale-orientation :initarg :sale-orientation
-         :initform (error ":sale-orientation must be specified")
-         :accessor sale-orientation
-         :type sf-rotation
-         :allocation :instance
-         :documentation "")
-   (transation :initarg :transation
-         :initform (error ":transation must be specified")
-         :accessor transation
-         :type sf-vec3f
-         :allocation :instance
-         :documentation ""))
+          :initform (sf-vec3f 1 1 1)
+          :accessor scale
+          :type sf-vec3f
+          :allocation :instance
+          :documentation "")
+   (scale-orientation :initarg :scale-orientation
+                     :initform (sf-rotation 0 0 1 0)
+                     :accessor scale-orientation
+                     :type sf-rotation
+                     :allocation :instance
+                     :documentation "")
+   (translation :initarg :translation
+               :initform (sf-vec3f 0 0 0)
+               :accessor translation
+               :type sf-vec3f
+               :allocation :instance
+               :documentation ""))
   (:documentation "
 ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
