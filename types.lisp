@@ -611,6 +611,13 @@ The default value of an uninitialized SFRotation field is (0 0 1 0). The default
 value of an MFRotation field is the empty list.
 "))
 
+(defmethod sf-rotation(x y z w)
+  (let ((a (coerce x 'single-float))
+        (b (coerce y 'single-float))
+        (c (coerce z 'single-float))
+        (angle (coerce w 'single-float)))
+  (list (vec a b c) angle)))
+
 ;; -----------------------------------------------------------------------class
 (defclass  mf-rotation (x3d-array-field)
   ()
@@ -928,6 +935,12 @@ number is defined in the specific encoding.
 The default value of an uninitialized SFVec3f field is (0 0 0). The default
 value of an MFVec3f field is the empty list.
 "))
+
+(defmethod sf-vec3f (x y z)
+  (let ((a (coerce x 'single-float))
+        (b (coerce y 'single-float))
+        (c (coerce z 'single-float)))
+    (vec a b c)))
 
 ;; -----------------------------------------------------------------------class
 (defclass  mf-vec3f (x3d-array-field)
