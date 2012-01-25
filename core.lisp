@@ -69,7 +69,7 @@ considered implicit to the characters in the string.
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-node ()
   ((metadata :initarg :metadata
-             :initform (error ":metadata must be specified")
+             :initform nil
              :accessor metadata
              :type x3d-metadata-object
              :allocation :instance
