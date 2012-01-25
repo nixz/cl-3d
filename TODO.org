@@ -1,0 +1,15 @@
+#+SEQ_TODO: TODO CURRENT DONE
+
+* TODO Implement run method for transform
+* TODO Implement the basic logic of operation
+** TODO read the scene into a *SCENE* global variable
+** TODO  run the root node
+   some logic has to come in this place for dealing with sensor nodes. May be
+   the sensor nodes have to be dealt with first before anything else. I would
+   like to see something like REPL to deal with such.
+   read->eval->print or Control->Model->View or Input -> Processing ->Output
+
+   So our main logic wil be read all the sensor nodes and start the evaluations.
+
+   IDEA: Alternatively it would be good to explore what hapens if there are
+   multiple sensor nodes and each starts its own thread of execution
