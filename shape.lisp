@@ -145,4 +145,97 @@ needed, is calculated by the browser. A description of the bboxCenter and
 bboxSize fields is contained in 10.2.2 Bounding boxes.
 "))
 
+;; -----------------------------------------------------------------------class
+(defclass  appearance (x3d-appearance-node)
+  ((fill-properties :initarg :fill-properties
+                    :initform (error ":fill-properties must be specified")
+                    :reader fill-properties-changed
+                    :writer set-fill-properties
+                    :type sf-node
+                    :allocation :instance
+                    :documentation "")
+   (line-properties :initarg :line-properties
+                    :initform (error ":line-properties must be specified")
+                    :reader line-properties-changed
+                    :writer set-line-properties
+                    :type sf-node
+                    :allocation :instance
+                    :documentation "")
+   (material :initarg :material
+             :initform (error ":material must be specified")
+             :reader material-changed
+             :writer set-material
+             :type sf-node
+             :allocation :instance
+             :documentation "")
+   (shaders :initarg :shaders
+            :initform (error ":shaders must be specified")
+            :reader shaders-changed
+            :writer set-shaders
+            :type sf-node
+            :allocation :instance
+            :documentation "")
+   (texture :initarg :texture
+            :initform (error ":texture must be specified")
+            :reader texture-changed
+            :writer set-texture
+            :type sf-node
+            :allocation :instance
+            :documentation "")
+   (texture-transform :initarg :texture-transform
+                      :initform (error ":texture-transform must be specified")
+                      :reader texture-transform-changed
+                      :writer set-texture-transform
+                      :type sf-node
+                      :allocation :instance
+                      :documentation ""))
+  (:documentation "
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+
+12.4.1 Appearance
+
+Appearance : X3DAppearanceNode {
+  SFNode [in,out] fillProperties   NULL [FillProperties]
+  SFNode [in,out] lineProperties   NULL [LineProperties]
+  SFNode [in,out] material         NULL [X3DMaterialNode]
+  SFNode [in,out] metadata         NULL [X3DMetadataObject]
+  MFNode [in,out] shaders          []   [X3DShaderNode]
+  SFNode [in,out] texture          NULL [X3DTextureNode]
+  SFNode [in,out] textureTransform NULL [X3DTextureTransformNode]
+}
+
+The Appearance node specifies the visual properties of geometry. The value for
+each of the fields in this node may be NULL. However, if the field is non-NULL,
+it shall contain one node of the appropriate type.
+
+The material field, if specified, shall contain a Material node. If the material
+field is NULL or unspecified, lighting is off (all lights are ignored during
+rendering of the object that references this Appearance) and the unlit object
+colour is (1, 1, 1). Details of the X3D lighting model are in 17 Lighting
+component.
+
+The texture field, if specified, shall contain one of the various types of
+texture nodes (see 18 Texturing component). If the texture node is NULL or the
+texture field is unspecified, the object that references this Appearance is not
+textured.
+
+The textureTransform field, if specified, shall contain a TextureTransform node
+as defined in 18.4.8 TextureTransform. If the textureTransform is NULL or
+unspecified, the textureTransform field has no effect.
+
+The lineProperties field, if specified, shall contain a LineProperties node as
+specified in 12.4.3 LineProperties. If lineProperties is NULL or unspecified,
+the lineProperties field has no effect.
+
+The fillProperties field, if specified, shall contain a FillProperties node as
+specified in 12.4.2 FillProperties. If fillProperties is NULL or unspecified,
+the fillProperties field has no effect.
+
+The shaders field contains a listing, in order of preference, of nodes that
+describe programmable shaders that replace the fixed rendering requirements of
+this part of ISO/IEC 19775 with user-provided functionality. If the field is not
+empty, one shader node is selected and the fixed rendering requirements defined
+by this specification are ignored. The field shall contain one of the various
+types of shader nodes as specified in 31 Programmable shaders component.
+"))
 
