@@ -268,3 +268,21 @@ Transform {
               ]
 }}}}}}}
 "))
+
+(defun transform(&key
+                 (children ())
+                 (metadata ())
+                 (center (sf-vec3f 0 0 0))
+                 (rotation (sf-rotation 0 0 1 0))
+                 (translation (sf-vec3f 0 0 0))
+                 (scale (sf-vec3f 1 1 1))
+                 (scale-orientation (sf-rotation 0 0 1 0)))
+  "generates a transformatio matrix"
+  (make-instance 'transform
+                 :children children
+                 :metadata metadata
+                 :center center
+                 :rotation rotation
+                 :translation translation
+                 :scale scale
+                 :scale-orientation scale-orientation))
