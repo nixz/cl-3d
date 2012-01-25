@@ -37,7 +37,7 @@
 (defclass  x3d-array-field ()
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.2.2 X3DArrayField
 
@@ -54,7 +54,7 @@ strings."))
 (defclass  x3d-field ()
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.2.3 X3DField
 
@@ -70,7 +70,7 @@ EXAMPLE SFBool is a field type that can contain a single Boolean value.
 (defclass  sf-bool (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.1 SFBool and MFBool
 
@@ -86,7 +86,7 @@ of an uninitialized MFBool field is the empty list
 (defclass  mf-bool (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.1 SFBool and MFBool
 
@@ -102,7 +102,7 @@ of an uninitialized MFBool field is the empty list.
 (defclass  sf-color (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.2 SFColor and MFColor
 
@@ -118,7 +118,7 @@ value of an uninitialized MFColor field is the empty list.
 (defclass  mf-color (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.2 SFColor and MFColor
 
@@ -134,7 +134,7 @@ value of an uninitialized MFColor field is the empty list.
 (defclass  sf-color-rgba (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.3 SFColorRGBA and MFColorRGBA
 
@@ -152,7 +152,7 @@ default value of an uninitialized MFColorRGBA field is the empty list.
 (defclass  mf-color-rgba (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.3 SFColorRGBA and MFColorRGBA
 
@@ -170,7 +170,7 @@ default value of an uninitialized MFColorRGBA field is the empty list.
 (defclass  sf-double (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.4 SFDouble and MFDouble
 
@@ -195,7 +195,7 @@ of an MFDouble field is the empty list.
 (defclass  mf-double (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.4 SFDouble and MFDouble
 
@@ -220,7 +220,7 @@ of an MFDouble field is the empty list.
 (defclass  sf-float (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.5 SFFloat and MFFloat
 
@@ -243,7 +243,7 @@ an MFFloat field is the empty list.
 (defclass  mf-float (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.5 SFFloat and MFFloat
 
@@ -266,7 +266,7 @@ an MFFloat field is the empty list.
 (defclass  sf-image (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.6 SFImage and MFImage
 
@@ -305,7 +305,7 @@ of an MFImage field is the empty list.
 (defclass  mf-image (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.6 SFImage and MFImage
 
@@ -344,7 +344,7 @@ of an MFImage field is the empty list.
 (defclass  sf-int32 (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.7 SFInt32 and MFInt32
 
@@ -359,7 +359,7 @@ an MFInt32 field is the empty list.
 (defclass  mf-int32 (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.7 SFInt32 and MFInt32
 
@@ -374,7 +374,7 @@ an MFInt32 field is the empty list.
 (defclass  sf-matrix3d (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.8 SFMatrix3d and MFMatrix3d
 
@@ -397,7 +397,7 @@ empty list.
 (defclass  mf-matrix3d (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.8 SFMatrix3d and MFMatrix3d
 
@@ -420,7 +420,7 @@ empty list.
 (defclass  sf-matrix3f (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.9 SFMatrix3f and MFMatrix3f
 
@@ -443,7 +443,7 @@ empty list.
 (defclass  mf-matrix3f (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.10 SFMatrix4d and MFMatrix4d
 
@@ -466,7 +466,7 @@ field is the empty list.
 (defclass  sf-matrix4d (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.10 SFMatrix4d and MFMatrix4d
 
@@ -489,7 +489,7 @@ field is the empty list.
 (defclass  mf-matrix4d (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.10 SFMatrix4d and MFMatrix4d
 
@@ -512,7 +512,7 @@ field is the empty list.
 (defclass  sf-matrix4f (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.11 SFMatrix4f and MFMatrix4f
 
@@ -535,7 +535,7 @@ field is the empty list.
 (defclass  mf-matrix4f (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.11 SFMatrix4f and MFMatrix4f
 
@@ -558,7 +558,7 @@ field is the empty list.
 (defclass  sf-node (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.12 SFNode and MFNode
 
@@ -573,7 +573,7 @@ an MFNode field is the empty list.
 (defclass  mf-node (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.12 SFNode and MFNode
 
@@ -588,7 +588,7 @@ an MFNode field is the empty list.
 (defclass  sf-rotation (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.13 SFRotation and MFRotation
 
@@ -615,7 +615,7 @@ value of an MFRotation field is the empty list.
 (defclass  mf-rotation (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.13 SFRotation and MFRotation
 
@@ -642,7 +642,7 @@ value of an MFRotation field is the empty list.
 (defclass  sf-string (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.14 SFString and MFString
 
@@ -706,7 +706,7 @@ As a two byte example, the symbol for a registered trade mark ®, encoded as
 (defclass  mf-string (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.14 SFString and MFString
 
@@ -770,7 +770,7 @@ As a two byte example, the symbol for a registered trade mark ®, encoded as
 (defclass  sf-time (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.15 SFTime and MFTime
 
@@ -789,7 +789,7 @@ an MFTime field is the empty list.
 (defclass  mf-time (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.15 SFTime and MFTime
 
@@ -808,7 +808,7 @@ an MFTime field is the empty list.
 (defclass  sf-vec2d (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.16 SFVec2d and MFVec2d
 
@@ -826,7 +826,7 @@ of an MFVec2d field is the empty list.
 (defclass  mf-vec2d (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 5.3.16 SFVec2d and MFVec2d
 
 The SFVec2d field specifies a two-dimensional (2D) vector. An MFVec2d field
@@ -843,7 +843,7 @@ of an MFVec2d field is the empty list.
 (defclass  sf-vec2f (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.17 SFVec2f and MFVec2f
 
@@ -861,7 +861,7 @@ of an MFVec2f field is the empty list.
 (defclass  mf-vec2f (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.17 SFVec2f and MFVec2f
 
@@ -879,7 +879,7 @@ of an MFVec2f field is the empty list.
 (defclass  sf-vec3d (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.18 SFVec3d and MFVec3d
 
@@ -897,7 +897,7 @@ value of an MFVec3d field is the empty list.
 (defclass  mf-vec3d (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.18 SFVec3d and MFVec3d
 
@@ -915,7 +915,7 @@ value of an MFVec3d field is the empty list.
 (defclass  sf-vec3f (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.19 SFVec3f and MFVec3f
 
@@ -933,7 +933,7 @@ value of an MFVec3f field is the empty list.
 (defclass  mf-vec3f (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.19 SFVec3f and MFVec3f
 
@@ -953,7 +953,7 @@ value of an MFVec3f field is the empty list.
 (defclass  sf-vec4d (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.20 SFVec4d and MFVec4d
 
@@ -972,7 +972,7 @@ value of an MFVec4d field is the empty list.
 (defclass  mf-vec4d (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.20 SFVec4d and MFVec4d
 
@@ -991,7 +991,7 @@ value of an MFVec4d field is the empty list.
 (defclass  sf-vec4f (x3d-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.21 SFVec4f and MFVec4f
 
@@ -1010,7 +1010,7 @@ value of an MFVec4f field is the empty list.
 (defclass  mf-vec4f (x3d-array-field)
   ()
   (:documentation "
-ISO/IEC 19775-1:2008
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
 5.3.21 SFVec4f and MFVec4f
 
