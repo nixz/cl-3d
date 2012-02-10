@@ -584,6 +584,19 @@ The default value of an uninitialized SFNode field is NULL. The default value of
 an MFNode field is the empty list.
 "))
 
+;; (defun mf-node (&rest rest)
+;;   "This creates a array of nodes of sf-node type"
+;;   (make-array (length rest)
+;;               :adjustable t
+;;               :element-type 'sf-node
+;;               :initial-contents rest))
+
+;; NOTE: for now implement mf-node as a list. Add and remove children also need
+;; to change imlementation when this is changed to using an array
+(defun mf-node (&rest rest)
+  "This simply creates of list of nodes"
+  rest)
+
 ;; -----------------------------------------------------------------------class
 (defclass  sf-rotation (x3d-field)
   ()

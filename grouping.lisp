@@ -74,7 +74,7 @@ bboxSize fields is contained in 10.2.2 Bounding boxes.
   ((children :initarg :children
              :initform ()
              :accessor children
-             :type mf-node
+             ;:type mf-node
              :allocation :instance
              :documentation ""))
   (:documentation "
@@ -98,13 +98,46 @@ More details on the children, addChildren, and removeChildren fields can be
 found in 10.2.1 Grouping and children node types.
 "))
 
-;; ---------------------------------------------------------------------generic
-(defmethod add-children((self x3d-grouping-node)
-                        (children x3d-grouping-node)))
+;; ----------------------------------------------------------------------method
+(defmethod add-children((self x3d-grouping-node) add-list)
+  "
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
 
-;; ---------------------------------------------------------------------generic
-(defmethod remove-children((self x3d-grouping-node)
-                           (children x3d-grouping-node)))
+10.2.1 (part)
+
+All grouping nodes have addChildren and removeChildren inputOnly fields. The
+addChildren event appends nodes to the children field of a grouping node. Any
+nodes passed to the addChildren inputOnly field that are already in the children
+list of the grouping node are ignored. For example, if the children field
+contains the nodes Q, L and S (in order) and the group receives an addChildren
+event containing (in order) nodes A, L, and Z, the result is a children field
+containing (in order) nodes Q, L, S, A, and Z.
+"
+  (dolist (x add-list)
+    (unless (find x (children self))
+        (setf (children self)
+              (append (children self) (list x)))))
+  (children self))
+
+;; ----------------------------------------------------------------------method
+(defmethod remove-children((self x3d-grouping-node) del-list)
+  "
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+
+10.2.1 (part)
+
+The removeChildren event removes nodes from the children field of the grouping
+node . Any nodes in the removeChildren event that are not in the children list
+of the grouping node are ignored. For example, if the children field contains
+the nodes Q, L, S, A and Z and it receives a removeChildren event containing
+nodes A, L, and Z, the result is Q, S.
+"
+  (dolist (x del-list)
+    (setf (children self)
+          (remove-if #'(lambda (y)
+                   (eql x y))
+               (children self))))
+  (children self))
 
 ;; -----------------------------------------------------------------------class
 (defclass  group (x3d-grouping-node)
