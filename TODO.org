@@ -7,7 +7,7 @@
 ** DONE Background class
 ** DONE Viewpoint class
 ** DONE Shape class
-** TODO Box class
+** DONE Box class
 ** DONE Appearance class
 ** DONE Material class
 ** TODO Implement parsing function for each
