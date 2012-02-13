@@ -34,8 +34,32 @@
   :description "x3d implementation in common lisp"
   :depends-on (cl-opengl sb-cga)
   :components ((:file "package")
-               (:file "types" :depends-on ("package"))
-               (:file "core" :depends-on ("types" "package"))
-               (:file "grouping" :depends-on ("types" "package"))
-               (:file "rendering" :depends-on ("types" "package"))
-               (:file "shape" :depends-on ("types" "package"))))
+               (:file "util" :depends-on ("package"))
+               (:file "types" :depends-on ("util" "package"))
+               (:file "core" :depends-on ("util" "types" "package"))
+               (:file "grouping" :depends-on ("core" "util" "types" "package"))
+               (:file "rendering" :depends-on ("core" "util" "types" "package"))
+               (:file "shape" :depends-on ("core" "util" "types" "package"))
+               (:file "geometry-3d" :depends-on ("shape" "core" "util" "types" "package"))
+               (:file "navigation" :depends-on ("core" "util" "types" "package"))
+               (:file "env-effects" :depends-on ("core" "util" "types" "package"))
+               (:file "main" :depends-on ("core"
+                                          "grouping"
+                                          "rendering"
+                                          "shape"
+                                          "geometry-3d"
+                                          "navigation"
+                                          "env-effects"
+                                          "util"
+                                          "types"
+                                          "package"))
+               (:file "run" :depends-on ("core"
+                                         "grouping"
+                                         "rendering"
+                                         "shape"
+                                         "geometry-3d"
+                                         "navigation"
+                                         "env-effects"
+                                         "util"
+                                         "types"
+                                         "package"))))
