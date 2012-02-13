@@ -629,7 +629,7 @@ value of an MFRotation field is the empty list.
         (b (coerce y 'single-float))
         (c (coerce z 'single-float))
         (angle (coerce w 'single-float)))
-  (list (vec a b c) angle)))
+  (list (sb-cga:vec a b c) angle)))
 
 ;; -----------------------------------------------------------------------class
 (defclass  mf-rotation (x3d-array-field)
@@ -953,7 +953,7 @@ value of an MFVec3f field is the empty list.
   (let ((a (coerce x 'single-float))
         (b (coerce y 'single-float))
         (c (coerce z 'single-float)))
-    (vec a b c)))
+    (sb-cga:vec a b c)))
 
 ;; -----------------------------------------------------------------------class
 (defclass  mf-vec3f (x3d-array-field)
