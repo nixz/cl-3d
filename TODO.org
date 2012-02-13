@@ -10,7 +10,7 @@
 ** DONE Box class
 ** DONE Appearance class
 ** DONE Material class
-** TODO Implement parsing function for each
+** DONE Implement parsing function for each
 * TODO Implement def mechanism
 * TODO Implement the basic logic of operation
 ** TODO read the scene into a *SCENE* global variable
