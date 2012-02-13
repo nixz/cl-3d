@@ -5,7 +5,7 @@
 ** DONE Adding box.lisp test (lispify)
    NOTE: http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
 ** DONE Background class
-** TODO Viewpoint class
+** DONE Viewpoint class
 ** TODO Shape class
 ** TODO Box class
 ** TODO Appearance class
