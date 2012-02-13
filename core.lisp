@@ -107,20 +107,12 @@ found in 10.2.1 Grouping and children node types.
 
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-bindable-node (x3d-child-node)
-  ((set-bind :initarg :set-bind
-             :initform (error ":set-bind must be specified")
-             :writer set-bind
-             :type sf-bool
-             :allocation :instance
-             :documentation "")
-   (bind-time :initarg :bind-time
-              :initform (error ":bind-time must be specified")
+  ((bind-time :initarg :bind-time
               :reader bind-time
               :type sf-time
               :allocation :instance
               :documentation "")
    (is-bound :initarg :is-bound
-             :initform (error ":is-bound must be specified")
              :reader is-bound
              :type sf-bool
              :allocation :instance
@@ -141,6 +133,10 @@ X3DBindableNode is the abstract base type for all bindable children nodes,
 including Background, TextureBackground, Fog, NavigationInfo and Viewpoint. For
 complete discussion of bindable behaviors, see 7.2.2 Bindable children nodes.
 "))
+
+(defmethod set-bind ((self x3d-bindable-node) bool-value)
+  ""
+  (setf (slot-value self 'is-bound) bool-value))
 
 ;; -----------------------------------------------------------------------class
 (defclass  x3d-info-node (x3d-child-node)
