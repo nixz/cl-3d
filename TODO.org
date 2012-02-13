@@ -2,7 +2,7 @@
 
 * DONE Implement run method for transform
 * TODO tests/box.lisp
-** TODO Adding box.lisp test (lispify)
+** DONE Adding box.lisp test (lispify)
    NOTE: http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
 ** TODO Background class
 ** TODO Viewpoint class
