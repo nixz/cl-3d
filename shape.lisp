@@ -109,81 +109,44 @@ This is the base node type for all Shape nodes.
 "))
 
 ;; -----------------------------------------------------------------------class
-(defclass  shape (x3d-shape-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-12.4.5 Shape
-
-Shape : X3DShapeNode {
-  SFNode  [in,out] appearance NULL     [X3DAppearanceNode]
-  SFNode  [in,out] geometry   NULL     [X3DGeometryNode]
-  SFNode  [in,out] metadata   NULL     [X3DMetadataObject]
-  SFVec3f []       bboxCenter 0 0 0    (-∞,∞)
-  SFVec3f []       bboxSize   -1 -1 -1 [0,∞) or −1 −1 −1
-}
-
-The Shape node has two fields, appearance and geometry, that are used to create
-rendered objects in the world. The appearance field contains an Appearance node
-that specifies the visual attributes (e.g., material and texture) to be applied
-to the geometry. The geometry field contains a geometry node. The specified
-geometry node is rendered with the specified appearance nodes applied. See 12.2
-Concepts for more information.
-
-17 Lighting component contains details of the X3D lighting model and the
-interaction between Appearance nodes and geometry nodes.
-
-If the geometry field is NULL, the object is not drawn.
-
-The bboxCenter and bboxSize fields specify a bounding box that encloses the
-Shape node's geometry. This is a hint that may be used for optimization
-purposes. The results are undefined if the specified bounding box is smaller
-than the actual bounding box of the geometry at any time. A default bboxSize
-value, (-1, -1, -1), implies that the bounding box is not specified and, if
-needed, is calculated by the browser. A description of the bboxCenter and
-bboxSize fields is contained in 10.2.2 Bounding boxes.
-"))
-
-;; -----------------------------------------------------------------------class
 (defclass  appearance (x3d-appearance-node)
   ((fill-properties :initarg :fill-properties
-                    :initform (error ":fill-properties must be specified")
+                    :initform nil
                     :reader fill-properties-changed
                     :writer set-fill-properties
                     :type sf-node
                     :allocation :instance
                     :documentation "")
    (line-properties :initarg :line-properties
-                    :initform (error ":line-properties must be specified")
+                    :initform nil
                     :reader line-properties-changed
                     :writer set-line-properties
                     :type sf-node
                     :allocation :instance
                     :documentation "")
    (material :initarg :material
-             :initform (error ":material must be specified")
+             :initform nil
              :reader material-changed
              :writer set-material
              :type sf-node
              :allocation :instance
              :documentation "")
    (shaders :initarg :shaders
-            :initform (error ":shaders must be specified")
+            :initform ()
             :reader shaders-changed
             :writer set-shaders
-            :type sf-node
+            :type mf-node
             :allocation :instance
             :documentation "")
    (texture :initarg :texture
-            :initform (error ":texture must be specified")
+            :initform nil
             :reader texture-changed
             :writer set-texture
             :type sf-node
             :allocation :instance
             :documentation "")
    (texture-transform :initarg :texture-transform
-                      :initform (error ":texture-transform must be specified")
+                      :initform nil
                       :reader texture-transform-changed
                       :writer set-texture-transform
                       :type sf-node
@@ -239,3 +202,127 @@ by this specification are ignored. The field shall contain one of the various
 types of shader nodes as specified in 31 Programmable shaders component.
 "))
 
+;; -----------------------------------------------------------------------class
+(defclass  material (x3d-material-node)
+  ((ambient-intensity :initarg :ambient-intensity
+         :initform 0.2
+         :accessor ambient-intensity
+         :type sf-float
+         :allocation :instance
+         :documentation "")
+   (diffuse-color :initarg :diffuse-color
+         :initform '(0.8 0.8 0.8)
+         :accessor diffuse-color
+         :type sf-color
+         :allocation :instance
+         :documentation "")
+   (emissive-color :initarg :emissive-color
+         :initform '(0 0 0)
+         :accessor emissive-color
+         :type sf-color
+         :allocation :instance
+         :documentation "")
+   (shininess :initarg :shininess
+         :initform 0.2
+         :accessor shininess
+         :type sf-float
+         :allocation :instance
+         :documentation "")
+   (specular-color  :initarg :specular-color
+         :initform '(0 0 0)
+         :accessor specular-color
+         :type sf-color
+         :allocation :instance
+         :documentation "")
+   (transparency :initarg :transparency
+         :initform 0
+         :accessor transparency
+         :type sf-float
+         :allocation :instance
+         :documentation ""))
+  (:documentation "
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+
+12.4.4 Material
+
+Material : X3DMaterialNode {
+  SFFloat [in,out] ambientIntensity 0.2         [0,1]
+  SFColor [in,out] diffuseColor     0.8 0.8 0.8 [0,1]
+  SFColor [in,out] emissiveColor    0 0 0       [0,1]
+  SFNode  [in,out] metadata         NULL        [X3DMetadataObject]
+  SFFloat [in,out] shininess        0.2         [0,1]
+  SFColor [in,out] specularColor    0 0 0       [0,1]
+  SFFloat [in,out] transparency     0           [0,1]
+}
+
+The Material node specifies surface material properties for associated geometry
+nodes and is used by the X3D lighting equations during rendering. 17 Lighting
+component contains a detailed description of the X3D lighting model equations.
+
+All of the fields in the Material node range from 0.0 to 1.0.
+
+The fields in the Material node determine how light reflects off an object to
+create colour:
+
+a. The ambientIntensity field specifies how much ambient light from light
+   sources this surface shall reflect. Ambient light is omnidirectional and
+   depends only on the number of light sources, not their positions with respect
+   to the surface. Ambient colour is calculated as ambientIntensity ×
+   diffuseColor.
+
+b. The diffuseColor field reflects all X3D light sources depending on the angle
+   of the surface with respect to the light source. The more directly the
+   surface faces the light, the more diffuse light reflects.
+
+c. The emissiveColor field models \"glowing\" objects. This can be useful for
+   displaying pre-lit models (where the light energy of the room is computed
+   explicitly), or for displaying scientific data.
+
+d. The specularColor and shininess fields determine the specular
+   highlights (e.g., the shiny spots on an apple). When the angle from the light
+   to the surface is close to the angle from the surface to the viewer, the
+   specularColor is added to the diffuse and ambient colour calculations. Lower
+   shininess values produce soft glows, while higher values result in sharper,
+   smaller highlights.
+
+e. The transparency field specifies how \"clear\" an object is, with 1.0 being
+   completely transparent, and 0.0 completely opaque.
+"))
+
+
+;; -----------------------------------------------------------------------class
+(defclass  shape (x3d-shape-node)
+  ()
+  (:documentation "
+ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+
+12.4.5 Shape
+
+Shape : X3DShapeNode {
+  SFNode  [in,out] appearance NULL     [X3DAppearanceNode]
+  SFNode  [in,out] geometry   NULL     [X3DGeometryNode]
+  SFNode  [in,out] metadata   NULL     [X3DMetadataObject]
+  SFVec3f []       bboxCenter 0 0 0    (-∞,∞)
+  SFVec3f []       bboxSize   -1 -1 -1 [0,∞) or −1 −1 −1
+}
+
+The Shape node has two fields, appearance and geometry, that are used to create
+rendered objects in the world. The appearance field contains an Appearance node
+that specifies the visual attributes (e.g., material and texture) to be applied
+to the geometry. The geometry field contains a geometry node. The specified
+geometry node is rendered with the specified appearance nodes applied. See 12.2
+Concepts for more information.
+
+17 Lighting component contains details of the X3D lighting model and the
+interaction between Appearance nodes and geometry nodes.
+
+If the geometry field is NULL, the object is not drawn.
+
+The bboxCenter and bboxSize fields specify a bounding box that encloses the
+Shape node's geometry. This is a hint that may be used for optimization
+purposes. The results are undefined if the specified bounding box is smaller
+than the actual bounding box of the geometry at any time. A default bboxSize
+value, (-1, -1, -1), implies that the bounding box is not specified and, if
+needed, is calculated by the browser. A description of the bboxCenter and
+bboxSize fields is contained in 10.2.2 Bounding boxes.
+"))
