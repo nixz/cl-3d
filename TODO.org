@@ -1,6 +1,6 @@
 #+SEQ_TODO: TODO CURRENT DONE
 
-* TODO Implement run method for transform
+* DONE Implement run method for transform
 * TODO Implement the basic logic of operation
 ** TODO read the scene into a *SCENE* global variable
 ** TODO  run the root node

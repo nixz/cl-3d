@@ -31,3 +31,18 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
+
+(in-package #:x3d)
+
+(defgeneric run(self)
+  (:documentation "Generic method to evaluate various nodes as they are traversed"))
+
+(defmethod run ((self transform))
+  (let ((C (sb-cga:translate (center self)))
+        (R (apply #'sb-cga:rotate-around (rotation self)))
+        (S (sb-cga:scale (scale self)))
+        (SR (apply #'sb-cga:rotate-around (scale-orientation self)))
+        (Tx (sb-cga:translate (translation self))))
+    (let ((-SR (sb-cga:inverse-matrix SR))
+          (-C (sb-cga:inverse-matrix C)))
+      (sb-cga:matrix* Tx C R SR S -SR -C))))
