@@ -1,6 +1,17 @@
 #+SEQ_TODO: TODO CURRENT DONE
 
 * DONE Implement run method for transform
+* TODO tests/box.lisp
+** TODO Adding box.lisp test (lispify)
+   NOTE: http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
+** TODO Background class
+** TODO Viewpoint class
+** TODO Shape class
+** TODO Box class
+** TODO Appearance class
+** TODO Material class
+** TODO Implement parsing function for each
+* TODO Implement def mechanism
 * TODO Implement the basic logic of operation
 ** TODO read the scene into a *SCENE* global variable
 ** TODO  run the root node
@@ -13,3 +24,6 @@
 
    IDEA: Alternatively it would be good to explore what hapens if there are
    multiple sensor nodes and each starts its own thread of execution
+* Misc
+** TODO Add NOTICE.txt
+** TODO Check if all docmentation has note to NOTICE.txt
