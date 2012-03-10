@@ -36,3 +36,31 @@
 (defun deg->rad (x) (* x (/ pi 180)))
 (defun rad->deg (x) (* x (/ 180 pi)))
 
+(defun frustum (xmin xmax ymin ymax znear zfar)
+  (let ((a (/ (* 2 znear)
+              (- xmax xmin)))
+        (b (/ (* 2 znear)
+              (- ymax ymin)))
+        (c (/ (+ xmin xmax)
+              (- xmax xmin)))
+        (d (/ (+ ymin ymax)
+              (- ymax ymin)))
+        (e (/ (- (+ znear zfar))
+              (- zfar znear)))
+        (f (/ (* -2 znear zfar)
+              (- zfar znear))))
+    (sb-cga:matrix   a  0.0     c  0.0
+                   0.0    b     d  0.0
+                   0.0  0.0     e    f
+                   0.0  0.0  -1.0  0.0)))
+
+(defun perspective (fov aspect znear zfar)
+  (let* ((ymax (coerce (* znear
+                          (tan (deg->rad (/ fov 2))))
+                       'single-float))
+         (ymin (- ymax))
+         (xmin (* ymin aspect))
+         (xmax (* ymax aspect)))
+    (frustum xmin xmax
+             ymin ymax
+             znear zfar)))1
