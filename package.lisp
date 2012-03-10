@@ -35,12 +35,8 @@
 
 (defpackage #:cl-3d
   (:nicknames #:x3d)
-  (:use #:cl #:cl-opengl #:sb-cga)
-  (:shadow #:rotate
-           #:translate
-           #:scale
-           #:position
-           #:material)
+  (:use #:cl)
+  (:shadow #:position)
   (:export #:scene
            #:transform
            #:appearance

@@ -32,7 +32,7 @@
 ;;;; ==========================================================================
 (defsystem cl-3d
   :description "x3d implementation in common lisp"
-  :depends-on (cl-opengl sb-cga)
+  :depends-on (cl-opengl sb-cga cl-glut cl-glu)
   :components ((:file "package")
                (:file "util" :depends-on ("package"))
                (:file "types" :depends-on ("util" "package"))
