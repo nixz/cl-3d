@@ -12,6 +12,7 @@
 ** DONE Material class
 ** DONE Implement parsing function for each
 ** CURRENT Implement default shader
+** DONE Implement GLUT windowing mechanism as scene
 * TODO Implement def mechanism
 * TODO Implement the basic logic of operation
 ** TODO read the scene into a *SCENE* global variable

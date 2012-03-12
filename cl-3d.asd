@@ -37,12 +37,14 @@
                (:file "util" :depends-on ("package"))
                (:file "types" :depends-on ("util" "package"))
                (:file "core" :depends-on ("util" "types" "package"))
+               (:file "networking" :depends-on ("package"))
                (:file "grouping" :depends-on ("core" "util" "types" "package"))
                (:file "rendering" :depends-on ("core" "util" "types" "package"))
                (:file "shape" :depends-on ("core" "util" "types" "package"))
-               (:file "geometry-3d" :depends-on ("shape" "core" "util" "types" "package"))
+               (:file "geometry-3d" :depends-on ("rendering" "shape" "core" "util" "types" "package"))
                (:file "navigation" :depends-on ("core" "util" "types" "package"))
                (:file "env-effects" :depends-on ("core" "util" "types" "package"))
+               (:file "programmable-shaders" :depends-on ("shape" "rendering" "networking" "core" "types" "package"))
                (:file "main" :depends-on ("core"
                                           "grouping"
                                           "rendering"
