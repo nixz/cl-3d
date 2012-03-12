@@ -49,13 +49,13 @@
    (jump :initarg :jump
          :initform t
          :accessor jump
-         :type sf-bool
+         ;; :type sf-bool
          :allocation  :instance
          :documentation "")
    (orientation :initarg :orientation
                 :initform (sf-rotation 0 0 1 0)
                 :accessor orientation
-                :type sf-rotation
+                ;; :type sf-rotation
                 :allocation :instance
                 :documentation "")
    (position  :initarg :position
@@ -280,7 +280,7 @@ TRUE.
   ((field-of-view  :initarg :field-of-view
          :initform (radian (/ pi 4))
          :accessor field-of-view
-         :type sf-float
+         ;; :type sf-float
          :allocation :instance
          :documentation ""))
   (:documentation "
