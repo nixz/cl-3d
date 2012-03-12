@@ -262,6 +262,12 @@ The default value of an uninitialized SFFloat field is 0.0. The default value of
 an MFFloat field is the empty list.
 "))
 
+(defun mf-float(&rest rest)
+  (apply #'vector (mapcar #'(lambda (x) (coerce x 'single-float)) rest)))
+
+(defun mf-uint(&rest rest)
+  (apply #'vector (mapcar #'(lambda (x) (floor (abs x))) rest)))
+
 ;; -----------------------------------------------------------------------class
 (defclass  sf-image (x3d-field)
   ()
