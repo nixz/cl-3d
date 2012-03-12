@@ -82,13 +82,15 @@ This is the base node type for all Material nodes.
 (defclass  x3d-shape-node (x3d-child-node x3d-bounded-object)
   ((appearance :initarg :appearance
                :initform nil
-               :accessor appearance
+               :reader appearance-changed
+               :writer set-appearance
                :type sf-node
                :allocation :instance
                :documentation "")
    (geometry :initarg :geometry
              :initform nil
-             :accessor geometry
+             :reader geometry-changed
+             :writer set-geometry
              :type sf-node
              :allocation :instance
              :documentation ""))
