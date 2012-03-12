@@ -58,14 +58,63 @@
 ;; These are mosly like callbacks but are automatically invoked when the values
 ;; are changed or perhaps these are handles to threads
 
+;; -----------------------------------------------------------------------scene
 
 ;; ============================================================================
 ;; CONSTRUCTOR FUNCTIONS
 ;; ============================================================================
 ;; -----------------------------------------------------------------------scene
+(defclass scene (glut:window)
+  ()
+  (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
+                     :mode '(:single :rgb)))
+
+(defparameter *SOUP* nil)
+(defparameter *BACKGROUND* nil)
+(defparameter *VIEWPOINT* nil)
+(defparameter *MODEL* nil)
+
+(defmethod glut:display-window :before ((w scene))
+  (gl:shade-model :flat))               ;global stuff
+
+(defmethod glut:display ((w scene))
+  (gl:viewport 0
+               0
+               (slot-value w 'glut::width)
+               (slot-value w 'glut::height))        ; this should be commands to the environment
+
+  ;; (gl:clear-color 0 0 0 0)              ;background
+  ;; (gl:clear :color-buffer)              ; clear the background background
+  (run *BACKGROUND*)
+
+  (gl:matrix-mode :projection)          ; projection
+  (gl:load-matrix (get-projection *VIEWPOINT* 1.0 1.5 20.0))
+  (gl:matrix-mode :modelview)           ; view
+  (gl:load-matrix (get-view *VIEWPOINT*))
+  ;; modeling transformation
+  (run *MODEL*)
+  (gl:scale 1 2 3)                      ; model transform
+  (gl:color 1 1 1)                      ; foreground color
+  (glut:wire-cube 1)                   ; shape
+  (gl:flush))
+
+
+(defmethod glut:reshape ((w scene) width height)
+  "Whenever the window is changed then this event is triggered"
+  (progn
+    (setf (slot-value w 'glut::width) width)
+    (setf (slot-value w 'glut::height) height)))
+
+(defmethod glut:keyboard ((w scene) key x y)
+  (declare (ignore x y))
+  (when (eql key #\Esc)
+    (glut:destroy-current-window)))
+
 (defun scene (&rest rest)
   ""
-  (apply #'list rest))
+  (setf *SOUP* (apply #'list rest))
+  (glut:display-window (make-instance 'scene)))
+
 
 ;; --------------------------------------------------------------------grouping
 (defun transform(&key
@@ -136,13 +185,14 @@
               (bboxCenter '(0 0 0))
               (bboxSize '(-1 -1 -1)))
   ""
-  (set-def :name def
-           :value (make-instance 'shape
-                                 :appearance appearance
-                                 :geometry geometry
-                                 :metadata metadata
-                                 :bbox-center bboxCenter
-                                 :bbox-size bboxSize)))
+  (setf *MODEL*
+        (set-def :name def
+                 :value (make-instance 'shape
+                                       :appearance appearance
+                                       :geometry geometry
+                                       :metadata metadata
+                                       :bbox-center bboxCenter
+                                       :bbox-size bboxSize))))
 
 ;; -----------------------------------------------------------------geometry-3d
 (defun box (&key
@@ -150,37 +200,38 @@
             (metadata nil)
             (size '(2 2 2))
             (solid t))
-""
-(set-def :name def
-         :value (make-instance 'box
-                               :metadata metadata
-                               :size (apply 'sf-vec3f size)
-                               :solid solid)))
+  ""
+  (set-def :name def
+           :value (make-instance 'box
+                                 :metadata metadata
+                                 :size (apply 'sf-vec3f size)
+                                 :solid solid)))
 
 ;; ------------------------------------------------------------------navigation
 (defun viewpoint (&key
                   (def (new-id))
                   (centerOfRotation '(0 0 0))
                   (description "")
-                  (fieldOfView (/ pi 4))
+                  (fieldOfView 45.0)
                   (jump t)
                   (metadata ())
                   (orientation '(0 0 1 0))
                   (position '(0 0 10))
                   (retainUserOffsets nil))
   ""
-  (set-def :name def
-           :value (make-instance 'viewpoint
-                                 :center-of-rotation (apply #'sf-vec3f
-                                                            centerOfRotation)
-                                 :description description
-                                 :field-of-view (deg->rad fieldOfView)
-                                 :jump jump
-                                 :metadata metadata
-                                 :orientation (apply #'sf-rotation
-                                                     orientation)
-                                 :position (apply #'sf-vec3f position)
-                                 :retain-user-offsets retainUserOffsets)))
+  (setf *VIEWPOINT*
+        (set-def :name def
+                 :value (make-instance 'viewpoint
+                                       :center-of-rotation (apply #'sf-vec3f
+                                                                  centerOfRotation)
+                                       :description description
+                                       :field-of-view fieldOfView
+                                       :jump jump
+                                       :metadata metadata
+                                       :orientation (apply #'sf-rotation
+                                                           orientation)
+                                       :position (apply #'sf-vec3f position)
+                                       :retain-user-offsets retainUserOffsets))))
 
 ;; -----------------------------------------------------------------env-effects
 (defun background(&key
@@ -198,16 +249,17 @@
                   (skyColor '(0 0 0))
                   (transparency nil))
   ""
-  (set-def :name def
-           :value (make-instance 'background
-                                 :ground-angle groundAngle
-                                 :ground-color groundColor
-                                 :back-url backUrl
-                                 :bottom-url bottomUrl
-                                 :front-url frontUrl
-                                 :left-url leftUrl
-                                 :right-url rightUrl
-                                 :top-url topUrl
-                                 :sky-angle skyAngle
-                                 :sky-color skyColor
-                                 :transparency transparency)))
+  (setf *BACKGROUND*
+        (set-def :name def
+                 :value (make-instance 'background
+                                       :ground-angle groundAngle
+                                       :ground-color groundColor
+                                       :back-url backUrl
+                                       :bottom-url bottomUrl
+                                       :front-url frontUrl
+                                       :left-url leftUrl
+                                       :right-url rightUrl
+                                       :top-url topUrl
+                                       :sky-angle skyAngle
+                                       :sky-color skyColor
+                                       :transparency transparency))))
