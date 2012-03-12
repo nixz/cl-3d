@@ -46,7 +46,7 @@
 
 (defun def (name)
   "Looks up the *DEF* hashmap and returns the value if present else nil"
-   (gethash name *DEF*))
+  (gethash name *DEF*))
 
 (defun set-def (&key name value)
   "Sets the key pair into *DEF* hash-table and return the value"
