@@ -145,7 +145,7 @@
 ;; ------------------------------------------------------------------------lisp
 (in-package #:cl-3d)
 (Scene
-  (Background :skyColor '(0 0 1))
+  (Background :skyColor '(1 1 1))
   (Viewpoint :description "Book View"
              :orientation '(-0.747 -0.624 -0.231 1.05)
              :position '(-1.81 3.12 2.59))
