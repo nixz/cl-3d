@@ -33,7 +33,7 @@
 
 (require 'cl-3d)
 (defvar *SCENE*)
-
+(use-package 'cl-3d)
 (defmethod shape (&key appearance geometry metadata bbox-center bbox-size)
   "")
 
@@ -81,3 +81,10 @@
        fromField='value_changed'
        toNode='EarthCoordinateSystem'
        toField='rotation')
+
+(setf temp (cl-3d::transform :children (list  1 2 3)))
+
+(Transform :def 'simple-geo-stationarysatellite
+           :rotation '(1 0 0 0.3)
+           :scale '(0.1 0.3 1.0)
+           :translation '(0 0 5))
