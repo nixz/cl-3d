@@ -39,6 +39,7 @@
 
 ;; ---------------------------------------------------------------------grouping
 (defmethod run ((self transform))
+  (format t "Transform~%")
   (let ((C (sb-cga:translate (center self)))
         (R (apply #'sb-cga:rotate-around (rotation self)))
         (S (sb-cga:scale (scale self)))
@@ -50,6 +51,7 @@
 
 ;; ------------------------------------------------------------------navigation
 (defmethod run ((self viewpoint))
+  (format t "Viewpoint~%")
   (let ((C (sb-cga:translate (center-of-rotation self)))
         (R (apply #'sb-cga:rotate-around (orientation self)))
         (Tx (sb-cga:translate (position self))))
@@ -66,28 +68,36 @@
 (defmethod run ((self box))
   "create a vertex and index buffers"
   (format t "Box~%")
-  (with-slots (size) self
-             (let* ((+x (abs (/ (elt size 0) 2)))
-                    (+y (abs (/ (elt size 1) 2)))
-                    (+z (abs (/ (elt size 2) 2)))
-                    (-x (- +x))
-                    (-y (- +y))
-                    (-z (- +z)))
-               (let ((verts (mf-float +x +y +z   ;right-top-front
-                                      -x +y +z   ;left-top-front
-                                      -x -y +z   ;left-bottom-front
-                                      +x -y +z   ;right-bottom-front
-                                      +x +y -z   ;right-top-back
-                                      -x +y -z   ;left-top-back
-                                      -x -y -z   ;left-bottom-back
-                                      +x -y -z)) ;righ-bottom-back
-                     (indexes (mf-uint 0 1 2 0 2 3    ;front
-                                       4 5 6 4 6 7    ;back
-                                       0 4 7 0 7 3    ;right
-                                       1 5 6 1 6 7    ;left
-                                       1 5 4 1 4 0    ;top
-                                       2 6 7 2 7 3))) ;bottom
-               (list :vertex-array verts :index-array indexes)))))
+  (with-slots (size solid) self
+    (let ((x (elt size 0))
+          (y (elt size 1))
+          (z (elt size 2)))
+      (gl:scale x y z)                      ; model transform
+      (if solid       
+          (glut:solid-cube 1)                   ; shape
+          (glut:wire-cube 1)))))
+
+;; (let* ((+x (abs (/ (elt size 0) 2)))
+;;        (+y (abs (/ (elt size 1) 2)))
+;;        (+z (abs (/ (elt size 2) 2)))
+;;        (-x (- +x))
+;;        (-y (- +y))
+;;        (-z (- +z)))
+;;   (let ((verts (mf-float +x +y +z   ;right-top-front
+;;                          -x +y +z   ;left-top-front
+;;                          -x -y +z   ;left-bottom-front
+;;                          +x -y +z   ;right-bottom-front
+;;                          +x +y -z   ;right-top-back
+;;                          -x +y -z   ;left-top-back
+;;                          -x -y -z   ;left-bottom-back
+;;                          +x -y -z)) ;righ-bottom-back
+;;         (indexes (mf-uint 0 1 2 0 2 3    ;front
+;;                           4 5 6 4 6 7    ;back
+;;                           0 4 7 0 7 3    ;right
+;;                           1 5 6 1 6 7    ;left
+;;                           1 5 4 1 4 0    ;top
+;;                           2 6 7 2 7 3))) ;bottom
+;;   (list :vertex-array verts :index-array indexes)))))
 
 ;; -----------------------------------------------------------------env-effects
 (defmethod run ((self background))
@@ -95,24 +105,40 @@
 TODO: Make an actual background. For now just use the sky color and set he
 background
 "
+  (format t "Background~%")
   (let ((color (append (slot-value self 'sky-color) '(0))))
     (apply #'gl:clear-color color)
-    (gl:clear :color-buffer)))
+    (gl:clear :color-buffer :depth-buffer )))
 
+;; -----------------------------------------------------------------------shape
 (defmethod run ((self shape))
   ""
   (format t "Shape~%")
   (with-slots (geometry appearance) self
-    (print (run geometry))
-    (run appearance)))
+    (run appearance)
+    (run geometry)))
 
+
+;; ------------------------------------------------------------------appearance
 (defmethod run ((self appearance))
   ""
   (format t "Appearance~%")
   (with-slots (material) self
     (run material)))
 
-
+;; ------------------------------------------------------------------appearance
 (defmethod run((self material))
   ""
-  (format t "Material~%"))
+  (format t "Material~%")
+  ;; (gl:light :light0 :specular '(1.0 1.0 1.0 0)) ;white-specular-light
+  ;; (gl:light :light0 :ambient '(0.0 0.0 0.0 0)) ;black-ambient-light
+  ;; (gl:light :light0 :diffuse '(1.0 1.0 1.0 0))  ;white-diffuse-light
+  
+  (gl:material :front :ambient (map 'vector #'(lambda (x)
+                                                (* (ambient-intensity self) x))
+                                       (diffuse-color self)))
+  (gl:material :front :diffuse (diffuse-color self))
+  (gl:material :front :specular (specular-color self))
+  (gl:material :front :emission (emissive-color self))
+  (gl:material :front :shininess (shininess self))
+)

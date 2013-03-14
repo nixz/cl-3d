@@ -32,16 +32,25 @@
 ;;;; ==========================================================================
 
 (in-package #:cl-user)
+(ql:quickload :sb-cga)
 
 (defpackage #:cl-3d
-  (:nicknames #:x3d)
-  (:use #:cl)
-  (:shadow #:position)
-  (:export #:scene
-           #:transform
-           #:appearance
-           #:material
-           #:shape
-           #:box
-           #:viewpoint
-           #:background))
+  (:use #:cl
+        #:cl-glut
+        #:cl-glu
+        ;; #:lispbuilder-sdl ; may need this in the future
+        #:bordeaux-threads
+        #:xmlisp
+        #:usocket
+        #:cl-package-locks)
+  (:shadowing-import-from #:cl-glut :special :get :close)
+  (:shadow :position)
+  (:export :scene
+           :transform
+           :appearance
+           :material
+           :shape
+           :box
+           :viewpoint
+           :background
+           :scale))

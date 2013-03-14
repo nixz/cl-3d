@@ -122,8 +122,8 @@ This is the base node type for color specifications in X3D.
               :documentation "")
    (normal :initarg :normal
            :initform (error ":normal must be specified")
-           :reader normal-changed
-           :writer set-tex-coord
+           :reader normal=>>
+           :writer =>>normal
            :type sf-node
            :allocation :instance
            :documentation "")

@@ -67,7 +67,7 @@
 (defclass scene (glut:window)
   ()
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
-                     :mode '(:single :rgb)))
+                     :mode '(:single :rgb :depth)))
 
 (defparameter *SOUP* nil)
 (defparameter *BACKGROUND* nil)
@@ -75,7 +75,14 @@
 (defparameter *MODEL* nil)
 
 (defmethod glut:display-window :before ((w scene))
-  (gl:shade-model :flat))               ;global stuff
+  (gl:clear-color 0 0 0 0)
+  (gl:cull-face :back)
+  (gl:depth-func :less)
+  (gl:disable :dither)
+  (gl:shade-model :smooth)              ; (gl:shade-model :flat)
+  (gl:light-model :light-model-local-viewer 1)
+  (gl:color-material :front :ambient-and-diffuse)
+  (gl:enable :light0 :lighting :cull-face :depth-test)) ; global stuff
 
 (defmethod glut:display ((w scene))
   (gl:viewport 0
@@ -93,9 +100,7 @@
   (gl:load-matrix (get-view *VIEWPOINT*))
   ;; modeling transformation
   (run *MODEL*)
-  (gl:scale 1 2 3)                      ; model transform
-  (gl:color 1 1 1)                      ; foreground color
-  (glut:wire-cube 1)                   ; shape
+ 
   (gl:flush))
 
 
@@ -160,11 +165,11 @@
 (defun material (&key
                  (def (new-id))
                  (ambientIntensity 0.2)
-                 (diffuseColor '(0.8 0.8 0.8))
-                 (emissiveColor '(0 0 0))
+                 (diffuseColor #(0.8 0.8 0.8 1.0))
+                 (emissiveColor #(0 0 0 1.0))
                  (metadata nil)
                  (shininess 0.2)
-                 (specularColor '(0 0 0))
+                 (specularColor #(0 0 0 1.0))
                  (transparency 0))
   ""
   (set-def :name def
@@ -206,6 +211,7 @@
                                  :metadata metadata
                                  :size (apply 'sf-vec3f size)
                                  :solid solid)))
+
 
 ;; ------------------------------------------------------------------navigation
 (defun viewpoint (&key

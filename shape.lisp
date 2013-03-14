@@ -213,13 +213,13 @@ types of shader nodes as specified in 31 Programmable shaders component.
          :allocation :instance
          :documentation "")
    (diffuse-color :initarg :diffuse-color
-         :initform '(0.8 0.8 0.8)
+         :initform (sf-color 0.8 0.8 0.8)
          :accessor diffuse-color
          :type sf-color
          :allocation :instance
          :documentation "")
    (emissive-color :initarg :emissive-color
-         :initform '(0 0 0)
+         :initform (sf-color 0 0 0)
          :accessor emissive-color
          :type sf-color
          :allocation :instance
@@ -231,7 +231,7 @@ types of shader nodes as specified in 31 Programmable shaders component.
          :allocation :instance
          :documentation "")
    (specular-color  :initarg :specular-color
-         :initform '(0 0 0)
+         :initform (sf-color 0 0 0)
          :accessor specular-color
          :type sf-color
          :allocation :instance

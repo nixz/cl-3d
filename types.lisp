@@ -114,6 +114,12 @@ The default value of an uninitialized SFColor field is (0 0 0). The default
 value of an uninitialized MFColor field is the empty list.
 "))
 
+(defmethod sf-color (x y z)
+  (let ((a (coerce x 'single-float))
+        (b (coerce y 'single-float))
+        (c (coerce z 'single-float)))
+    (vector a b c 1.0)))
+
 ;; -----------------------------------------------------------------------class
 (defclass  mf-color (x3d-array-field)
   ()
