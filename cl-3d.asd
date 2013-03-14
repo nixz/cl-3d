@@ -34,34 +34,20 @@
   :description "x3d implementation in common lisp"
   :depends-on (cl-opengl sb-cga cl-glut cl-glu)
   :components ((:file "package")
-               (:file "util" :depends-on ("package"))
-               (:file "types" :depends-on ("util" "package"))
-               (:file "core" :depends-on ("util" "types" "package"))
-               (:file "networking" :depends-on ("package"))
-               (:file "grouping" :depends-on ("core" "util" "types" "package"))
-               (:file "rendering" :depends-on ("core" "util" "types" "package"))
-               (:file "shape" :depends-on ("core" "util" "types" "package"))
-               (:file "geometry-3d" :depends-on ("rendering" "shape" "core" "util" "types" "package"))
-               (:file "navigation" :depends-on ("core" "util" "types" "package"))
-               (:file "env-effects" :depends-on ("core" "util" "types" "package"))
-               (:file "programmable-shaders" :depends-on ("shape" "rendering" "networking" "core" "types" "package"))
-               (:file "main" :depends-on ("core"
-                                          "grouping"
-                                          "rendering"
-                                          "shape"
-                                          "geometry-3d"
-                                          "navigation"
-                                          "env-effects"
-                                          "util"
-                                          "types"
-                                          "package"))
-               (:file "run" :depends-on ("core"
-                                         "grouping"
-                                         "rendering"
-                                         "shape"
-                                         "geometry-3d"
-                                         "navigation"
-                                         "env-effects"
-                                         "util"
-                                         "types"
-                                         "package"))))
+               (:file "util"                 :depends-on ("package"))
+               (:file "types"                :depends-on ("util"))
+               (:file "core"                 :depends-on ("types"))
+               (:file "networking"           :depends-on ("package"))
+               (:file "grouping"             :depends-on ("core"))
+               (:file "rendering"            :depends-on ("core"))
+               (:file "shape"                :depends-on ("core"))
+               (:file "geometry-3d"          :depends-on ("rendering" "shape"))
+               (:file "navigation"           :depends-on ("core"))
+               (:file "env-effects"          :depends-on ("core"))
+               (:file "programmable-shaders" :depends-on ("shape" "rendering" "networking"))
+               (:file "scene"                :depends-on ("package"))
+               (:file "main"                 :depends-on ("grouping" "geometry-3d" "navigation" "env-effects"))
+               (:file "run"                  :depends-on ("grouping" "geometry-3d" "navigation" "env-effects"))
+               (:file "opengl"               :depends-on ("package"))))
+   ;; (:file "graphics" :depends-on("package"
+   ;;                               "opengl"))
