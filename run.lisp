@@ -32,7 +32,7 @@
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
 
-(in-package #:x3d)
+(in-package #:cl-3d)
 
 (defgeneric run(self)
   (:documentation "Generic method to evaluate various nodes as they are traversed"))

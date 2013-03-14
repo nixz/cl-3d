@@ -31,7 +31,7 @@
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
 
-(require 'x3d)
+(require 'cl-3d)
 (defvar *SCENE*)
 
 (defmethod shape (&key appearance geometry metadata bbox-center bbox-size)

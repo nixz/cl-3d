@@ -143,7 +143,7 @@
 
 
 ;; ------------------------------------------------------------------------lisp
-(in-package #:x3d)
+(in-package #:cl-3d)
 (Scene
   (Background :skyColor '(0 0 1))
   (Viewpoint :description "Book View"

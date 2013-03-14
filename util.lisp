@@ -31,7 +31,7 @@
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
 
-(in-package #:x3d)
+(in-package #:cl-3d)
 
 (defun deg->rad (x) (* x (/ pi 180)))
 (defun rad->deg (x) (* x (/ 180 pi)))
