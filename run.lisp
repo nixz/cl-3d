@@ -38,44 +38,70 @@
   (:documentation "Generic method to evaluate various nodes as they are traversed"))
 
 ;; ---------------------------------------------------------------------grouping
-(defmethod run ((self transform))
-  (format t "Transform~%")
-  (let ((C (sb-cga:translate (center self)))
-        (R (apply #'sb-cga:rotate-around (rotation self)))
-        (S (sb-cga:scale (scale self)))
-        (SR (apply #'sb-cga:rotate-around (scale-orientation self)))
-        (Tx (sb-cga:translate (translation self))))
-    (let ((-SR (sb-cga:inverse-matrix SR))
-          (-C (sb-cga:inverse-matrix C)))
-      (sb-cga:matrix* Tx C R SR S -SR -C))))
+;; (defmethod run ((self transform))
+;;   (format t "Transform~%")
+;;   (let ((C (sb-cga:translate (center self)))
+;;         (R (apply #'sb-cga:rotate-around (rotation self)))
+;;         (S (sb-cga:scale (scale self)))
+;;         (SR (apply #'sb-cga:rotate-around (scale-orientation self)))
+;;         (Tx (sb-cga:translate (translation self))))
+;;     (let ((-SR (sb-cga:inverse-matrix SR))
+;;           (-C (sb-cga:inverse-matrix C)))
+;;       (sb-cga:matrix* Tx C R SR S -SR -C))))
 
 ;; ------------------------------------------------------------------navigation
 (defmethod run ((self viewpoint))
   (format t "Viewpoint~%")
-  (let ((C (sb-cga:translate (center-of-rotation self)))
-        (R (apply #'sb-cga:rotate-around (orientation self)))
-        (Tx (sb-cga:translate (position self))))
+  (with-slots (centerOfRotation orientation position) self
+    (let ((centerOfRotation (SFVec3f centerOfRotation))
+          (orientation (SFRotation orientation))
+          (position (SFVec3f position)))
+      (let ((C (sb-cga:translate centerOfRotation))
+            (R (apply #'sb-cga:rotate-around orientation))
+            (Tx (sb-cga:translate position)))
     (let ((-C (sb-cga:inverse-matrix C)))
-      (sb-cga:inverse-matrix (sb-cga:matrix* Tx R))))) ;; this is the LOOKAT configuration
+      (sb-cga:inverse-matrix (sb-cga:matrix* Tx R))))))) ;; this is the LOOKAT configuration
 
+;; ----------------------------------------------------------------------------
 (defmethod get-projection ((self viewpoint) aspect near far)
-  (perspective (slot-value self 'field-of-view) aspect near far))
+  (with-slots (fieldOfView) self
+    (let ((fieldOfView (degrees (SFFloat fieldOfView))))
+      (perspective fieldOfView aspect near far))))
 
+;; ----------------------------------------------------------------------------
 (defmethod get-view ((self viewpoint))
   (run self))
 
 ;; -----------------------------------------------------------------geometry-3d
+;; .........................................................................Box
 (defmethod run ((self box))
   "create a vertex and index buffers"
   (format t "Box~%")
   (with-slots (size solid) self
-    (let ((x (elt size 0))
-          (y (elt size 1))
-          (z (elt size 2)))
-      (gl:scale x y z)                      ; model transform
-      (if solid       
-          (glut:solid-cube 1)                   ; shape
-          (glut:wire-cube 1)))))
+    (let ((size (SFVec3f size))
+          (solid (SFBool solid)))
+      (let ((x (elt size 0))
+            (y (elt size 1))
+            (z (elt size 2)))
+        (gl:scale x y z)                      ; model transform
+        (if solid       
+            (glut:solid-cube 1)                   ; shape
+            (glut:wire-cube 1))))))
+
+;; ........................................................................Cone
+(defmethod run ((self cone))
+  "create a vertex and index buffers"
+  (format t "Box~%")
+  (with-slots (bottomRadius height side bottom solid) self
+    (let ((size (SFVec3f size))
+          (solid (SFBool solid)))
+      (let ((x (elt size 0))
+            (y (elt size 1))
+            (z (elt size 2)))
+        (gl:scale x y z)                      ; model transform
+        (if solid       
+            (glut:solid-cube 1)                   ; shape
+            (glut:wire-cube 1))))))
 
 ;; (let* ((+x (abs (/ (elt size 0) 2)))
 ;;        (+y (abs (/ (elt size 1) 2)))
@@ -106,25 +132,27 @@ TODO: Make an actual background. For now just use the sky color and set he
 background
 "
   (format t "Background~%")
-  (let ((color (append (slot-value self 'sky-color) '(0))))
-    (apply #'gl:clear-color color)
-    (gl:clear :color-buffer :depth-buffer )))
+  (with-slots (skyColor) self
+    (let ((skyColor (list<-str skyColor)))
+      (let ((color (append skyColor '(0))))
+        (apply #'gl:clear-color color)
+        (gl:clear :color-buffer :depth-buffer)))))
 
 ;; -----------------------------------------------------------------------shape
 (defmethod run ((self shape))
   ""
   (format t "Shape~%")
-  (with-slots (geometry appearance) self
-    (run appearance)
-    (run geometry)))
-
+  (with-slots (containerField) self
+    (dolist (element containerField)
+      (run element))))
 
 ;; ------------------------------------------------------------------appearance
 (defmethod run ((self appearance))
   ""
   (format t "Appearance~%")
-  (with-slots (material) self
-    (run material)))
+  (with-slots (containerField) self
+    (dolist (element containerField)
+      (run element))))
 
 ;; ------------------------------------------------------------------appearance
 (defmethod run((self material))
@@ -133,12 +161,16 @@ background
   ;; (gl:light :light0 :specular '(1.0 1.0 1.0 0)) ;white-specular-light
   ;; (gl:light :light0 :ambient '(0.0 0.0 0.0 0)) ;black-ambient-light
   ;; (gl:light :light0 :diffuse '(1.0 1.0 1.0 0))  ;white-diffuse-light
-  
-  (gl:material :front :ambient (map 'vector #'(lambda (x)
-                                                (* (ambient-intensity self) x))
-                                       (diffuse-color self)))
-  (gl:material :front :diffuse (diffuse-color self))
-  (gl:material :front :specular (specular-color self))
-  (gl:material :front :emission (emissive-color self))
-  (gl:material :front :shininess (shininess self))
-)
+  (with-slots (ambientIntensity diffuseColor specularColor emissiveColor shininess) self
+    (let ((ambient-intensity (SFFloat ambientIntensity))
+          (diffuse-color (SfColor diffuseColor))
+          (specular-color (SFColor specularColor))
+          (emissive-color (SFColor emissiveColor))
+          (shininess  (SFFloat shininess)))
+      (gl:material :front :ambient (map 'cl:vector #'(lambda (x)
+                                                       (* ambient-intensity x))
+                                        diffuse-color))
+      (gl:material :front :diffuse diffuse-color)
+      (gl:material :front :specular specular-color)
+      (gl:material :front :emission emissive-color)
+      (gl:material :front :shininess shininess))))

@@ -44,7 +44,12 @@
         #:usocket
         #:cl-package-locks)
   (:shadowing-import-from #:cl-glut :special :get :close)
-  (:shadow :position)
+  (:shadow :position 
+           :vector
+           :inline
+           :load
+           :type
+           :speed)
   (:export :scene
            :transform
            :appearance

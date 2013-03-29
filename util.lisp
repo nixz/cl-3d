@@ -36,6 +36,9 @@
 (defun deg->rad (x) (* x (/ pi 180)))
 (defun rad->deg (x) (* x (/ 180 pi)))
 
+(defun radians (x) (* x (/ pi 180)))
+(defun degrees (x) (* x (/ 180 pi)))
+
 (defun frustum (xmin xmax ymin ymax znear zfar)
   (let ((a (/ (* 2 znear)
               (- xmax xmin)))
@@ -64,3 +67,104 @@
     (frustum xmin xmax
              ymin ymax
              znear zfar)))
+
+(defmethod sf-color (x y z)
+  (let ((a (coerce x 'single-float))
+        (b (coerce y 'single-float))
+        (c (coerce z 'single-float)))
+    (vector a b c 1.0)))
+
+;; (defmethod MFColor (x y z)
+;;   (let ((a (coerce x 'single-float))
+;;         (b (coerce y 'single-float))
+;;         (c (coerce z 'single-float)))
+;;     (cl:vector a b c 1.0)))
+
+(defmethod IntensityType(str)
+  (coerce (read-from-string str) 'single-float))
+
+;; ----------------------------------------------------------------------------
+(defmethod MFColor(str)
+  (apply #'cl:vector 
+         (mapcar (lambda (x)
+                   (coerce x 'single-float))
+                 (with-input-from-string (in str)
+                   (loop for x = (read in nil nil) 
+                      while x 
+                      collect x)))))
+
+;; ----------------------------------------------------------------------------
+(defmethod SFColor(str)
+  (let ((float-list (append (list<-str str) '(1.0))))
+    (apply #'cl:vector float-list)))
+
+;; ----------------------------------------------------------------------------
+(defmethod SFVec3f(str)
+  (apply #'cl:vector 
+         (mapcar (lambda (x)
+                   (coerce x 'single-float))
+                 (with-input-from-string (in str)
+                   (loop for x = (read in nil nil) 
+                      while x 
+                      collect x)))))
+
+;; ----------------------------------------------------------------------------
+(defmethod BoundingBoxSizeType(str)
+  (apply #'cl:vector 
+         (mapcar (lambda (x)
+                   (coerce x 'single-float))
+                 (with-input-from-string (in str)
+                   (loop for x = (read in nil nil) 
+                      while x 
+                      collect x)))))
+
+;; ----------------------------------------------------------------------------
+(defmethod SFBool(str)
+  (if (string= "true" str)
+      t
+      nil))
+
+;; ----------------------------------------------------------------------------
+(defmethod SFRotation(str)
+  (apply #'cl:vector 
+         (mapcar (lambda (x)
+                   (coerce x 'single-float))
+                 (with-input-from-string (in str)
+                   (loop for x = (read in nil nil) 
+                      while x 
+                      collect x)))))
+
+;; ----------------------------------------------------------------------------
+(defmethod SFFloat(str)
+  (coerce (with-input-from-string(in str)
+            (read in nil nil))
+          'single-float))
+
+
+;; ----------------------------------------------------------------------------
+(defun list<-str (str)
+  (mapcar (lambda (x)
+            (coerce x 'single-float))
+          (with-input-from-string (in str)
+            (loop for x = (read in nil nil) 
+               while x 
+               collect x))))
+
+;; ----------------------------------------------------------------------------
+(defmethod val<-str (str)
+  (coerce (with-input-from-string(in str)
+            (read in nil nil))
+          'single-float))
+
+;; ----------------------------------------------------------------------------
+(defmethod SFRotation(str)
+  (let ((float-list (list<-str str)))
+    (list (sb-cga:vec (first float-list)
+                      (second float-list)
+                      (third float-list))
+          (fourth float-list))))
+
+;; ----------------------------------------------------------------------------
+(defmethod SFVec3f (str)
+  (let ((float-list (list<-str str)))
+  (apply #'sb-cga:vec float-list)))
