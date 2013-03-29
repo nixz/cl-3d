@@ -38,16 +38,16 @@
 *** [x] Parse X3d using xmlisp
 *** [x] Implement run method and basic windowing
 **** [x] Implement GLUT windowing mechanism as scene
-** CURRENT 2. GeometricPrimitives
+** [*] 2. GeometricPrimitives
 *** [x] Box.lisp example
-    NOTE: http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
-**** [x] Background class
-**** [x] Viewpoint class
-**** [x] Shape class
-**** [x] Box class
-**** [x] Appearance class
-**** [x] Material class
-**** [x] Implement parsing function for each
+#    NOTE: http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
+# **** [x] Background class
+# **** [x] Viewpoint class
+# **** [x] Shape class
+# **** [x] Box class
+# **** [x] Appearance class
+# **** [x] Material class
+# **** [x] Implement parsing function for each
 
 *** [_] Cone.lisp
 *** [_] Cyliner.lisp
