@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; programmable-shaders.lisp --- Definitions of the PROGRAMMABLE-SHADERS Component in X3D
+;;;; interpolation.lisp --- Definitions of the INTERPOLATION Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,168 +32,190 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DProgrammableShaderObject ()
+(defclass X3DInterpolatorNode (X3DChildNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DShaderNode (X3DAppearanceChildNode)
-  (
-    (language :initarg :language
+    (key :initarg :key
         :initform  ""
-        :accessor language
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
+        :accessor key
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DShaderNode) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DVertexAttributeNode (X3DGeometricPropertyNode)
+(defclass ColorInterpolator (X3DInterpolatorNode)
   (
-    (name :initarg :name
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor name
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DVertexAttributeNode) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ComposedShader (X3DProgrammableShaderObject)
+(defclass CoordinateInterpolator (X3DInterpolatorNode)
   (
-    (language :initarg :language
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor language
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ComposedShader) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass FloatVertexAttribute (X3DVertexAttributeNode)
+(defclass CoordinateInterpolator2D (X3DInterpolatorNode)
   (
-    (value :initarg :value
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor value
-        :documentation "")
-    (numComponents :initarg :numComponents
-        :initform  "4"
-        :accessor numComponents
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Matrix3VertexAttribute (X3DVertexAttributeNode)
+(defclass NormalInterpolator (X3DInterpolatorNode)
   (
-    (value :initarg :value
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor value
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Matrix4VertexAttribute (X3DVertexAttributeNode)
+(defclass OrientationInterpolator (X3DInterpolatorNode)
   (
-    (value :initarg :value
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor value
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass PackagedShader (X3DProgrammableShaderObject)
+(defclass PositionInterpolator (X3DInterpolatorNode)
   (
-    (language :initarg :language
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor language
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self PackagedShader) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ProgramShader (X3DShaderNode)
+(defclass PositionInterpolator2D (X3DInterpolatorNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass ShaderPart (X3DNodeMixedContent)
-  (
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-    (type :initarg :type
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor type
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ShaderPart) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ShaderProgram (X3DProgrammableShaderObject)
+(defclass ScalarInterpolator (X3DInterpolatorNode)
   (
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-    (type :initarg :type
+    (keyValue :initarg :keyValue
         :initform  ""
-        :accessor type
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ShaderProgram) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
+(defclass EaseInEaseOut (X3DChildNode)
+  (
+    (easeInEaseOut :initarg :easeInEaseOut
+        :initform  ""
+        :accessor easeInEaseOut
+        :documentation "")
+    (key :initarg :key
+        :initform  ""
+        :accessor key
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass SplinePositionInterpolator (X3DInterpolatorNode)
+  (
+    (closed :initarg :closed
+        :initform  "false"
+        :accessor closed
+        :documentation "")
+    (keyValue :initarg :keyValue
+        :initform  ""
+        :accessor keyValue
+        :documentation "")
+    (keyVelocity :initarg :keyVelocity
+        :initform  ""
+        :accessor keyVelocity
+        :documentation "")
+    (normalizeVelocity :initarg :normalizeVelocity
+        :initform  "false"
+        :accessor normalizeVelocity
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass SplinePositionInterpolator2D (X3DInterpolatorNode)
+  (
+    (closed :initarg :closed
+        :initform  "false"
+        :accessor closed
+        :documentation "")
+    (keyValue :initarg :keyValue
+        :initform  ""
+        :accessor keyValue
+        :documentation "")
+    (keyVelocity :initarg :keyVelocity
+        :initform  ""
+        :accessor keyVelocity
+        :documentation "")
+    (normalizeVelocity :initarg :normalizeVelocity
+        :initform  "false"
+        :accessor normalizeVelocity
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass SplineScalarInterpolator (X3DInterpolatorNode)
+  (
+    (closed :initarg :closed
+        :initform  "false"
+        :accessor closed
+        :documentation "")
+    (keyValue :initarg :keyValue
+        :initform  ""
+        :accessor keyValue
+        :documentation "")
+    (keyVelocity :initarg :keyVelocity
+        :initform  ""
+        :accessor keyVelocity
+        :documentation "")
+    (normalizeVelocity :initarg :normalizeVelocity
+        :initform  "false"
+        :accessor normalizeVelocity
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass SquadOrientationInterpolator (X3DInterpolatorNode)
+  (
+    (closed :initarg :closed
+        :initform  "false"
+        :accessor closed
+        :documentation "")
+    (keyValue :initarg :keyValue
+        :initform  ""
+        :accessor keyValue
+        :documentation "")
+    (normalizeVelocity :initarg :normalizeVelocity
+        :initform  "false"
+        :accessor normalizeVelocity
+        :documentation "")
+  )
+  (:documentation ""))
 

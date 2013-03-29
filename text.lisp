@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; text.lisp --- Definitions of the TEXT Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,67 +32,79 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DFontStyleNode (X3DNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (containerField
+        :initform NIL
+        :accessor containerField
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
+(defmethod add-subobject ((self X3DFontStyleNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defclass FontStyle (X3DFontStyleNode)
   (
-    (load :initarg :load
+    (family :initarg :family
+        :initform  `("SERIF")
+        :accessor family
+        :documentation "")
+    (horizontal :initarg :horizontal
         :initform  "true"
-        :accessor load
+        :accessor horizontal
         :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
+    (justify :initarg :justify
+        :initform  `("BEGIN")
+        :accessor justify
         :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
+    (language :initarg :language
+        :initform  ""
+        :accessor language
         :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (leftToRight :initarg :leftToRight
+        :initform  "true"
+        :accessor leftToRight
+        :documentation "")
+    (size :initarg :size
+        :initform  "1.0"
+        :accessor size
+        :documentation "")
+    (spacing :initarg :spacing
+        :initform  "1.0"
+        :accessor spacing
+        :documentation "")
+    (style :initarg :style
+        :initform  "PLAIN"
+        :accessor style
+        :documentation "")
+    (topToBottom :initarg :topToBottom
+        :initform  "true"
+        :accessor topToBottom
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
+(defclass Text (X3DGeometryNode)
   (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
+    (string :initarg :string
+        :initform  `()
+        :accessor string
+        :documentation "")
+    (length :initarg :length
+        :initform  ""
+        :accessor length
+        :documentation "")
+    (maxExtent :initarg :maxExtent
+        :initform  "0.0"
+        :accessor maxExtent
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "false"
+        :accessor solid
         :documentation "")
   )
   (:documentation ""))

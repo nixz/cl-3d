@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; pointing-device-sensor.lisp --- Definitions of the POINTING-DEVICE-SENSOR Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,68 +32,84 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DDragSensorNode (X3DPointingDeviceSensorNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (autoOffset :initarg :autoOffset
+        :initform  "true"
+        :accessor autoOffset
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
+(defclass X3DPointingDeviceSensorNode (X3DSensorNode)
   (
     (description :initarg :description
         :initform  ""
         :accessor description
         :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defclass X3DTouchSensorNode (X3DPointingDeviceSensorNode)
   (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
+(defclass CylinderSensor (X3DDragSensorNode)
   (
-    (timeOut :initarg :timeOut
+    (diskAngle :initarg :diskAngle
+        :initform  "0.26179167"
+        :accessor diskAngle
+        :documentation "")
+    (maxAngle :initarg :maxAngle
+        :initform  "-1"
+        :accessor maxAngle
+        :documentation "")
+    (minAngle :initarg :minAngle
         :initform  "0"
-        :accessor timeOut
+        :accessor minAngle
         :documentation "")
+    (offset :initarg :offset
+        :initform  "0"
+        :accessor offset
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PlaneSensor (X3DDragSensorNode)
+  (
+    (maxPosition :initarg :maxPosition
+        :initform  "-1 -1"
+        :accessor maxPosition
+        :documentation "")
+    (minPosition :initarg :minPosition
+        :initform  "0 0"
+        :accessor minPosition
+        :documentation "")
+    (offset :initarg :offset
+        :initform  "0 0 0"
+        :accessor offset
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass SphereSensor (X3DDragSensorNode)
+  (
+    (offset :initarg :offset
+        :initform  "0 1 0 0"
+        :accessor offset
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TouchSensor (X3DTouchSensorNode)
+  (
   )
   (:documentation ""))
 

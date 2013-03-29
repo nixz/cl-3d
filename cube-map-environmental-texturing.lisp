@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; cube-map-environmental-texturing.lisp --- Definitions of the CUBE-MAP-ENVIRONMENTAL-TEXTURING Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,67 +32,45 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DEnvironmentTextureNode (X3DAppearanceChildNode)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DEnvironmentTextureNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
+
+;; ----------------------------------------------------------------------------
+(defclass ComposedCubeMapTexture (X3DEnvironmentTextureNode)
   (
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
+(defclass GeneratedCubeMapTexture (X3DEnvironmentTextureNode)
+  (
+    (update :initarg :update
+        :initform  "NONE"
+        :accessor update
+        :documentation "")
+    (size :initarg :size
+        :initform  "128"
+        :accessor size
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass ImageCubeMapTexture (X3DEnvironmentTextureNode)
   (
     (url :initarg :url
         :initform  `()
         :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
-  (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
-  (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
         :documentation "")
   )
   (:documentation ""))

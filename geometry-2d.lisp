@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; geometry-2d.lisp --- Definitions of the GEOMETRY-2D Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,67 +32,121 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass Arc2D (X3DGeometryNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (radius :initarg :radius
+        :initform  "1"
+        :accessor radius
         :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
-  (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
-  (
-    (timeOut :initarg :timeOut
+    (startAngle :initarg :startAngle
         :initform  "0"
-        :accessor timeOut
+        :accessor startAngle
+        :documentation "")
+    (endAngle :initarg :endAngle
+        :initform  "1.570796"
+        :accessor endAngle
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass ArcClose2D (X3DGeometryNode)
+  (
+    (radius :initarg :radius
+        :initform  "1"
+        :accessor radius
+        :documentation "")
+    (startAngle :initarg :startAngle
+        :initform  "0"
+        :accessor startAngle
+        :documentation "")
+    (endAngle :initarg :endAngle
+        :initform  "1.570796"
+        :accessor endAngle
+        :documentation "")
+    (closureType :initarg :closureType
+        :initform  "PIE"
+        :accessor closureType
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "false"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass Circle2D (X3DGeometryNode)
+  (
+    (radius :initarg :radius
+        :initform  "1"
+        :accessor radius
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass Disk2D (X3DGeometryNode)
+  (
+    (innerRadius :initarg :innerRadius
+        :initform  "0"
+        :accessor innerRadius
+        :documentation "")
+    (outerRadius :initarg :outerRadius
+        :initform  "1"
+        :accessor outerRadius
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "false"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass Polyline2D (X3DGeometryNode)
+  (
+    (lineSegments :initarg :lineSegments
+        :initform  ""
+        :accessor lineSegments
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass Polypoint2D (X3DGeometryNode)
+  (
+    (point :initarg :point
+        :initform  ""
+        :accessor point
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass Rectangle2D (X3DGeometryNode)
+  (
+    (size :initarg :size
+        :initform  "2 2"
+        :accessor size
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "false"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TriangleSet2D (X3DGeometryNode)
+  (
+    (vertices :initarg :vertices
+        :initform  ""
+        :accessor vertices
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "false"
+        :accessor solid
         :documentation "")
   )
   (:documentation ""))

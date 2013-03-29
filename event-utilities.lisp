@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; event-utilities.lisp --- Definitions of the EVENT-UTILITIES Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,68 +32,76 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DSequencerNode (X3DChildNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
+    (key :initarg :key
         :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+        :accessor key
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defclass X3DTriggerNode (X3DChildNode)
   (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass BooleanFilter (X3DChildNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass BooleanSequencer (X3DSequencerNode)
+  (
+    (keyValue :initarg :keyValue
+        :initform  ""
+        :accessor keyValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
+(defclass BooleanToggle (X3DChildNode)
   (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
+    (toggle :initarg :toggle
+        :initform  "false"
+        :accessor toggle
         :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass BooleanTrigger (X3DChildNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass IntegerSequencer (X3DSequencerNode)
+  (
+    (keyValue :initarg :keyValue
+        :initform  ""
+        :accessor keyValue
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass IntegerTrigger (X3DChildNode)
+  (
+    (integerKey :initarg :integerKey
+        :initform  "-1"
+        :accessor integerKey
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TimeTrigger (X3DChildNode)
+  (
   )
   (:documentation ""))
 

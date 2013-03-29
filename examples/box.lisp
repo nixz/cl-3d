@@ -1,8 +1,8 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; box.lisp --- Test box tutorial from x3dforwebauthors ch2.
 ;;;;
-;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
+;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
 ;;;;
 ;;;; Redistribution and use in source and binary forms, with or without
@@ -30,70 +30,32 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
+
+;; This example is taken from the following link
+;; http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
+
+;; ------------------------------------------------------------------------lisp
 (in-package #:cl-3d)
-;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
-  (
-  )
-  (:documentation ""))
+(render
+<Scene>
+  <Background skyColor='1 1 1'/>
+  <Viewpoint description='Book View'
+             orientation='-0.747 -0.624 -0.231 1.05'
+             position='-1.81 3.12 2.59'/>
+  <Shape>
+  <Box size='1 2 3'/>
+    <Appearance>
+      <Material/>
+    </Appearance>
+  </Shape>
+</Scene>)
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
-  (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
-  (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
-        :documentation "")
-  )
-  (:documentation ""))
-
+;; purely in lisp this should probably look like the following
+;; (Scene
+;;   (Background :skyColor '(1 1 1))
+;;   (Viewpoint :description "Book View"
+;;              :orientation '(-0.747 -0.624 -0.231 1.05)
+;;              :position '(-1.81 3.12 2.59))
+;;   (Shape :geometry (Box :size '(1 2 3))
+;;          :appearance (Appearance :material (Material))))

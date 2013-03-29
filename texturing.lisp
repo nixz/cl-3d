@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; rendering.lisp --- Definitions of the RENDERING Component in X3D
+;;;; texturing.lisp --- Definitions of the TEXTURING Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,7 +32,7 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DColorNode (X3DGeometricPropertyNode)
+(defclass X3DTextureNode (X3DAppearanceChildNode)
   (
     (containerField
         :initform NIL
@@ -42,39 +42,25 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DColorNode) (stuff X3DNode))
+(defmethod add-subobject ((self X3DTextureNode) (stuff X3DNode))
    (add-object-to-slot self stuff 'containerField))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DComposedGeometryNode (X3DGeometryNode)
+(defclass X3DTexture2DNode (X3DTextureNode)
   (
-    (ccw :initarg :ccw
+    (repeatS :initarg :repeatS
         :initform  "true"
-        :accessor ccw
+        :accessor repeatS
         :documentation "")
-    (colorPerVertex :initarg :colorPerVertex
+    (repeatT :initarg :repeatT
         :initform  "true"
-        :accessor colorPerVertex
-        :documentation "")
-    (normalPerVertex :initarg :normalPerVertex
-        :initform  "true"
-        :accessor normalPerVertex
-        :documentation "")
-    (solid :initarg :solid
-        :initform  "true"
-        :accessor solid
+        :accessor repeatT
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DCoordinateNode (X3DGeometricPropertyNode)
-  (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DGeometryNode (X3DNode)
+(defclass X3DTextureCoordinateNode (X3DGeometricPropertyNode)
   (
     (containerField
         :initform NIL
@@ -84,17 +70,11 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DGeometryNode) (stuff X3DNode))
+(defmethod add-subobject ((self X3DTextureCoordinateNode) (stuff X3DNode))
    (add-object-to-slot self stuff 'containerField))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DGeometricPropertyNode (X3DNode)
-  (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DNormalNode (X3DGeometricPropertyNode)
+(defclass X3DTextureTransformNode (X3DAppearanceChildNode)
   (
     (containerField
         :initform NIL
@@ -104,158 +84,182 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DNormalNode) (stuff X3DNode))
+(defmethod add-subobject ((self X3DTextureTransformNode) (stuff X3DNode))
    (add-object-to-slot self stuff 'containerField))
 
 ;; ----------------------------------------------------------------------------
-(defclass ClipPlane (X3DChildNode)
+(defclass ImageTexture (X3DTexture2DNode)
   (
-    (enabled :initarg :enabled
-        :initform  "true"
-        :accessor enabled
-        :documentation "")
-    (plane :initarg :plane
-        :initform  "0 1 0 0"
-        :accessor plane
+    (url :initarg :url
+        :initform  `()
+        :accessor url
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Color (X3DColorNode)
+(defclass TextureProperties (X3DAppearanceChildNode)
   (
-    (color :initarg :color
+    (anisotropicDegree :initarg :anisotropicDegree
+        :initform  "0"
+        :accessor anisotropicDegree
+        :documentation "")
+    (borderColor :initarg :borderColor
+        :initform  "0 0 0 0"
+        :accessor borderColor
+        :documentation "")
+    (borderWidth :initarg :borderWidth
+        :initform  "0"
+        :accessor borderWidth
+        :documentation "")
+    (boundaryModeS :initarg :boundaryModeS
+        :initform  "REPEAT"
+        :accessor boundaryModeS
+        :documentation "")
+    (boundaryModeT :initarg :boundaryModeT
+        :initform  "REPEAT"
+        :accessor boundaryModeT
+        :documentation "")
+    (boundaryModeR :initarg :boundaryModeR
+        :initform  "REPEAT"
+        :accessor boundaryModeR
+        :documentation "")
+    (magnificationFilter :initarg :magnificationFilter
+        :initform  "FASTEST"
+        :accessor magnificationFilter
+        :documentation "")
+    (minificationFilter :initarg :minificationFilter
+        :initform  "FASTEST"
+        :accessor minificationFilter
+        :documentation "")
+    (textureCompression :initarg :textureCompression
+        :initform  "FASTEST"
+        :accessor textureCompression
+        :documentation "")
+    (texturePriority :initarg :texturePriority
+        :initform  "0"
+        :accessor texturePriority
+        :documentation "")
+    (generateMipMaps :initarg :generateMipMaps
+        :initform  "false"
+        :accessor generateMipMaps
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self TextureProperties) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
+
+;; ----------------------------------------------------------------------------
+(defclass MovieTexture (X3DSoundSourceNode)
+  (
+    (description :initarg :description
         :initform  ""
+        :accessor description
+        :documentation "")
+    (url :initarg :url
+        :initform  `()
+        :accessor url
+        :documentation "")
+    (repeatS :initarg :repeatS
+        :initform  "true"
+        :accessor repeatS
+        :documentation "")
+    (repeatT :initarg :repeatT
+        :initform  "true"
+        :accessor repeatT
+        :documentation "")
+    (speed :initarg :speed
+        :initform  "1.0"
+        :accessor speed
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass MultiTexture (X3DTextureNode)
+  (
+    (alpha :initarg :alpha
+        :initform  "1"
+        :accessor alpha
+        :documentation "")
+    (color :initarg :color
+        :initform  "1 1 1"
         :accessor color
         :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass ColorRGBA (X3DColorNode)
-  (
-    (color :initarg :color
-        :initform  ""
-        :accessor color
+    (function :initarg :function
+        :initform  `()
+        :accessor function
+        :documentation "")
+    (mode :initarg :mode
+        :initform  `()
+        :accessor mode
+        :documentation "")
+    (source :initarg :source
+        :initform  `()
+        :accessor source
+        :documentation "")
+    (transparent :initarg :transparent
+        :initform  "false"
+        :accessor transparent
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Coordinate (X3DCoordinateNode)
+(defclass MultiTextureCoordinate (X3DTextureCoordinateNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass MultiTextureTransform (X3DTextureTransformNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PixelTexture (X3DTexture2DNode)
+  (
+    (image :initarg :image
+        :initform  "0 0 0"
+        :accessor image
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TextureCoordinate (X3DTextureCoordinateNode)
   (
     (point :initarg :point
         :initform  ""
         :accessor point
         :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self Coordinate) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass IndexedLineSet (X3DGeometryNode)
+(defclass TextureCoordinateGenerator (X3DTextureCoordinateNode)
   (
-    (colorPerVertex :initarg :colorPerVertex
-        :initform  "true"
-        :accessor colorPerVertex
+    (mode :initarg :mode
+        :initform  "SPHERE"
+        :accessor mode
         :documentation "")
-    (colorIndex :initarg :colorIndex
+    (parameter :initarg :parameter
         :initform  ""
-        :accessor colorIndex
-        :documentation "")
-    (coordIndex :initarg :coordIndex
-        :initform  ""
-        :accessor coordIndex
+        :accessor parameter
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass IndexedTriangleFanSet (X3DComposedGeometryNode)
+(defclass TextureTransform (X3DTextureTransform2DNode)
   (
-    (index :initarg :index
-        :initform  ""
-        :accessor index
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass IndexedTriangleSet (X3DComposedGeometryNode)
-  (
-    (index :initarg :index
-        :initform  ""
-        :accessor index
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass IndexedTriangleStripSet (X3DComposedGeometryNode)
-  (
-    (index :initarg :index
-        :initform  ""
-        :accessor index
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LineSet (X3DGeometryNode)
-  (
-    (vertexCount :initarg :vertexCount
-        :initform  ""
-        :accessor vertexCount
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Normal (X3DNormalNode)
-  (
-    (vector :initarg :vector
-        :initform  ""
-        :accessor vector
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass PointSet (X3DGeometryNode)
-  (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass TriangleFanSet (X3DComposedGeometryNode)
-  (
-    (fanCount :initarg :fanCount
-        :initform  ""
-        :accessor fanCount
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass TriangleSet (X3DComposedGeometryNode)
-  (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass TriangleStripSet (X3DComposedGeometryNode)
-  (
-    (stripCount :initarg :stripCount
-        :initform  ""
-        :accessor stripCount
-        :documentation "")
   )
   (:documentation ""))
 

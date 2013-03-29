@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; key-device-sensor.lisp --- Definitions of the KEY-DEVICE-SENSOR Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,67 +32,23 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DKeyDeviceSensorNode (X3DSensorNode)
   (
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
+(defclass KeySensor (X3DKeyDeviceSensorNode)
   (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
+(defclass StringSensor (X3DKeyDeviceSensorNode)
   (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
-  (
-    (load :initarg :load
+    (deletionAllowed :initarg :deletionAllowed
         :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
-  (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
+        :accessor deletionAllowed
         :documentation "")
   )
   (:documentation ""))

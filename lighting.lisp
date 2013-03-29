@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; lighting.lisp --- Definitions of the LIGHTING Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,67 +32,93 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DLightNode (X3DChildNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
-  (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
-  (
-    (timeOut :initarg :timeOut
+    (ambientIntensity :initarg :ambientIntensity
         :initform  "0"
-        :accessor timeOut
+        :accessor ambientIntensity
+        :documentation "")
+    (color :initarg :color
+        :initform  "1 1 1"
+        :accessor color
+        :documentation "")
+    (intensity :initarg :intensity
+        :initform  "1"
+        :accessor intensity
+        :documentation "")
+    (on :initarg :on
+        :initform  "true"
+        :accessor on
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass DirectionalLight (X3DLightNode)
+  (
+    (direction :initarg :direction
+        :initform  "0 0 -1"
+        :accessor direction
+        :documentation "")
+    (global :initarg :global
+        :initform  "false"
+        :accessor global
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PointLight (X3DLightNode)
+  (
+    (attenuation :initarg :attenuation
+        :initform  "1 0 0"
+        :accessor attenuation
+        :documentation "")
+    (location :initarg :location
+        :initform  "0 0 0"
+        :accessor location
+        :documentation "")
+    (radius :initarg :radius
+        :initform  "100"
+        :accessor radius
+        :documentation "")
+    (global :initarg :global
+        :initform  "true"
+        :accessor global
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass SpotLight (X3DLightNode)
+  (
+    (attenuation :initarg :attenuation
+        :initform  "1 0 0"
+        :accessor attenuation
+        :documentation "")
+    (beamWidth :initarg :beamWidth
+        :initform  "0.7854"
+        :accessor beamWidth
+        :documentation "")
+    (cutOffAngle :initarg :cutOffAngle
+        :initform  "1.570796"
+        :accessor cutOffAngle
+        :documentation "")
+    (direction :initarg :direction
+        :initform  "0 0 -1"
+        :accessor direction
+        :documentation "")
+    (location :initarg :location
+        :initform  "0 0 0"
+        :accessor location
+        :documentation "")
+    (radius :initarg :radius
+        :initform  "100"
+        :accessor radius
+        :documentation "")
+    (global :initarg :global
+        :initform  "true"
+        :accessor global
         :documentation "")
   )
   (:documentation ""))

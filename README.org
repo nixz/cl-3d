@@ -1,0 +1,91 @@
+#+SEQ_TODO: TODO CURRENT DONE
+
+For now the plan to execute the project in two phases i.e create first
+optimize second. Phase II (optimization) starts midway of Phase I
+(creation) and we will slowly and smoothly transistion to more
+optimized implementation.
+
+* Phase I (Create)
+  All boiler plate code should be generated. Use opengl 1.1 or whateve
+  is fastest to just make things work. This from a user perspective
+  should be reasonably complete with basic rendering and interaction
+  facilities working (non optimized).
+
+  This will be test driven development and the goal will be make the
+  tests work. Our tests are basically X3D scripts taken from the
+  following site.
+
+  http://x3dgraphics.com/examples/X3dForWebAuthors/
+
+** DONE 1. Basic
+*** DONE make XMLisp accessable with asdf
+*** DONE Parse X3d using xmlisp
+*** DONE Implement run method and basic windowing
+**** DONE Implement GLUT windowing mechanism as scene
+** CURRENT 2. GeometricPrimitives
+*** DONE Box.lisp example
+    NOTE: http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
+**** DONE Background class
+**** DONE Viewpoint class
+**** DONE Shape class
+**** DONE Box class
+**** DONE Appearance class
+**** DONE Material class
+**** DONE Implement parsing function for each
+
+*** TODO Cone.lisp
+*** TODO Cyliner.lisp
+*** TODO GeometryPrimitiveNodes.lisp
+*** TODO GeometryPrimitiveNodesWhiteBackground.lisp
+*** TODO Sphere.lisp
+*** TODO Text.lisp
+*** TODO TextLengthMaxExtent.lisp
+*** TODO TextSpecialCharacters.lisp
+
+** TODO 3. Grouping
+** TODO 4. Viewing Navigation
+** TODO 5. Appearence Material Textures
+** TODO 6. Geometry Points Lines and Polygons
+** TODO 7. Event Animation Interpolation
+** TODO 8. Interactivity
+** TODO 9. Event Utilities Scripting
+** TODO 10. Geometry 2D
+** TODO 11. Lighting Environment Effects
+** TODO 12. Environment Sensor Sound
+** TODO 13. Geometry Triangles Quadrilaterals.
+** TODO 14. Prototypes
+** TODO 15. MetaData
+
+* Phase II (Optimize)
+** TODO Use reactive programming / asynchronous programming using cl-async.
+** TODO Implement the basic logic of operation
+** TODO Implement default shader
+*** TODO Add genertic function to initialize Shader and Program
+*** TODO Initialize VAO and VBO
+*** TODO Implement initialization pass
+
+* General notes and ideas
+** DONE Add NOTICE.txt
+** TODO Check if all docmentation has note to NOTICE.txt
+
+Notes:
+
+- It looks like windowing and gl are sort of implementation details and come at
+  lower level.
+- Do we need the concept of a window? Things are going to be full screen anyway
+  so no.
+** DONE Shader object
+** DONE Program object
+** TODO (defuniform) macro
+*** TODO Extend support for Matrix, integer and vector
+** TODO (defattribute) macro
+** TODO Write small sample shader for 3d.
+** TODO Render box example using this sample shader
+** TODO Implement Sphere source
+** TODO Redo molecule application using custom spheres
+** DONE Optionally use SDL example to set opengl context
+** TODO Projection and model view calculations for VR
+** TODO Send inputs form mouse
+** TODO Handle events from gamepad
+** TODO Figure out how to render onto another display
+- Start a common lisp server of that session and let it go

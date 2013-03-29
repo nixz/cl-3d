@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; programmable-shaders.lisp --- Definitions of the PROGRAMMABLE-SHADERS Component in X3D
+;;;; environmental-effects.lisp --- Definitions of the ENVIRONMENTAL-EFFECTS Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,17 +32,45 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DProgrammableShaderObject ()
+(defclass X3DBackgroundNode (X3DBindableNode)
   (
+    (groundAngle :initarg :groundAngle
+        :initform  ""
+        :accessor groundAngle
+        :documentation "")
+    (groundColor :initarg :groundColor
+        :initform  ""
+        :accessor groundColor
+        :documentation "")
+    (skyAngle :initarg :skyAngle
+        :initform  ""
+        :accessor skyAngle
+        :documentation "")
+    (skyColor :initarg :skyColor
+        :initform  "0 0 0"
+        :accessor skyColor
+        :documentation "")
+    (transparency :initarg :transparency
+        :initform  "0"
+        :accessor transparency
+        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DShaderNode (X3DAppearanceChildNode)
+(defclass X3DFogObject (X3DNode)
   (
-    (language :initarg :language
-        :initform  ""
-        :accessor language
+    (color :initarg :color
+        :initform  "1 1 1"
+        :accessor color
+        :documentation "")
+    (fogType :initarg :fogType
+        :initform  "LINEAR"
+        :accessor fogType
+        :documentation "")
+    (visibilityRange :initarg :visibilityRange
+        :initform  "0"
+        :accessor visibilityRange
         :documentation "")
     (containerField
         :initform NIL
@@ -52,148 +80,100 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DShaderNode) (stuff X3DNode))
+(defmethod add-subobject ((self X3DFogObject) (stuff X3DNode))
    (add-object-to-slot self stuff 'containerField))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DVertexAttributeNode (X3DGeometricPropertyNode)
+(defclass Background (X3DBackgroundNode)
   (
-    (name :initarg :name
-        :initform  ""
-        :accessor name
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DVertexAttributeNode) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ComposedShader (X3DProgrammableShaderObject)
-  (
-    (language :initarg :language
-        :initform  ""
-        :accessor language
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ComposedShader) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass FloatVertexAttribute (X3DVertexAttributeNode)
-  (
-    (value :initarg :value
-        :initform  ""
-        :accessor value
-        :documentation "")
-    (numComponents :initarg :numComponents
-        :initform  "4"
-        :accessor numComponents
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Matrix3VertexAttribute (X3DVertexAttributeNode)
-  (
-    (value :initarg :value
-        :initform  ""
-        :accessor value
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Matrix4VertexAttribute (X3DVertexAttributeNode)
-  (
-    (value :initarg :value
-        :initform  ""
-        :accessor value
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass PackagedShader (X3DProgrammableShaderObject)
-  (
-    (language :initarg :language
-        :initform  ""
-        :accessor language
-        :documentation "")
-    (url :initarg :url
+    (backUrl :initarg :backUrl
         :initform  `()
-        :accessor url
+        :accessor backUrl
         :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self PackagedShader) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ProgramShader (X3DShaderNode)
-  (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass ShaderPart (X3DNodeMixedContent)
-  (
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-    (url :initarg :url
+    (bottomUrl :initarg :bottomUrl
         :initform  `()
-        :accessor url
+        :accessor bottomUrl
         :documentation "")
-    (type :initarg :type
-        :initform  ""
-        :accessor type
+    (frontUrl :initarg :frontUrl
+        :initform  `()
+        :accessor frontUrl
+        :documentation "")
+    (leftUrl :initarg :leftUrl
+        :initform  `()
+        :accessor leftUrl
+        :documentation "")
+    (rightUrl :initarg :rightUrl
+        :initform  `()
+        :accessor rightUrl
+        :documentation "")
+    (topUrl :initarg :topUrl
+        :initform  `()
+        :accessor topUrl
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ShaderPart) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
+(defclass Fog (X3DBindableNode)
+  (
+    (color :initarg :color
+        :initform  "1 1 1"
+        :accessor color
+        :documentation "")
+    (fogType :initarg :fogType
+        :initform  "LINEAR"
+        :accessor fogType
+        :documentation "")
+    (visibilityRange :initarg :visibilityRange
+        :initform  "0"
+        :accessor visibilityRange
+        :documentation "")
+  )
+  (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass ShaderProgram (X3DProgrammableShaderObject)
+(defclass FogCoordinate (X3DCoordinateNode)
   (
+    (depth :initarg :depth
+        :initform  ""
+        :accessor depth
+        :documentation "")
     (containerField
         :initform NIL
         :accessor containerField
         :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self FogCoordinate) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
+
+;; ----------------------------------------------------------------------------
+(defclass LocalFog (X3DBindableNode)
+  (
+    (enabled :initarg :enabled
+        :initform  "true"
+        :accessor enabled
         :documentation "")
-    (type :initarg :type
-        :initform  ""
-        :accessor type
+    (color :initarg :color
+        :initform  "1 1 1"
+        :accessor color
+        :documentation "")
+    (fogType :initarg :fogType
+        :initform  "LINEAR"
+        :accessor fogType
+        :documentation "")
+    (visibilityRange :initarg :visibilityRange
+        :initform  "0"
+        :accessor visibilityRange
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ShaderProgram) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
+(defclass TextureBackground (X3DBackgroundNode)
+  (
+  )
+  (:documentation ""))
 

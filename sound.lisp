@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; sound.lisp --- Definitions of the SOUND Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,32 +32,28 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DSoundNode (X3DChildNode)
   (
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
+(defclass X3DSoundSourceNode (X3DTimeDependentNode)
   (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (pitch :initarg :pitch
+        :initform  "1.0"
+        :accessor pitch
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
+(defclass AudioClip (X3DSoundSourceNode)
   (
     (description :initarg :description
         :initform  ""
         :accessor description
         :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
     (url :initarg :url
         :initform  `()
         :accessor url
@@ -66,33 +62,43 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defclass Sound (X3DSoundNode)
   (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
+    (direction :initarg :direction
+        :initform  "0 0 1"
+        :accessor direction
         :documentation "")
-    (bboxCenter :initarg :bboxCenter
+    (intensity :initarg :intensity
+        :initform  "1"
+        :accessor intensity
+        :documentation "")
+    (location :initarg :location
         :initform  "0 0 0"
-        :accessor bboxCenter
+        :accessor location
         :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
+    (maxBack :initarg :maxBack
+        :initform  "10"
+        :accessor maxBack
         :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (maxFront :initarg :maxFront
+        :initform  "10"
+        :accessor maxFront
         :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
-  (
-    (timeOut :initarg :timeOut
+    (minBack :initarg :minBack
+        :initform  "1"
+        :accessor minBack
+        :documentation "")
+    (minFront :initarg :minFront
+        :initform  "1"
+        :accessor minFront
+        :documentation "")
+    (priority :initarg :priority
         :initform  "0"
-        :accessor timeOut
+        :accessor priority
+        :documentation "")
+    (spatialize :initarg :spatialize
+        :initform  "true"
+        :accessor spatialize
         :documentation "")
   )
   (:documentation ""))

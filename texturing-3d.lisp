@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; texturing-3d.lisp --- Definitions of the TEXTURING-3D Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,13 +32,31 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DTexture3DNode (X3DTextureNode)
+  (
+    (repeatS :initarg :repeatS
+        :initform  "false"
+        :accessor repeatS
+        :documentation "")
+    (repeatT :initarg :repeatT
+        :initform  "false"
+        :accessor repeatT
+        :documentation "")
+    (repeatR :initarg :repeatR
+        :initform  "false"
+        :accessor repeatR
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass ComposedTexture3D (X3DTexture3DNode)
   (
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
+(defclass ImageTexture3D (X3DTexture3DNode)
   (
     (url :initarg :url
         :initform  `()
@@ -48,51 +66,63 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
+(defclass PixelTexture3D (X3DTexture3DNode)
   (
-    (description :initarg :description
+    (image :initarg :image
+        :initform  "0 0 0 0"
+        :accessor image
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TextureCoordinate3D (X3DTextureCoordinateNode)
+  (
+    (point :initarg :point
         :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+        :accessor point
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defclass TextureCoordinate4D (X3DTextureCoordinateNode)
   (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
+    (point :initarg :point
+        :initform  ""
+        :accessor point
         :documentation "")
-    (bboxCenter :initarg :bboxCenter
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TextureTransformMatrix3D (X3DTextureTransformNode)
+  (
+    (matrix :initarg :matrix
+        :initform  "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
+        :accessor matrix
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TextureTransform3D (X3DTextureTransformNode)
+  (
+    (center :initarg :center
         :initform  "0 0 0"
-        :accessor bboxCenter
+        :accessor center
         :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
+    (rotation :initarg :rotation
+        :initform  "0 0 1 0"
+        :accessor rotation
         :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (scale :initarg :scale
+        :initform  "1 1 1"
+        :accessor scale
         :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
-  (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
+    (translation :initarg :translation
+        :initform  "0 0 0"
+        :accessor translation
         :documentation "")
   )
   (:documentation ""))

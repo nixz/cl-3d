@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; layout.lisp --- Definitions of the LAYOUT Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,68 +32,106 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DLayoutNode (X3DChildNode)
   (
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
+(defclass Layout (X3DLayoutNode)
   (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (align :initarg :align
+        :initform  `("CENTER" "CENTER")
+        :accessor align
+        :documentation "")
+    (offset :initarg :offset
+        :initform  "0 0"
+        :accessor offset
+        :documentation "")
+    (offsetUnits :initarg :offsetUnits
+        :initform  `("WORLD" "WORLD")
+        :accessor offsetUnits
+        :documentation "")
+    (scaleMode :initarg :scaleMode
+        :initform  `("NONE" "NONE")
+        :accessor scaleMode
+        :documentation "")
+    (size :initarg :size
+        :initform  "1 1"
+        :accessor size
+        :documentation "")
+    (sizeUnits :initarg :sizeUnits
+        :initform  `("WORLD" "WORLD")
+        :accessor sizeUnits
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
+(defclass LayoutGroup (X3DNode)
   (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (containerField
+        :initform NIL
+        :accessor containerField
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defmethod add-subobject ((self LayoutGroup) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
+
+;; ----------------------------------------------------------------------------
+(defclass LayoutLayer (X3DLayerNode)
   (
-    (load :initarg :load
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass ScreenFontStyle (X3DFontStyleNode)
+  (
+    (family :initarg :family
+        :initform  `("SERIF")
+        :accessor family
+        :documentation "")
+    (horizontal :initarg :horizontal
         :initform  "true"
-        :accessor load
+        :accessor horizontal
         :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
+    (justify :initarg :justify
+        :initform  `("BEGIN")
+        :accessor justify
         :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
+    (language :initarg :language
+        :initform  ""
+        :accessor language
         :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (leftToRight :initarg :leftToRight
+        :initform  "true"
+        :accessor leftToRight
+        :documentation "")
+    (pointSize :initarg :pointSize
+        :initform  "12.0"
+        :accessor pointSize
+        :documentation "")
+    (spacing :initarg :spacing
+        :initform  "1.0"
+        :accessor spacing
+        :documentation "")
+    (style :initarg :style
+        :initform  "PLAIN"
+        :accessor style
+        :documentation "")
+    (topToBottom :initarg :topToBottom
+        :initform  "true"
+        :accessor topToBottom
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
+(defclass ScreenGroup (X3DGroupingNode)
   (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
-        :documentation "")
   )
   (:documentation ""))
 

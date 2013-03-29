@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; cad-geometry.lisp --- Definitions of the CAD-GEOMETRY Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,45 +32,79 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DProductStructureChildNode (X3DChildNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
+    (name :initarg :name
         :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+        :accessor name
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defclass CADAssembly (X3DProductStructureChildNode)
   (
-    (load :initarg :load
-        :initform  "true"
-        :accessor load
+    (bboxCenter :initarg :bboxCenter
+        :initform  "0 0 0"
+        :accessor bboxCenter
+        :documentation "")
+    (bboxSize :initarg :bboxSize
+        :initform  "-1 -1 -1"
+        :accessor bboxSize
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass CADFace (X3DProductStructureChildNode)
+  (
+    (bboxCenter :initarg :bboxCenter
+        :initform  "0 0 0"
+        :accessor bboxCenter
+        :documentation "")
+    (bboxSize :initarg :bboxSize
+        :initform  "-1 -1 -1"
+        :accessor bboxSize
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass CADLayer (X3DGroupingNode)
+  (
+    (name :initarg :name
+        :initform  ""
+        :accessor name
+        :documentation "")
+    (visible :initarg :visible
+        :initform  ""
+        :accessor visible
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass CADPart (X3DProductStructureChildNode)
+  (
+    (center :initarg :center
+        :initform  "0 0 0"
+        :accessor center
+        :documentation "")
+    (rotation :initarg :rotation
+        :initform  "0 0 1 0"
+        :accessor rotation
+        :documentation "")
+    (scale :initarg :scale
+        :initform  "1 1 1"
+        :accessor scale
+        :documentation "")
+    (scaleOrientation :initarg :scaleOrientation
+        :initform  "0 0 1 0"
+        :accessor scaleOrientation
+        :documentation "")
+    (translation :initarg :translation
+        :initform  "0 0 0"
+        :accessor translation
         :documentation "")
     (bboxCenter :initarg :bboxCenter
         :initform  "0 0 0"
@@ -80,20 +114,22 @@
         :initform  "-1 -1 -1"
         :accessor bboxSize
         :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass IndexedQuadSet (X3DComposedGeometryNode)
+  (
+    (index :initarg :index
+        :initform  ""
+        :accessor index
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
+(defclass QuadSet (X3DComposedGeometryNode)
   (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
-        :documentation "")
   )
   (:documentation ""))
 

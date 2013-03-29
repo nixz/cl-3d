@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; picking-sensor.lisp --- Definitions of the PICKING-SENSOR Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,68 +32,72 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DPickableObject ()
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (objectType :initarg :objectType
+        :initform  `(ALL)
+        :accessor objectType
         :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
-  (
-    (load :initarg :load
+    (pickable :initarg :pickable
         :initform  "true"
-        :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+        :accessor pickable
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
+(defclass X3DPickSensorNode (X3DSensorNode)
   (
-    (timeOut :initarg :timeOut
-        :initform  "0"
-        :accessor timeOut
+    (objectType :initarg :objectType
+        :initform  `(ALL)
+        :accessor objectType
         :documentation "")
+    (intersectionType :initarg :intersectionType
+        :initform  "BOUNDS"
+        :accessor intersectionType
+        :documentation "")
+    (sortOrder :initarg :sortOrder
+        :initform  "CLOSEST"
+        :accessor sortOrder
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass LinePickSensor (X3DPickSensorNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PickableGroup (X3DGroupingNode)
+  (
+    (objectType :initarg :objectType
+        :initform  `(ALL)
+        :accessor objectType
+        :documentation "")
+    (pickable :initarg :pickable
+        :initform  "true"
+        :accessor pickable
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PointPickSensor (X3DPickSensorNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PrimitivePickSensor (X3DPickSensorNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass VolumePickSensor (X3DPickSensorNode)
+  (
   )
   (:documentation ""))
 

@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; programmable-shaders.lisp --- Definitions of the PROGRAMMABLE-SHADERS Component in X3D
+;;;; follower.lisp --- Definitions of the FOLLOWER Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,168 +32,176 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DProgrammableShaderObject ()
+(defclass X3DChaserNode (X3DFollowerNode)
+  (
+    (duration :initarg :duration
+        :initform  "1"
+        :accessor duration
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass X3DDamperNode (X3DFollowerNode)
+  (
+    (tau :initarg :tau
+        :initform  "0.3"
+        :accessor tau
+        :documentation "")
+    (tolerance :initarg :tolerance
+        :initform  "-1"
+        :accessor tolerance
+        :documentation "")
+    (order :initarg :order
+        :initform  "3"
+        :accessor order
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass X3DFollowerNode (X3DChildNode)
   (
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DShaderNode (X3DAppearanceChildNode)
+(defclass ColorDamper (X3DDamperNode)
   (
-    (language :initarg :language
+    (initialDestination :initarg :initialDestination
+        :initform  "0.8 0.8 0.8"
+        :accessor initialDestination
+        :documentation "")
+    (initialValue :initarg :initialValue
+        :initform  "0.8 0.8 0.8"
+        :accessor initialValue
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass CoordinateDamper (X3DDamperNode)
+  (
+    (initialDestination :initarg :initialDestination
+        :initform  "0 0 0"
+        :accessor initialDestination
+        :documentation "")
+    (initialValue :initarg :initialValue
+        :initform  "0 0 0"
+        :accessor initialValue
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass OrientationDamper (X3DDamperNode)
+  (
+    (initialDestination :initarg :initialDestination
+        :initform  "0 1 0 0"
+        :accessor initialDestination
+        :documentation "")
+    (initialValue :initarg :initialValue
+        :initform  "0 1 0 0"
+        :accessor initialValue
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PositionDamper (X3DDamperNode)
+  (
+    (initialDestination :initarg :initialDestination
+        :initform  "0 0 0"
+        :accessor initialDestination
+        :documentation "")
+    (initialValue :initarg :initialValue
+        :initform  "0 0 0"
+        :accessor initialValue
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass PositionDamper2D (X3DDamperNode)
+  (
+    (initialDestination :initarg :initialDestination
+        :initform  "0 0"
+        :accessor initialDestination
+        :documentation "")
+    (initialValue :initarg :initialValue
+        :initform  "0 0"
+        :accessor initialValue
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TexCoordDamper2D (X3DDamperNode)
+  (
+    (initialDestination :initarg :initialDestination
         :initform  ""
-        :accessor language
+        :accessor initialDestination
         :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DShaderNode) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DVertexAttributeNode (X3DGeometricPropertyNode)
-  (
-    (name :initarg :name
+    (initialValue :initarg :initialValue
         :initform  ""
-        :accessor name
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
+        :accessor initialValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self X3DVertexAttributeNode) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ComposedShader (X3DProgrammableShaderObject)
+(defclass OrientationChaser (X3DChaserNode)
   (
-    (language :initarg :language
-        :initform  ""
-        :accessor language
+    (initialDestination :initarg :initialDestination
+        :initform  "0 1 0 0"
+        :accessor initialDestination
         :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
+    (initialValue :initarg :initialValue
+        :initform  "0 1 0 0"
+        :accessor initialValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ComposedShader) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass FloatVertexAttribute (X3DVertexAttributeNode)
+(defclass PositionChaser (X3DChaserNode)
   (
-    (value :initarg :value
-        :initform  ""
-        :accessor value
+    (initialDestination :initarg :initialDestination
+        :initform  "0 0 0"
+        :accessor initialDestination
         :documentation "")
-    (numComponents :initarg :numComponents
-        :initform  "4"
-        :accessor numComponents
+    (initialValue :initarg :initialValue
+        :initform  "0 0 0"
+        :accessor initialValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Matrix3VertexAttribute (X3DVertexAttributeNode)
+(defclass PositionChaser2D (X3DChaserNode)
   (
-    (value :initarg :value
-        :initform  ""
-        :accessor value
+    (initialDestination :initarg :initialDestination
+        :initform  "0 0"
+        :accessor initialDestination
+        :documentation "")
+    (initialValue :initarg :initialValue
+        :initform  "0 0"
+        :accessor initialValue
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Matrix4VertexAttribute (X3DVertexAttributeNode)
+(defclass ScalarChaser (X3DChaserNode)
   (
-    (value :initarg :value
-        :initform  ""
-        :accessor value
+    (initialDestination :initarg :initialDestination
+        :initform  "0"
+        :accessor initialDestination
+        :documentation "")
+    (initialValue :initarg :initialValue
+        :initform  "0"
+        :accessor initialValue
         :documentation "")
   )
   (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass PackagedShader (X3DProgrammableShaderObject)
-  (
-    (language :initarg :language
-        :initform  ""
-        :accessor language
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self PackagedShader) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ProgramShader (X3DShaderNode)
-  (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass ShaderPart (X3DNodeMixedContent)
-  (
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-    (type :initarg :type
-        :initform  ""
-        :accessor type
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ShaderPart) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
-
-;; ----------------------------------------------------------------------------
-(defclass ShaderProgram (X3DProgrammableShaderObject)
-  (
-    (containerField
-        :initform NIL
-        :accessor containerField
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-    (type :initarg :type
-        :initform  ""
-        :accessor type
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self ShaderProgram) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
 

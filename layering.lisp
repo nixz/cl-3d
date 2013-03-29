@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;; layering.lisp --- Definitions of the LAYERING Component in X3D
 ;;;;
 ;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -32,67 +32,63 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DNetworkSensorNode (X3DSensorNode)
+(defclass X3DLayerNode (X3DNode)
   (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass X3DUrlObject ()
-  (
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Anchor (X3DGroupingNode)
-  (
-    (description :initarg :description
-        :initform  ""
-        :accessor description
-        :documentation "")
-    (parameter :initarg :parameter
-        :initform  `()
-        :accessor parameter
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
-        :documentation "")
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
-  (
-    (load :initarg :load
+    (isPickable :initarg :isPickable
         :initform  "true"
-        :accessor load
+        :accessor isPickable
         :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
-    (url :initarg :url
-        :initform  `()
-        :accessor url
+    (containerField
+        :initform NIL
+        :accessor containerField
         :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass LoadSensor (X3DNetworkSensorNode)
+(defmethod add-subobject ((self X3DLayerNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
+
+;; ----------------------------------------------------------------------------
+(defclass X3DViewportNode (X3DGroupingNode)
   (
-    (timeOut :initarg :timeOut
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass Layer (X3DLayerNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass LayerSet (X3DNode)
+  (
+    (activeLayer :initarg :activeLayer
         :initform  "0"
-        :accessor timeOut
+        :accessor activeLayer
+        :documentation "")
+    (order :initarg :order
+        :initform  "0"
+        :accessor order
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self LayerSet) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
+
+;; ----------------------------------------------------------------------------
+(defclass Viewport (X3DViewportNode)
+  (
+    (clipBoundary :initarg :clipBoundary
+        :initform  "0 1 0 1"
+        :accessor clipBoundary
         :documentation "")
   )
   (:documentation ""))
