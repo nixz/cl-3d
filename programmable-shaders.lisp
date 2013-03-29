@@ -1,9 +1,8 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; programmable-shaders.lisp --- Implementation of ISO/IEC 19775-1:2008:
-;;;;                              31. Programmable Shaders Component
+;;;; programmable-shaders.lisp --- Definitions of the PROGRAMMABLE-SHADERS Component in X3D
 ;;;;
-;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
+;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
 ;;;;
 ;;;; Redistribution and use in source and binary forms, with or without
@@ -31,219 +30,170 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
-
 (in-package #:cl-3d)
+;; ----------------------------------------------------------------------------
+(defclass X3DProgrammableShaderObject ()
+  (
+  )
+  (:documentation ""))
 
-;; -----------------------------------------------------------------------class
-(defclass  x3d-programmable-shader-object ()
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass X3DShaderNode (X3DAppearanceChildNode)
+  (
+    (language :initarg :language
+        :initform  ""
+        :accessor language
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-31.3.1 X3DProgrammableShaderObject
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DShaderNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-X3DProgrammableShaderObject {
-}
+;; ----------------------------------------------------------------------------
+(defclass X3DVertexAttributeNode (X3DGeometricPropertyNode)
+  (
+    (name :initarg :name
+        :initform  ""
+        :accessor name
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-This abstract node type is the base type for all node types that specify
-arbitrary fields for interfacing with per-object attribute values.
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DVertexAttributeNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-A concrete X3DProgrammableShaderObject node instance is used to program
-behaviour for a shader in a scene. The shader is able to receive and process
-events that are sent to it. Each event that can be received shall be declared in
-the shader node using the same field syntax as is used in a prototype
-definition:
+;; ----------------------------------------------------------------------------
+(defclass ComposedShader (X3DProgrammableShaderObject)
+  (
+    (language :initarg :language
+        :initform  ""
+        :accessor language
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-inputOnly type name
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self ComposedShader) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-The type can be any of the standard X3D fields (as defined in 5 Field type
-reference). The name shall be an identifier that is unique for this shader node
-and is used to map the value to the shader program's uniform variable of the
-same name. If a shader program does not have a matching uniform variable, the
-field value is ignored.
+;; ----------------------------------------------------------------------------
+(defclass FloatVertexAttribute (X3DVertexAttributeNode)
+  (
+    (value :initarg :value
+        :initform  ""
+        :accessor value
+        :documentation "")
+    (numComponents :initarg :numComponents
+        :initform  "4"
+        :accessor numComponents
+        :documentation "")
+  )
+  (:documentation ""))
 
-OutputOnly fields are not required to generate output events from a
-shader. Current hardware shader technology does not support this capability,
-though future versions may.
+;; ----------------------------------------------------------------------------
+(defclass Matrix3VertexAttribute (X3DVertexAttributeNode)
+  (
+    (value :initarg :value
+        :initform  ""
+        :accessor value
+        :documentation "")
+  )
+  (:documentation ""))
 
-It is recommended that user-defined field or event names defined in shader nodes
-follow the naming conventions described in Part 2 of ISO/IEC 19775.
-"))
+;; ----------------------------------------------------------------------------
+(defclass Matrix4VertexAttribute (X3DVertexAttributeNode)
+  (
+    (value :initarg :value
+        :initform  ""
+        :accessor value
+        :documentation "")
+  )
+  (:documentation ""))
 
-;; -----------------------------------------------------------------------class
-(defclass  x3d-shader-node (x3d-appearance-child-node)
-  ((acivate :initarg :acivate
-         :initform nil
-         ;; :accessor acivate
-         :writer set-acivate
-         :allocation :instance
-         :documentation "")
-   (is-selected :initarg :is-selected
-         :initform nil
-         ;; :accessor is-selected
-         :reader is-selected-changed
-         ;; :writer set-is-selected
-         ;; :type
-         :allocation :instance
-         :documentation "")
-   (is-valid :initarg :is-valid
-         :initform (error ":is-valid must be specified")
-         ;; :accessor is-valid
-         :reader is-valid-changed
-         ;; :writer set-is-valid
-         ;; :type
-         :allocation :instance
-         :documentation "")
-   (language :initarg :language
-         :initform ""
-         ;; :accessor language
-         :reader language-changed
-         :writer set-language
-         ;; :type
-         :allocation :instance
-         :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass PackagedShader (X3DProgrammableShaderObject)
+  (
+    (language :initarg :language
+        :initform  ""
+        :accessor language
+        :documentation "")
+    (url :initarg :url
+        :initform  `()
+        :accessor url
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-31.3.2 X3DShaderNode
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self PackagedShader) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-X3DShaderNode : X3DAppearanceChildNode {
-  SFBool   [in]     activate
-  SFNode   [in,out] metadata   NULL [X3DMetadataObject]
-  SFBool   [out]    isSelected
-  SFBool   [out]    isValid
-  SFString []       language   \"\"   [\"CG\"|\"GLSL\"|\"HLSL\"|...]
-}
+;; ----------------------------------------------------------------------------
+(defclass ProgramShader (X3DShaderNode)
+  (
+  )
+  (:documentation ""))
 
-This abstract node type is the base type for all node types that specify a
-programmable shader.
+;; ----------------------------------------------------------------------------
+(defclass ShaderPart (X3DNodeMixedContent)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+    (url :initarg :url
+        :initform  `()
+        :accessor url
+        :documentation "")
+    (type :initarg :type
+        :initform  ""
+        :accessor type
+        :documentation "")
+  )
+  (:documentation ""))
 
-The isSelected output field is used to indicate that this shader instance is the
-one selected for use by the browser. A TRUE value indicates that this instance
-is in use. A FALSE value indicates that this instance is not in use. The rules
-for when a browser decides to select a particular node instance are described in
-31.2.2.3 Selecting an appropriate shader.
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self ShaderPart) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-The isValid field is used to indicate whether the current shader objects can be
-run as a shader program.
+;; ----------------------------------------------------------------------------
+(defclass ShaderProgram (X3DProgrammableShaderObject)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+    (url :initarg :url
+        :initform  `()
+        :accessor url
+        :documentation "")
+    (type :initarg :type
+        :initform  ""
+        :accessor type
+        :documentation "")
+  )
+  (:documentation ""))
 
-EXAMPLE There are no syntax errors and the hardware can support all the required
-features.
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self ShaderProgram) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-The definition of this field may also add additional semantics on a per-language
-basis.
-
-The language field is used to indicate to the browser which shading language is
-used for the source file(s). This field may be used as a hint for the browser if
-the shading language is not immediately determinable from the source (e.g., a
-generic MIME type of text/plain is returned). A browser may use this field for
-determining which node instance will be selected and to ignore languages that it
-is not capable of supporting. Three basic language types are defined for this
-specification and others may be optionally supported by a browser.
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  x3d-vertex-attribute-node (x3d-geometric-property-node)
-  ((name :initarg :name
-         :initform ""
-         ;; :accessor name
-         :reader name-changed
-         :writer set-name
-         ;; :type
-         :allocation :instance
-         :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-31.3.3 X3DVertexAttributeNode
-
-X3DVertexAttributeNode : X3DGeometricPropertyNode {
-  SFNode   [in,out] metadata NULL [X3DMetadataObject]
-  SFString []       name     \"\"
-}
-
-This abstract node type is the base type for all node types that specify
-per-vertex attribute information to the shader.
-
-The name field describes a name that is mapped to the shading language-specific
-name for describing per-vertex data. The appropriate shader language annex (see
-Table 31.2) annex contains language-specific binding information.
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  composed-shader (x3d-shader-node x3d-programmable-shader-object)
-  ((parts :initarg :parts
-         :initform ()
-         ;; :accessor parts
-         :reader parts-changed
-         :writer set-parts
-         ;; :type
-         :allocation :instance
-         :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-31.4.1 ComposedShader
-
-ComposedShader : X3DShaderNode, X3DProgrammableShaderObject {
-  SFBool    [in]     activate
-  SFNode    [in,out] metadata   NULL [X3DMetadataObject]
-  MFNode    [in,out] parts      []   [ShaderPart]
-  SFBool    [out]    isSelected
-  SFBool    [out]    isValid
-  SFString  []       language   \"\"
-
-  # And any number of:
-  fieldType []       fieldName
-  fieldType [in]     fieldName
-  fieldType [out]    fieldName
-  fieldType [in,out] fieldName
-}
-
-The ComposedShader node defines a shader where the individual source files are
-not individually programmable. All access to the shading capabilities is defined
-through a single interface that applies to all parts.
-
-EXAMPLE  OpenGL Shading Language (GLSL)
-
-The isValid field adds an additional semantic indicating whether the current
-shader parts can be linked together to form a complete valid shader program.
-
-The activate field forces the shader to activate the contained objects. The
-conditions under which a activate may be required are described in I.5 Event
-model.
-"))
-
-
-(defclass shader-part (x3d-node x3d-url-object)
-  ((type :initarg :type
-         :initform "VERTEX"
-         ;; :accessor type
-         :reader type-changed
-         :writer set-type
-         ;; :type
-         :allocation :instance
-         :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-31.4.7 ShaderPart
-
-ShaderPart : X3DNode, X3DUrlObject {
-  SFNode   [in,out] metadata NULL       [X3DMetadataObject]
-  MFString [in,out] url      []         [URI]
-  SFString []       type     \"VERTEX\"   [\"VERTEX\"|\"FRAGMENT\"]
-}
-
-The ShaderPart node defines the source for a single object to be used by a
-ComposedShader node. The source is not required to be a complete shader for all
-of the vertex/fragment processing.
-
-The type field indicates whether this object shall be compiled as a vertex
-shader, fragment shader, or other future-defined shader type.
-
-The shader source is read from the URL specified by the url field. When the url
-field contains no values ([]), this object instance is ignored. The url field is
-defined in 9.2.1 URLs. Shader source files shall be plain text encoded as
-specified for MIME type text/plain and interpreted according to the type field.
-"))

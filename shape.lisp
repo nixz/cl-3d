@@ -1,9 +1,8 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; shape.lisp ---  Implementation of ISO/IEC 19775-1:2008:
-;;;;                 12. Shape Component.
+;;;; shape.lisp --- Definitions of the SHAPE Component in X3D
 ;;;;
-;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
+;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
 ;;;;
 ;;;; Redistribution and use in source and binary forms, with or without
@@ -32,299 +31,207 @@
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
 (in-package #:cl-3d)
+;; ----------------------------------------------------------------------------
+(defclass X3DAppearanceNode (X3DNode)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-;; -----------------------------------------------------------------------class
-(defclass  x3d-appearance-child-node (x3d-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DAppearanceNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-12.3.1 X3DAppearanceChildNode
+;; ----------------------------------------------------------------------------
+(defclass X3DAppearanceChildNode (X3DNode)
+  (
+  )
+  (:documentation ""))
 
-X3DAppearanceChildNode : X3DNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
+;; ----------------------------------------------------------------------------
+(defclass X3DMaterialNode (X3DAppearanceChildNode)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-This is the base node type for the child nodes of the X3DAppearanceNode type.
-"))
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DMaterialNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-;; -----------------------------------------------------------------------class
-(defclass  x3d-appearance-node (x3d-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass X3DShapeNode (X3DChildNode)
+  (
+    (bboxCenter :initarg :bboxCenter
+        :initform  "0 0 0"
+        :accessor bboxCenter
+        :documentation "")
+    (bboxSize :initarg :bboxSize
+        :initform  "-1 -1 -1"
+        :accessor bboxSize
+        :documentation "")
+  )
+  (:documentation ""))
 
-12.3.2 X3DAppearanceNode
+;; ----------------------------------------------------------------------------
+(defclass Appearance (X3DAppearanceNode)
+  (
+  )
+  (:documentation ""))
 
-X3DAppearanceNode : X3DNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
+;; ----------------------------------------------------------------------------
+(defclass FillProperties (X3DAppearanceChildNode)
+  (
+    (filled :initarg :filled
+        :initform  "true"
+        :accessor filled
+        :documentation "")
+    (hatched :initarg :hatched
+        :initform  "true"
+        :accessor hatched
+        :documentation "")
+    (hatchStyle :initarg :hatchStyle
+        :initform  "1"
+        :accessor hatchStyle
+        :documentation "")
+    (hatchColor :initarg :hatchColor
+        :initform  "1 1 1"
+        :accessor hatchColor
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-This is the base node type for all Appearance nodes.
-"))
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self FillProperties) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-;; -----------------------------------------------------------------------class
-(defclass  x3d-material-node (x3d-appearance-child-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass LineProperties (X3DAppearanceChildNode)
+  (
+    (applied :initarg :applied
+        :initform  "true"
+        :accessor applied
+        :documentation "")
+    (linetype :initarg :linetype
+        :initform  "1"
+        :accessor linetype
+        :documentation "")
+    (linewidthScaleFactor :initarg :linewidthScaleFactor
+        :initform  "0"
+        :accessor linewidthScaleFactor
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-12.3.3 X3DMaterialNode
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self LineProperties) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-X3DMaterialNode : X3DAppearanceChildNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
+;; ----------------------------------------------------------------------------
+(defclass Material (X3DMaterialNode)
+  (
+    (ambientIntensity :initarg :ambientIntensity
+        :initform  "0.2"
+        :accessor ambientIntensity
+        :documentation "")
+    (diffuseColor :initarg :diffuseColor
+        :initform  "0.8 0.8 0.8"
+        :accessor diffuseColor
+        :documentation "")
+    (emissiveColor :initarg :emissiveColor
+        :initform  "0 0 0"
+        :accessor emissiveColor
+        :documentation "")
+    (shininess :initarg :shininess
+        :initform  "0.2"
+        :accessor shininess
+        :documentation "")
+    (specularColor :initarg :specularColor
+        :initform  "0 0 0"
+        :accessor specularColor
+        :documentation "")
+    (transparency :initarg :transparency
+        :initform  "0"
+        :accessor transparency
+        :documentation "")
+  )
+  (:documentation ""))
 
-This is the base node type for all Material nodes.
-"))
+;; ----------------------------------------------------------------------------
+(defclass TwoSidedMaterial (X3DMaterialNode)
+  (
+    (ambientIntensity :initarg :ambientIntensity
+        :initform  "0.2"
+        :accessor ambientIntensity
+        :documentation "")
+    (backAmbientIntensity :initarg :backAmbientIntensity
+        :initform  "0.2"
+        :accessor backAmbientIntensity
+        :documentation "")
+    (diffuseColor :initarg :diffuseColor
+        :initform  "0.8 0.8 0.8"
+        :accessor diffuseColor
+        :documentation "")
+    (backDiffuseColor :initarg :backDiffuseColor
+        :initform  "0.8 0.8 0.8"
+        :accessor backDiffuseColor
+        :documentation "")
+    (emissiveColor :initarg :emissiveColor
+        :initform  "0 0 0"
+        :accessor emissiveColor
+        :documentation "")
+    (backEmissiveColor :initarg :backEmissiveColor
+        :initform  "0 0 0"
+        :accessor backEmissiveColor
+        :documentation "")
+    (shininess :initarg :shininess
+        :initform  "0.2"
+        :accessor shininess
+        :documentation "")
+    (backShininess :initarg :backShininess
+        :initform  "0.2"
+        :accessor backShininess
+        :documentation "")
+    (specularColor :initarg :specularColor
+        :initform  "0 0 0"
+        :accessor specularColor
+        :documentation "")
+    (backSpecularColor :initarg :backSpecularColor
+        :initform  "0 0 0"
+        :accessor backSpecularColor
+        :documentation "")
+    (transparency :initarg :transparency
+        :initform  "0"
+        :accessor transparency
+        :documentation "")
+    (backTransparency :initarg :backTransparency
+        :initform  "0"
+        :accessor backTransparency
+        :documentation "")
+    (separateBackColor :initarg :separateBackColor
+        :initform  "false"
+        :accessor separateBackColor
+        :documentation "")
+  )
+  (:documentation ""))
 
-;; -----------------------------------------------------------------------class
-(defclass  x3d-shape-node (x3d-child-node x3d-bounded-object)
-  ((appearance :initarg :appearance
-               :initform nil
-               :reader appearance-changed
-               :writer set-appearance
-               :type sf-node
-               :allocation :instance
-               :documentation "")
-   (geometry :initarg :geometry
-             :initform nil
-             :reader geometry-changed
-             :writer set-geometry
-             :type sf-node
-             :allocation :instance
-             :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass Shape (X3DShapeNode)
+  (
+  )
+  (:documentation ""))
 
-12.3.4 X3DShapeNode
-
-X3DShapeNode : X3DChildNode, X3DBoundedObject {
-  SFNode  [in,out] appearance NULL     [X3DAppearanceNode]
-  SFNode  [in,out] geometry   NULL     [X3DGeometryNode]
-  SFNode  [in,out] metadata   NULL     [X3DMetadataObject]
-  SFVec3f []       bboxCenter 0 0 0    (-∞,∞)
-  SFVec3f []       bboxSize   -1 -1 -1 [0,∞) or −1 −1 −1
-}
-
-This is the base node type for all Shape nodes.
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  appearance (x3d-appearance-node)
-  ((fill-properties :initarg :fill-properties
-                    :initform nil
-                    :reader fill-properties-changed
-                    :writer set-fill-properties
-                    :type sf-node
-                    :allocation :instance
-                    :documentation "")
-   (line-properties :initarg :line-properties
-                    :initform nil
-                    :reader line-properties-changed
-                    :writer set-line-properties
-                    :type sf-node
-                    :allocation :instance
-                    :documentation "")
-   (material :initarg :material
-             :initform nil
-             :reader material-changed
-             :writer set-material
-             :type sf-node
-             :allocation :instance
-             :documentation "")
-   (shaders :initarg :shaders
-            :initform ()
-            :reader shaders-changed
-            :writer set-shaders
-            :type mf-node
-            :allocation :instance
-            :documentation "")
-   (texture :initarg :texture
-            :initform nil
-            :reader texture-changed
-            :writer set-texture
-            :type sf-node
-            :allocation :instance
-            :documentation "")
-   (texture-transform :initarg :texture-transform
-                      :initform nil
-                      :reader texture-transform-changed
-                      :writer set-texture-transform
-                      :type sf-node
-                      :allocation :instance
-                      :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-12.4.1 Appearance
-
-Appearance : X3DAppearanceNode {
-  SFNode [in,out] fillProperties   NULL [FillProperties]
-  SFNode [in,out] lineProperties   NULL [LineProperties]
-  SFNode [in,out] material         NULL [X3DMaterialNode]
-  SFNode [in,out] metadata         NULL [X3DMetadataObject]
-  MFNode [in,out] shaders          []   [X3DShaderNode]
-  SFNode [in,out] texture          NULL [X3DTextureNode]
-  SFNode [in,out] textureTransform NULL [X3DTextureTransformNode]
-}
-
-The Appearance node specifies the visual properties of geometry. The value for
-each of the fields in this node may be NULL. However, if the field is non-NULL,
-it shall contain one node of the appropriate type.
-
-The material field, if specified, shall contain a Material node. If the material
-field is NULL or unspecified, lighting is off (all lights are ignored during
-rendering of the object that references this Appearance) and the unlit object
-colour is (1, 1, 1). Details of the X3D lighting model are in 17 Lighting
-component.
-
-The texture field, if specified, shall contain one of the various types of
-texture nodes (see 18 Texturing component). If the texture node is NULL or the
-texture field is unspecified, the object that references this Appearance is not
-textured.
-
-The textureTransform field, if specified, shall contain a TextureTransform node
-as defined in 18.4.8 TextureTransform. If the textureTransform is NULL or
-unspecified, the textureTransform field has no effect.
-
-The lineProperties field, if specified, shall contain a LineProperties node as
-specified in 12.4.3 LineProperties. If lineProperties is NULL or unspecified,
-the lineProperties field has no effect.
-
-The fillProperties field, if specified, shall contain a FillProperties node as
-specified in 12.4.2 FillProperties. If fillProperties is NULL or unspecified,
-the fillProperties field has no effect.
-
-The shaders field contains a listing, in order of preference, of nodes that
-describe programmable shaders that replace the fixed rendering requirements of
-this part of ISO/IEC 19775 with user-provided functionality. If the field is not
-empty, one shader node is selected and the fixed rendering requirements defined
-by this specification are ignored. The field shall contain one of the various
-types of shader nodes as specified in 31 Programmable shaders component.
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  material (x3d-material-node)
-  ((ambient-intensity :initarg :ambient-intensity
-         :initform 0.2
-         :accessor ambient-intensity
-         :type sf-float
-         :allocation :instance
-         :documentation "")
-   (diffuse-color :initarg :diffuse-color
-         :initform (sf-color 0.8 0.8 0.8)
-         :accessor diffuse-color
-         :type sf-color
-         :allocation :instance
-         :documentation "")
-   (emissive-color :initarg :emissive-color
-         :initform (sf-color 0 0 0)
-         :accessor emissive-color
-         :type sf-color
-         :allocation :instance
-         :documentation "")
-   (shininess :initarg :shininess
-         :initform 0.2
-         :accessor shininess
-         :type sf-float
-         :allocation :instance
-         :documentation "")
-   (specular-color  :initarg :specular-color
-         :initform (sf-color 0 0 0)
-         :accessor specular-color
-         :type sf-color
-         :allocation :instance
-         :documentation "")
-   (transparency :initarg :transparency
-         :initform 0
-         :accessor transparency
-         :type sf-float
-         :allocation :instance
-         :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-12.4.4 Material
-
-Material : X3DMaterialNode {
-  SFFloat [in,out] ambientIntensity 0.2         [0,1]
-  SFColor [in,out] diffuseColor     0.8 0.8 0.8 [0,1]
-  SFColor [in,out] emissiveColor    0 0 0       [0,1]
-  SFNode  [in,out] metadata         NULL        [X3DMetadataObject]
-  SFFloat [in,out] shininess        0.2         [0,1]
-  SFColor [in,out] specularColor    0 0 0       [0,1]
-  SFFloat [in,out] transparency     0           [0,1]
-}
-
-The Material node specifies surface material properties for associated geometry
-nodes and is used by the X3D lighting equations during rendering. 17 Lighting
-component contains a detailed description of the X3D lighting model equations.
-
-All of the fields in the Material node range from 0.0 to 1.0.
-
-The fields in the Material node determine how light reflects off an object to
-create colour:
-
-a. The ambientIntensity field specifies how much ambient light from light
-   sources this surface shall reflect. Ambient light is omnidirectional and
-   depends only on the number of light sources, not their positions with respect
-   to the surface. Ambient colour is calculated as ambientIntensity ×
-   diffuseColor.
-
-b. The diffuseColor field reflects all X3D light sources depending on the angle
-   of the surface with respect to the light source. The more directly the
-   surface faces the light, the more diffuse light reflects.
-
-c. The emissiveColor field models \"glowing\" objects. This can be useful for
-   displaying pre-lit models (where the light energy of the room is computed
-   explicitly), or for displaying scientific data.
-
-d. The specularColor and shininess fields determine the specular
-   highlights (e.g., the shiny spots on an apple). When the angle from the light
-   to the surface is close to the angle from the surface to the viewer, the
-   specularColor is added to the diffuse and ambient colour calculations. Lower
-   shininess values produce soft glows, while higher values result in sharper,
-   smaller highlights.
-
-e. The transparency field specifies how \"clear\" an object is, with 1.0 being
-   completely transparent, and 0.0 completely opaque.
-"))
-
-
-;; -----------------------------------------------------------------------class
-(defclass  shape (x3d-shape-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-12.4.5 Shape
-
-Shape : X3DShapeNode {
-  SFNode  [in,out] appearance NULL     [X3DAppearanceNode]
-  SFNode  [in,out] geometry   NULL     [X3DGeometryNode]
-  SFNode  [in,out] metadata   NULL     [X3DMetadataObject]
-  SFVec3f []       bboxCenter 0 0 0    (-∞,∞)
-  SFVec3f []       bboxSize   -1 -1 -1 [0,∞) or −1 −1 −1
-}
-
-The Shape node has two fields, appearance and geometry, that are used to create
-rendered objects in the world. The appearance field contains an Appearance node
-that specifies the visual attributes (e.g., material and texture) to be applied
-to the geometry. The geometry field contains a geometry node. The specified
-geometry node is rendered with the specified appearance nodes applied. See 12.2
-Concepts for more information.
-
-17 Lighting component contains details of the X3D lighting model and the
-interaction between Appearance nodes and geometry nodes.
-
-If the geometry field is NULL, the object is not drawn.
-
-The bboxCenter and bboxSize fields specify a bounding box that encloses the
-Shape node's geometry. This is a hint that may be used for optimization
-purposes. The results are undefined if the specified bounding box is smaller
-than the actual bounding box of the geometry at any time. A default bboxSize
-value, (-1, -1, -1), implies that the bounding box is not specified and, if
-needed, is calculated by the browser. A description of the bboxCenter and
-bboxSize fields is contained in 10.2.2 Bounding boxes.
-"))

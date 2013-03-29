@@ -1,9 +1,8 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; rendering.lisp --- Implementation of ISO/IEC 19775-1:2008:
-;;;;                    11. Rendering Component.
+;;;; rendering.lisp --- Definitions of the RENDERING Component in X3D
 ;;;;
-;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
+;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
 ;;;;
 ;;;; Redistribution and use in source and binary forms, with or without
@@ -32,254 +31,231 @@
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
 (in-package #:cl-3d)
-
-;; -----------------------------------------------------------------------class
-(defclass  x3d-geometric-property-node (x3d-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-11.3.4 X3DGeometricPropertyNode
-
-X3DGeometricPropertyNode : X3DNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
-
-This is the base node type for all geometric property node types defined in X3D
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  x3d-geometry-node (x3d-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-11.3.5 X3DGeometryNode
-
-X3DGeometryNode : X3DNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
-
-This is the base node type for all geometry in X3D.
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  x3d-normal-node (x3d-geometric-property-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-11.3.6 X3DNormalNode
-
-X3DNormalNode : X3DGeometricPropertyNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
-
-This is the base node type for all normal node types in X3D. All normals are
-specified in nodes derived from this abstract node type.
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  x3d-color-node (x3d-geometric-property-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
-
-11.3.1 X3DColorNode
-
-X3DColorNode : X3DGeometricPropertyNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
-
-This is the base node type for color specifications in X3D.
-"))
-
-;; -----------------------------------------------------------------------class
-(defclass  x3d-composed-geometry-node (x3d-geometry-node)
-  ((attrib :initarg :attrib
-           :initform (error ":attrib must be specified")
-           :accessor attrib
-           :type mf-node
-           :allocation :instance
-           :documentation "")
-   (color :initarg :color
-          :initform (error ":color must be specified")
-          ;; :accessor color
-          :type sf-node
-          :allocation :instance
-          :documentation "")
-   (coord :initarg :coord
-          :initform (error ":coord must be specified")
-          :accessor coord
-          :type sf-node
-          :allocation :instance
-          :documentation "")
-   (fog-coord :initarg :fog-coord
-              :initform (error ":fog-coord must be specified")
-              ;; :accessor fog-coord
-              :type sf-node
-              :allocation :instance
-              :documentation "")
-   (normal :initarg :normal
-           :initform (error ":normal must be specified")
-           :reader normal=>>
-           :writer =>>normal
-           :type sf-node
-           :allocation :instance
-           :documentation "")
-   (tex-coord :initarg :tex-coord
-              :initform (error ":tex-coord must be specified")
-              :reader tex-coord-changed
-              :writer set-tex-coord
-              ;; :accessor tex-coord
-              :type sf-node
-              :allocation :instance
-              :documentation "")
-   (ccw :initarg :ccw
-        :initform (error ":ccw must be specified")
-        :accessor ccw
-        :type sf-bool
-        :allocation :instance
+;; ----------------------------------------------------------------------------
+(defclass X3DColorNode (X3DGeometricPropertyNode)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
         :documentation "")
-   (color-per-vertex :initarg :color-per-vertex
-                     :initform (error ":color-per-vertex must be specified")
-                     :accessor color-per-vertex
-                     :type sf-bool
-                     :allocation :instance
-                     :documentation "")
-   (normal-per-vertex :initarg :normal-per-vertex
-                      :initform (error ":normal-per-vertex must be specified")
-                      :accessor normal-per-vertex
-                      :type sf-bool
-                      :allocation :instance
-                      :documentation "")
-   (solid :initarg :solid
-          :initform (error ":solid must be specified")
-          :accessor solid
-          :type sf-bool
-          :allocation :instance
-          :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+  )
+  (:documentation ""))
 
-11.3.2 X3DComposedGeometryNode
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DColorNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-X3DComposedGeometryNode : X3DGeometryNode {
-  MFNode [in,out] attrib          []   [X3DVertexAttributeNode]
-  SFNode [in,out] color           NULL [X3DColorObject]
-  SFNode [in,out] coord           NULL [X3DCoordinateNode]
-  SFNode [in,out] fogCoord        []   [FogCoordinate]
-  SFNode [in,out] metadata        NULL [X3DMetadataObject]
-  SFNode [in,out] normal          NULL [X3DNormalNode]
-  SFNode [in,out] texCoord        NULL [X3DTextureCoordinateNode]
-  SFBool []       ccw             TRUE
-  SFBool []       colorPerVertex  TRUE
-  SFBool []       normalPerVertex TRUE
-  SFBool []       solid           TRUE
-}
+;; ----------------------------------------------------------------------------
+(defclass X3DComposedGeometryNode (X3DGeometryNode)
+  (
+    (ccw :initarg :ccw
+        :initform  "true"
+        :accessor ccw
+        :documentation "")
+    (colorPerVertex :initarg :colorPerVertex
+        :initform  "true"
+        :accessor colorPerVertex
+        :documentation "")
+    (normalPerVertex :initarg :normalPerVertex
+        :initform  "true"
+        :accessor normalPerVertex
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "true"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
 
-This is the base node type for all composed 3D geometry in X3D.
+;; ----------------------------------------------------------------------------
+(defclass X3DCoordinateNode (X3DGeometricPropertyNode)
+  (
+  )
+  (:documentation ""))
 
-A composed geometry node type defines an abstract type that composes geometry
-from a set of nodes that define individual components. Composed geometry may
-have color, coordinates, normal and texture coordinates supplied. The rendered
-output of the combination of these is dependent on the concrete node
-definition. However, in general, the following rules shall be applied for all
-nodes:
+;; ----------------------------------------------------------------------------
+(defclass X3DGeometryNode (X3DNode)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-- If the color field is not NULL, it shall contain an X3DColorNode node whose
-  colours are applied to the vertices or faces of the X3DComposedGeometryNode as
-  follows:
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DGeometryNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-- If colorPerVertex is FALSE, colours are applied to each face. If
-  colorPerVertex is true, colours are applied to each vertex.
+;; ----------------------------------------------------------------------------
+(defclass X3DGeometricPropertyNode (X3DNode)
+  (
+  )
+  (:documentation ""))
 
-- If the color field is NULL, the geometry shall be rendered normally using the
-  Material and texture defined in the Appearance node (see 12.2.2 Appearance
-  node for details).
+;; ----------------------------------------------------------------------------
+(defclass X3DNormalNode (X3DGeometricPropertyNode)
+  (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-- If normalPerVertex is FALSE, colours are applied to each face. If
-  normalPerVertex is true, colours are applied to each vertex.
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self X3DNormalNode) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-- If the normal field is not NULL, it shall contain a Normal node whose normals
-  are applied to the vertices or faces of the X3DComposedGeometryNode in a
-  manner exactly equivalent to that described above for applying colours to
-  vertices/faces (where normalPerVertex corresponds to colorPerVertex and
-  normalIndex corresponds to colorIndex).
+;; ----------------------------------------------------------------------------
+(defclass ClipPlane (X3DChildNode)
+  (
+    (enabled :initarg :enabled
+        :initform  "true"
+        :accessor enabled
+        :documentation "")
+    (plane :initarg :plane
+        :initform  "0 1 0 0"
+        :accessor plane
+        :documentation "")
+  )
+  (:documentation ""))
 
-- If the normal field is NULL, the browser shall automatically generate normals
-  in accordance with the node's definition. If the node does not define a
-  behaviour, the default is to generate an averaged normal for all faces that
-  share that vertex.
+;; ----------------------------------------------------------------------------
+(defclass Color (X3DColorNode)
+  (
+    (color :initarg :color
+        :initform  ""
+        :accessor color
+        :documentation "")
+  )
+  (:documentation ""))
 
-- If the texCoord field is not NULL, it shall contain a TextureCoordinate node.
+;; ----------------------------------------------------------------------------
+(defclass ColorRGBA (X3DColorNode)
+  (
+    (color :initarg :color
+        :initform  ""
+        :accessor color
+        :documentation "")
+  )
+  (:documentation ""))
 
-If the attrib field is not empty it shall contain a list of per-vertex attribute
-information for programmable shaders as specified in 32.2.2.4 Per-vertex
-attributes.
+;; ----------------------------------------------------------------------------
+(defclass Coordinate (X3DCoordinateNode)
+  (
+    (point :initarg :point
+        :initform  ""
+        :accessor point
+        :documentation "")
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
+  )
+  (:documentation ""))
 
-If the fogCoord field is not empty, it shall contain a list of per-vertex depth
-values for calculating fog depth as specified in 24.2.2.5 Fog colour
-calculation.
-"))
+;; ----------------------------------------------------------------------------
+(defmethod add-subobject ((self Coordinate) (stuff X3DNode))
+   (add-object-to-slot self stuff 'containerField))
 
-;; -----------------------------------------------------------------------class
-(defclass  x3d-coordinate-node (x3d-geometric-property-node)
-  ()
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass IndexedLineSet (X3DGeometryNode)
+  (
+    (colorPerVertex :initarg :colorPerVertex
+        :initform  "true"
+        :accessor colorPerVertex
+        :documentation "")
+    (colorIndex :initarg :colorIndex
+        :initform  ""
+        :accessor colorIndex
+        :documentation "")
+    (coordIndex :initarg :coordIndex
+        :initform  ""
+        :accessor coordIndex
+        :documentation "")
+  )
+  (:documentation ""))
 
-11.3.3 X3DCoordinateNode
+;; ----------------------------------------------------------------------------
+(defclass IndexedTriangleFanSet (X3DComposedGeometryNode)
+  (
+    (index :initarg :index
+        :initform  ""
+        :accessor index
+        :documentation "")
+  )
+  (:documentation ""))
 
-X3DCoordinateNode : X3DGeometricPropertyNode {
-  SFNode [in,out] metadata NULL [X3DMetadataObject]
-}
+;; ----------------------------------------------------------------------------
+(defclass IndexedTriangleSet (X3DComposedGeometryNode)
+  (
+    (index :initarg :index
+        :initform  ""
+        :accessor index
+        :documentation "")
+  )
+  (:documentation ""))
 
-This is the base node type for all coordinate node types in X3D. All coordinates
-are specified in nodes derived from this abstract node type.
-"))
+;; ----------------------------------------------------------------------------
+(defclass IndexedTriangleStripSet (X3DComposedGeometryNode)
+  (
+    (index :initarg :index
+        :initform  ""
+        :accessor index
+        :documentation "")
+  )
+  (:documentation ""))
 
-;; -----------------------------------------------------------------------class
-(defclass  clip-plane (x3d-child-node)
-  ((enabled :initarg :enabled
-            :initform (error ":enabled must be specified")
-            :accessor enabled
-            :type sf-bool
-            :allocation :instance
-            :documentation "")
-   (plane :initarg :plane
-          :initform (error ":plane must be specified")
-          :accessor plane
-          :type sf-vect4f
-          :allocation :instance
-          :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass LineSet (X3DGeometryNode)
+  (
+    (vertexCount :initarg :vertexCount
+        :initform  ""
+        :accessor vertexCount
+        :documentation "")
+  )
+  (:documentation ""))
 
-11.4.1 ClipPlane
+;; ----------------------------------------------------------------------------
+(defclass Normal (X3DNormalNode)
+  (
+    (vector :initarg :vector
+        :initform  ""
+        :accessor vector
+        :documentation "")
+  )
+  (:documentation ""))
 
-ClipPlane : X3DChildNode {
-  SFBool  [in,out] enabled  TRUE
-  SFNode  [in,out] metadata NULL    [X3DMetadataObject]
-  SFVec4f [in,out] plane    0 1 0 0 [0,1]
-}
+;; ----------------------------------------------------------------------------
+(defclass PointSet (X3DGeometryNode)
+  (
+  )
+  (:documentation ""))
 
-The ClipPlane node specifies a single plane equation that will be used to clip
-the geometry. The plane field specifies a four-component plane equation that
-describes the inside and outside half space. The first three components are a
-normalized vector describing the direction of the plane's normal direction.
-"))
+;; ----------------------------------------------------------------------------
+(defclass TriangleFanSet (X3DComposedGeometryNode)
+  (
+    (fanCount :initarg :fanCount
+        :initform  ""
+        :accessor fanCount
+        :documentation "")
+  )
+  (:documentation ""))
 
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
-;; -----------------------------------------------------------------------class
+;; ----------------------------------------------------------------------------
+(defclass TriangleSet (X3DComposedGeometryNode)
+  (
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass TriangleStripSet (X3DComposedGeometryNode)
+  (
+    (stripCount :initarg :stripCount
+        :initform  ""
+        :accessor stripCount
+        :documentation "")
+  )
+  (:documentation ""))
+

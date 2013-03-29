@@ -1,8 +1,8 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; networking.lisp --- Implementation of ISO/IEC 19775-1:2008:
-;;;;                     9. Networking Component
-;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
+;;;; networking.lisp --- Definitions of the NETWORKING Component in X3D
+;;;;
+;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
 ;;;;
 ;;;; Redistribution and use in source and binary forms, with or without
@@ -31,36 +31,69 @@
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
 (in-package #:cl-3d)
+;; ----------------------------------------------------------------------------
+(defclass X3DNetworkSensorNode (X3DSensorNode)
+  (
+  )
+  (:documentation ""))
 
-(defclass  x3d-url-object ()
-  ((url :initarg :url
-         :initform ""
-         ;; :accessor url
-         :reader url-changed
-         :writer set-url
-         ;; :type
-         :allocation :instance
-         :documentation ""))
-  (:documentation "
-ISO/IEC 19775-1:2008 (SEE NOTICE.TXT)
+;; ----------------------------------------------------------------------------
+(defclass X3DUrlObject ()
+  (
+    (url :initarg :url
+        :initform  `()
+        :accessor url
+        :documentation "")
+  )
+  (:documentation ""))
 
-9.3.2 X3DUrlObject
+;; ----------------------------------------------------------------------------
+(defclass Anchor (X3DGroupingNode)
+  (
+    (description :initarg :description
+        :initform  ""
+        :accessor description
+        :documentation "")
+    (parameter :initarg :parameter
+        :initform  `()
+        :accessor parameter
+        :documentation "")
+    (url :initarg :url
+        :initform  `()
+        :accessor url
+        :documentation "")
+  )
+  (:documentation ""))
 
-X3DUrlObject {
-  MFString [in,out] url [] [URI]
-}
+;; ----------------------------------------------------------------------------
+(defclass Inline (X3DChildNode)
+  (
+    (load :initarg :load
+        :initform  "true"
+        :accessor load
+        :documentation "")
+    (bboxCenter :initarg :bboxCenter
+        :initform  "0 0 0"
+        :accessor bboxCenter
+        :documentation "")
+    (bboxSize :initarg :bboxSize
+        :initform  "-1 -1 -1"
+        :accessor bboxSize
+        :documentation "")
+    (url :initarg :url
+        :initform  `()
+        :accessor url
+        :documentation "")
+  )
+  (:documentation ""))
 
-This abstract interface is inherited by all nodes that contain data located on
-the World Wide Web, such as AudioClip, ImageTexture and Inline.
-
-All url fields can hold multiple string values. The strings in these fields
-indicate multiple locations to search for data in the order listed. If the
-browser cannot locate or interpret the data specified by the first location, it
-shall try the second and subsequent locations in order until a location
-containing interpretable data is encountered. X3D browsers only have to
-interpret a single string. If no interpretable locations are found, the node
-type defines the resultant default behaviour.
-
-For more information on URLs, see 9.2.1 URLs.
-"))
+;; ----------------------------------------------------------------------------
+(defclass LoadSensor (X3DNetworkSensorNode)
+  (
+    (timeOut :initarg :timeOut
+        :initform  "0"
+        :accessor timeOut
+        :documentation "")
+  )
+  (:documentation ""))
 

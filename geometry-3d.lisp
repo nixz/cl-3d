@@ -1,9 +1,8 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; geometry-3d.lisp --- Implementation of ISO/IEC 19775-1:2008:
-;;;;                      13 Geometry3D Component.
+;;;; geometry-3d.lisp --- Definitions of the GEOMETRY-3D Component in X3D
 ;;;;
-;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
+;;;; Copyright (c) 2011-2013, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
 ;;;;
 ;;;; Redistribution and use in source and binary forms, with or without
@@ -32,57 +31,209 @@
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
 (in-package #:cl-3d)
+;; ----------------------------------------------------------------------------
+(defclass Box (X3DGeometryNode)
+  (
+    (size :initarg :size
+        :initform  "2 2 2"
+        :accessor size
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "true"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
 
-(defclass  box (x3d-geometry-node)
-  ((size :initarg :size
-         :initform (sf-vec3f 2 2 2)
-         ;; :accessor size
-         :reader size-changed
-         :writer set-size
-         :type 'sf-vec3f
-         :allocation :instance
-         :documentation "")
-   (solid :initarg :solid
-         :initform t
-         ;; :accessor solid
-         :reader solid-changed
-         :writer set-solid
-         :type 'sf-bool
-         :allocation :instance
-         :documentation ""))
-  (:documentation "
-13.3.1 Box
+;; ----------------------------------------------------------------------------
+(defclass Cone (X3DGeometryNode)
+  (
+    (bottomRadius :initarg :bottomRadius
+        :initform  "1"
+        :accessor bottomRadius
+        :documentation "")
+    (height :initarg :height
+        :initform  "2"
+        :accessor height
+        :documentation "")
+    (side :initarg :side
+        :initform  "true"
+        :accessor side
+        :documentation "")
+    (bottom :initarg :bottom
+        :initform  "true"
+        :accessor bottom
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "true"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
 
-Box : X3DGeometryNode {
-  SFNode  [in,out] metadata NULL  [X3DMetadataObject]
-  SFVec3f []       size     2 2 2 (0,∞)
-  SFBool  []       solid    TRUE
-}
+;; ----------------------------------------------------------------------------
+(defclass Cylinder (X3DGeometryNode)
+  (
+    (bottom :initarg :bottom
+        :initform  "true"
+        :accessor bottom
+        :documentation "")
+    (height :initarg :height
+        :initform  "2"
+        :accessor height
+        :documentation "")
+    (radius :initarg :radius
+        :initform  "1"
+        :accessor radius
+        :documentation "")
+    (side :initarg :side
+        :initform  "true"
+        :accessor side
+        :documentation "")
+    (top :initarg :top
+        :initform  "true"
+        :accessor top
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "true"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
 
-The Box node specifies a rectangular parallelepiped box centred at (0, 0, 0) in
-the local coordinate system and aligned with the local coordinate axes. By
-default, the box measures 2 units in each dimension, from -1 to +1. The size
-field specifies the extents of the box along the X-, Y-, and Z-axes respectively
-and each component value shall be greater than zero. Figure 13.1 illustrates the
-Box node.
+;; ----------------------------------------------------------------------------
+(defclass ElevationGrid (X3DGeometryNode)
+  (
+    (height :initarg :height
+        :initform  ""
+        :accessor height
+        :documentation "")
+    (ccw :initarg :ccw
+        :initform  "true"
+        :accessor ccw
+        :documentation "")
+    (colorPerVertex :initarg :colorPerVertex
+        :initform  "true"
+        :accessor colorPerVertex
+        :documentation "")
+    (creaseAngle :initarg :creaseAngle
+        :initform  "0"
+        :accessor creaseAngle
+        :documentation "")
+    (normalPerVertex :initarg :normalPerVertex
+        :initform  "true"
+        :accessor normalPerVertex
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "true"
+        :accessor solid
+        :documentation "")
+    (xDimension :initarg :xDimension
+        :initform  "0"
+        :accessor xDimension
+        :documentation "")
+    (xSpacing :initarg :xSpacing
+        :initform  "1.0"
+        :accessor xSpacing
+        :documentation "")
+    (zDimension :initarg :zDimension
+        :initform  "0"
+        :accessor zDimension
+        :documentation "")
+    (zSpacing :initarg :zSpacing
+        :initform  "1.0"
+        :accessor zSpacing
+        :documentation "")
+  )
+  (:documentation ""))
 
-[Figure 13.1 — Box node]?
+;; ----------------------------------------------------------------------------
+(defclass Extrusion (X3DGeometryNode)
+  (
+    (beginCap :initarg :beginCap
+        :initform  "true"
+        :accessor beginCap
+        :documentation "")
+    (ccw :initarg :ccw
+        :initform  "true"
+        :accessor ccw
+        :documentation "")
+    (convex :initarg :convex
+        :initform  "true"
+        :accessor convex
+        :documentation "")
+    (creaseAngle :initarg :creaseAngle
+        :initform  "0.0"
+        :accessor creaseAngle
+        :documentation "")
+    (crossSection :initarg :crossSection
+        :initform  "1 1 1 -1 -1 -1 -1 1 1 1"
+        :accessor crossSection
+        :documentation "")
+    (endCap :initarg :endCap
+        :initform  "true"
+        :accessor endCap
+        :documentation "")
+    (orientation :initarg :orientation
+        :initform  "0 0 1 0"
+        :accessor orientation
+        :documentation "")
+    (scale :initarg :scale
+        :initform  "1 1"
+        :accessor scale
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "true"
+        :accessor solid
+        :documentation "")
+    (spine :initarg :spine
+        :initform  "0 0 0 0 1 0"
+        :accessor spine
+        :documentation "")
+  )
+  (:documentation ""))
 
-Textures are applied individually to each face of the box. On the front (+Z),
-back (-Z), right (+X), and left (-X) faces of the box, when viewed from the
-outside with the +Y-axis up, the texture is mapped onto each face with the same
-orientation as if the image were displayed normally in 2D. On the top face of
-the box (+Y), when viewed from above and looking down the Y-axis toward the
-origin with the -Z-axis as the view up direction, the texture is mapped onto the
-face with the same orientation as if the image were displayed normally in 2D. On
-the bottom face of the box (-Y), when viewed from below looking up the Y-axis
-toward the origin with the +Z-axis as the view up direction, the texture is
-mapped onto the face with the same orientation as if the image were displayed
-normally in 2D. TextureTransform affects the texture coordinates of the Box (see
-18.4.8 TextureTransform).
+;; ----------------------------------------------------------------------------
+(defclass IndexedFaceSet (X3DComposedGeometryNode)
+  (
+    (convex :initarg :convex
+        :initform  "true"
+        :accessor convex
+        :documentation "")
+    (creaseAngle :initarg :creaseAngle
+        :initform  "0"
+        :accessor creaseAngle
+        :documentation "")
+    (colorIndex :initarg :colorIndex
+        :initform  ""
+        :accessor colorIndex
+        :documentation "")
+    (coordIndex :initarg :coordIndex
+        :initform  ""
+        :accessor coordIndex
+        :documentation "")
+    (normalIndex :initarg :normalIndex
+        :initform  ""
+        :accessor normalIndex
+        :documentation "")
+    (texCoordIndex :initarg :texCoordIndex
+        :initform  ""
+        :accessor texCoordIndex
+        :documentation "")
+  )
+  (:documentation ""))
 
-The solid field determines whether the box is visible when viewed from the
-inside. 11.2.3 Common geometry fields provides a complete description of the
-solid field.
-"))
+;; ----------------------------------------------------------------------------
+(defclass Sphere (X3DGeometryNode)
+  (
+    (radius :initarg :radius
+        :initform  "1"
+        :accessor radius
+        :documentation "")
+    (solid :initarg :solid
+        :initform  "true"
+        :accessor solid
+        :documentation "")
+  )
+  (:documentation ""))
 
