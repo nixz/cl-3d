@@ -1,0 +1,29 @@
+* DONE xs:NMTOKEN is not found
+  - The solution to this is to either get rid of NMToken or add
+  xs:NMTOKEN function/class to cl-xsd
+  - For not its best 
+
+* DONE networking.lisp (inline is also present in another package) 
+  - class inline causes package lock exception. Also inline::load
+    does the same. The solution is to simply shadow the two symbols.
+
+* DONE rendering.lisp 
+  - normal class has an attribute called 'vector' and causes
+    package-lock exception. Solved by shadowing vector in package.lisp
+
+* DONE geometry-3d.lisp
+  - types with NIL should not have default values in ()
+  - types should not be specified
+
+* DONE programmable-shaders.lisp
+  - same issue as geometry-3d.lisp
+
+* DONE types.lisp are not getting generated
+* DONE Children should have a special mechanism to be dealt with
+  XMLisp has a way to add a list of some element by adding a method 'add-subobject
+* DONE MFColor and SFColor functions should be defined
+  MFColor is not well defined. Need to redefine this in the future
+* DONE Let all default values be strings
+  - String get converted to values only when visited by methods.
+  - This means that we need to have basic conversion utilitiy
+    function from string to the defined types.
