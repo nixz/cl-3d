@@ -30,25 +30,27 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
-
-;; <Scene>
-;; <Background skyColor='1 1 1'/> 
-;; <Viewpoint description='Side View' position='0 0 3'/> 
-;; <Viewpoint description='Book View' orientation='-1 0 0 0.68' position='0 1.11 1.93'/> 
-;; <Shape>
-;; <Cone height='1'/> 
-;; <Appearance>
-;; <Material/>
-;; </Appearance>
-;; </Shape>
-;; </Scene>
-
 (in-package #:cl-3d)
-(Scene
- (Background :skyColor'(1 1 1)) 
- (Viewpoint :description "Side View" :position '(0 0 3))
- (Viewpoint :description "Book View" :orientation'(-1 0 0 0.68) :position '(0 1.11 1.93))
- (Shape
-  (Cone :height 1)
-  (Appearance
-   (Material))))
+
+(render
+<Scene>
+  <Background skyColor='1 1 1'/> 
+  <Viewpoint description='Side View' position='0 0 3'/> 
+  <Viewpoint description='Book View' orientation='-1 0 0 0.68' position='0 1.11 1.93'/> 
+  <Shape>
+    <Cone height='1'/> 
+    <Appearance>
+      <Material/>
+    </Appearance>
+  </Shape>
+</Scene>
+)
+
+;; (Scene
+;;  (Background :skyColor'(1 1 1)) 
+;;  (Viewpoint :description "Side View" :position '(0 0 3))
+;;  (Viewpoint :description "Book View" :orientation'(-1 0 0 0.68) :position '(0 1.11 1.93))
+;;  (Shape
+;;   (Cone :height 1)
+;;   (Appearance
+;;    (Material))))
