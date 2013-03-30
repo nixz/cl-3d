@@ -49,7 +49,7 @@
 # **** [x] Material class
 # **** [x] Implement parsing function for each
 
-*** [_] Cone.lisp
+*** [x] Cone.lisp
 *** [_] Cyliner.lisp
 *** [_] GeometryPrimitiveNodes.lisp
 *** [_] GeometryPrimitiveNodesWhiteBackground.lisp
