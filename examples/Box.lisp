@@ -2,7 +2,7 @@
 ;;;; ==========================================================================
 ;;;; box.lisp --- Test box tutorial from x3dforwebauthors ch2.
 ;;;;
-;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
+;;;; Copyright (c) 2011,2013 Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
 ;;;;
 ;;;; Redistribution and use in source and binary forms, with or without
@@ -30,9 +30,9 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
-
-;; This example is taken from the following link
-;; http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
+;;;; XML part of code is from http://x3dgraphics.com/examples/X3dForWebAuthors/
+;;;; Please read NOTICE.txt
+;;;; ==========================================================================
 
 ;; ------------------------------------------------------------------------lisp
 (in-package #:cl-3d)
