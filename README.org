@@ -50,7 +50,7 @@
 # **** [x] Implement parsing function for each
 
 *** [x] Cone.lisp
-*** [_] Cyliner.lisp
+*** [x] Cylinder.lisp
 *** [_] GeometryPrimitiveNodes.lisp
 *** [_] GeometryPrimitiveNodesWhiteBackground.lisp
 *** [_] Sphere.lisp
