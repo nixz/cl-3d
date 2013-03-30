@@ -82,6 +82,10 @@
 ;; ----------------------------------------------------------------------------
 (defclass X3DNode (xml-serializer)
   (
+    (DEF :initarg :DEF
+        :initform  ""
+        :accessor DEF
+        :documentation "")
   )
   (:documentation ""))
 
