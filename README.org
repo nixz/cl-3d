@@ -53,7 +53,7 @@
 *** [x] Cylinder.lisp
 *** [_] GeometryPrimitiveNodes.lisp
 *** [_] GeometryPrimitiveNodesWhiteBackground.lisp
-*** [_] Sphere.lisp
+*** [x] Sphere.lisp
 *** [_] Text.lisp
 *** [_] TextLengthMaxExtent.lisp
 *** [_] TextSpecialCharacters.lisp
