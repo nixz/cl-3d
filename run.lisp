@@ -93,15 +93,16 @@
   "create a vertex and index buffers"
   (format t "Box~%")
   (with-slots (bottomRadius height side bottom solid) self
-    (let ((size (SFVec3f size))
+    (let ((bottomRadius (SFFloat bottomRadius))
+          (height (SFFloat height))
+          (side (SFBool side))
+          (bottom (SFBool bottom))
           (solid (SFBool solid)))
-      (let ((x (elt size 0))
-            (y (elt size 1))
-            (z (elt size 2)))
-        (gl:scale x y z)                      ; model transform
-        (if solid       
-            (glut:solid-cube 1)                   ; shape
-            (glut:wire-cube 1))))))
+      (gl:rotate -90 1 0 0)
+      (gl:translate 0 0 (- (/ height 2)))
+      (if solid       
+          (glut:solid-cone bottomRadius height 20 1)                   ; shape
+          (glut:wire-cone bottomRadius height 20 1)))))
 
 ;; (let* ((+x (abs (/ (elt size 0) 2)))
 ;;        (+y (abs (/ (elt size 1) 2)))
