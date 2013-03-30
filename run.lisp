@@ -120,6 +120,20 @@
       (glut:solid-cylinder radius height 20 1))))
 
 
+;; ......................................................................Sphere
+(defmethod run ((self Sphere))
+  "TODO: Eventually create a vertex and index buffers"
+  (format t "Sphere~%")
+  (with-slots (radius solid) self
+    (let ((radius (SFFloat radius))
+          (solid (SFBool solid)))
+      (print radius)
+      (print solid)
+      (gl:rotate -90 1 0 0)
+      (if solid
+          (glut:solid-sphere radius 30 30)
+          (glut:wire-sphere radius 30 30)))))
+
 ;; (let* ((+x (abs (/ (elt size 0) 2)))
 ;;        (+y (abs (/ (elt size 1) 2)))
 ;;        (+z (abs (/ (elt size 2) 2)))
