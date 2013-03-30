@@ -91,7 +91,7 @@
 ;; ........................................................................Cone
 (defmethod run ((self cone))
   "create a vertex and index buffers"
-  (format t "Box~%")
+  (format t "Cone~%")
   (with-slots (bottomRadius height side bottom solid) self
     (let ((bottomRadius (SFFloat bottomRadius))
           (height (SFFloat height))
