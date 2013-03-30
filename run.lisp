@@ -104,6 +104,22 @@
           (glut:solid-cone bottomRadius height 20 1)                   ; shape
           (glut:wire-cone bottomRadius height 20 1)))))
 
+;; ....................................................................Cylinder
+(defmethod run ((self Cylinder))
+  "create a vertex and index buffers"
+  (format t "Cylinder~%")
+  (with-slots (radius height side bottom top solid) self
+    (let ((radius (SFFloat radius))
+          (height (SFFloat height))
+          (side (SFBool side))
+          (bottom (SFBool bottom))
+          (top (SFBool top))
+          (solid (SFBool solid)))
+      (gl:rotate -90 1 0 0)
+      (gl:translate 0 0 (- (/ height 2)))
+      (glut:solid-cylinder radius height 20 1))))
+
+
 ;; (let* ((+x (abs (/ (elt size 0) 2)))
 ;;        (+y (abs (/ (elt size 1) 2)))
 ;;        (+z (abs (/ (elt size 2) 2)))
