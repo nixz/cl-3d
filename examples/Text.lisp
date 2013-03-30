@@ -1,6 +1,6 @@
 ;;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 ;;;; ==========================================================================
-;;;; cl-3d.asd --- Define the system
+;;;; Text.lisp --- render text
 ;;;;
 ;;;; Copyright (c) 2011, Nikhil Shetty <nikhil.j.shetty@gmail.com>
 ;;;;   All rights reserved.
@@ -30,32 +30,21 @@
 ;;;; (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 ;;;; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;; ==========================================================================
-(defsystem cl-3d
-  :description "x3d implementation in common lisp"
-  :depends-on (#:cl-opengl
-               #:cl-glut
-               #:cl-glu
-               #:lispbuilder-sdl
-               #:bordeaux-threads
-               #:xmlisp
-               #:usocket
-               #:cl-package-locks)
-  :components ((:file "package")
-               (:file "util"                 :depends-on ("package"))
-               (:file "types"                :depends-on ("util"))
-               (:file "core"                 :depends-on ("types"))
-               (:file "environmental-effects" :depends-on ("core"))
-               (:file "geometry-3d"          :depends-on ("rendering" "shape"))
-               (:file "grouping"             :depends-on ("core"))
-               (:file "navigation"           :depends-on ("core"))
-               (:file "networking"           :depends-on ("package"))
-               (:file "programmable-shaders" :depends-on ("shape" "rendering" "networking"))
-               (:file "rendering"            :depends-on ("core"))
-               (:file "shape"                :depends-on ("core"))
-               (:file "text"                 :depends-on ("core"))
-               (:file "scene"                :depends-on ("package"))
-               (:file "main"                 :depends-on ("grouping" "geometry-3d" "navigation" "environmental-effects"))
-               (:file "run"                  :depends-on ("grouping" "geometry-3d" "navigation" "environmental-effects"))
-               (:file "opengl"               :depends-on ("package"))))
-   ;; (:file "graphics" :depends-on("package"
-   ;;                               "opengl"))
+
+(in-package #:cl-3d)
+
+(render
+  <Scene>
+    <Background skyColor='1 1 1'/>
+    <Viewpoint description='Book view' position='0.89 -1.11 2.33'/>
+    <Viewpoint description='Text example' position='0 0 3'/>
+    <Shape>
+      <Text DEF='HelloText' string='"hello" "X3D!"'>
+        <FontStyle DEF='CenteredFontStyle' justify='"MIDDLE" "MIDDLE"'/>
+      </Text>
+      <Appearance>
+        <Material DEF='DefaultMaterial' ambientIntensity='0.2' diffuseColor='.2 .2 .2' shininess='0.2'/>
+      </Appearance>
+    </Shape>
+  </Scene>
+)

@@ -54,7 +54,7 @@
 *** [_] GeometryPrimitiveNodes.lisp
 *** [_] GeometryPrimitiveNodesWhiteBackground.lisp
 *** [x] Sphere.lisp
-*** [_] Text.lisp
+*** [x] Text.lisp
 *** [_] TextLengthMaxExtent.lisp
 *** [_] TextSpecialCharacters.lisp
 
