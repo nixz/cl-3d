@@ -156,6 +156,24 @@
 ;;                           2 6 7 2 7 3))) ;bottom
 ;;   (list :vertex-array verts :index-array indexes)))))
 
+;; ------------------------------------------------------------------------Text
+(defmethod run ((self Text))
+  (format t "Text~%")
+  (with-slots (length maxExtent string lineBounds origin textBounds solid) self
+    ;; (let ((length (MFFloat length))
+    ;;       (maxExtent (SFFloat maxExtent))
+    ;;       (string (MFString string))
+    ;;       (lineBounds (MFVec2f lineBounds))
+    ;; (let ((origin (SFVec3f origin))))
+    ;;       (textBounds (SFVec2f textBounds))
+    ;;       (solid (SFBool solid))))
+      ;; (let ((x (elt origin 0))
+      ;;       (y (elt origin 1))
+      ;;       (z (elt origin 2)))
+        (gl:rotate -90 1 0 0)
+        (gl:translate 0 0 0)
+        (glut:stroke-string +stroke-roman+ "hi this is nikhil")))
+
 ;; -----------------------------------------------------------------env-effects
 (defmethod run ((self background))
   "

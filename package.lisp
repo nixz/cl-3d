@@ -49,7 +49,9 @@
            :inline
            :load
            :type
-           :speed)
+           :speed
+           :length
+           :string)
   (:export :scene
            :transform
            :appearance
