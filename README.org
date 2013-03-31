@@ -51,7 +51,7 @@
 
 *** [x] Cone.lisp
 *** [x] Cylinder.lisp
-*** [_] GeometryPrimitiveNodes.lisp
+*** [x] GeometryPrimitiveNodes.lisp
 *** [_] GeometryPrimitiveNodesWhiteBackground.lisp
 *** [x] Sphere.lisp
 *** [x] Text.lisp
