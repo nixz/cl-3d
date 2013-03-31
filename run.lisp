@@ -48,6 +48,27 @@
 ;;     (let ((-SR (sb-cga:inverse-matrix SR))
 ;;           (-C (sb-cga:inverse-matrix C)))
 ;;       (sb-cga:matrix* Tx C R SR S -SR -C))))
+;; -----------------------------------------------------------------------scene
+(defmethod run ((self scene))
+  (with-slots (backgrounds viewpoints shapes transforms) self
+    (let ((BACKGROUND (if (first backgrounds)
+                          (first backgrounds)
+                          (make-instance 'Background)))
+          (VIEWPOINT (if (first viewpoints)
+                         (first viewpoints)
+                         (make-instance 'Viewpoint))))
+      ;; (MODEL (first shapes)))
+      (run BACKGROUND)
+      (gl:matrix-mode :projection)          ; projection
+      (gl:load-matrix (get-projection VIEWPOINT 1.0 1.5 1000.0))
+      (gl:matrix-mode :modelview)           ; view
+      (gl:load-identity)
+      (gl:mult-matrix (get-view VIEWPOINT))
+      (dolist (shape shapes)
+        (when shape (run shape)))
+      ;; (run (first (shapes self)))
+      (dolist (tx transforms)
+          (when tx (run tx))))))
 
 ;; ------------------------------------------------------------------navigation
 (defmethod run ((self viewpoint))
