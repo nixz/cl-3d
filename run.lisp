@@ -93,7 +93,7 @@
             (R (apply #'sb-cga:rotate-around orientation))
             (Tx (sb-cga:translate position)))
     (let ((-C (sb-cga:inverse-matrix C)))
-      (sb-cga:inverse-matrix (sb-cga:matrix* Tx R))))))) ;; this is the LOOKAT configuration
+      (sb-cga:inverse-matrix (sb-cga:matrix* Tx C R -C))))))) ;; this is the LOOKAT configuration
 
 ;; ----------------------------------------------------------------------------
 (defmethod get-projection ((self viewpoint) aspect near far)
@@ -116,10 +116,11 @@
       (let ((x (elt size 0))
             (y (elt size 1))
             (z (elt size 2)))
-        (gl:scale x y z)                      ; model transform
-        (if solid       
-            (glut:solid-cube 1)                   ; shape
-            (glut:wire-cube 1))))))
+        (gl:with-pushed-matrix
+          (gl:scale x y z)                      ; model transform
+          (if solid
+              (glut:solid-cube 1)                   ; shape
+              (glut:wire-cube 1)))))))
 
 ;; ........................................................................Cone
 (defmethod run ((self cone))
@@ -131,11 +132,12 @@
           (side (SFBool side))
           (bottom (SFBool bottom))
           (solid (SFBool solid)))
+      (gl:with-pushed-matrix
       (gl:rotate -90 1 0 0)
       (gl:translate 0 0 (- (/ height 2)))
       (if solid       
           (glut:solid-cone bottomRadius height 20 1)                   ; shape
-          (glut:wire-cone bottomRadius height 20 1)))))
+          (glut:wire-cone bottomRadius height 20 1))))))
 
 ;; ....................................................................Cylinder
 (defmethod run ((self Cylinder))
@@ -148,9 +150,10 @@
           (bottom (SFBool bottom))
           (top (SFBool top))
           (solid (SFBool solid)))
+        (gl:with-pushed-matrix
       (gl:rotate -90 1 0 0)
       (gl:translate 0 0 (- (/ height 2)))
-      (glut:solid-cylinder radius height 20 1))))
+      (glut:solid-cylinder radius height 20 1)))))
 
 
 ;; ......................................................................Sphere
@@ -160,12 +163,11 @@
   (with-slots (radius solid) self
     (let ((radius (SFFloat radius))
           (solid (SFBool solid)))
-      (print radius)
-      (print solid)
+        (gl:with-pushed-matrix
       (gl:rotate -90 1 0 0)
       (if solid
           (glut:solid-sphere radius 30 30)
-          (glut:wire-sphere radius 30 30)))))
+          (glut:wire-sphere radius 30 30))))))
 
 ;; (let* ((+x (abs (/ (elt size 0) 2)))
 ;;        (+y (abs (/ (elt size 1) 2)))
@@ -203,9 +205,10 @@
       ;; (let ((x (elt origin 0))
       ;;       (y (elt origin 1))
       ;;       (z (elt origin 2)))
-        (gl:rotate -90 1 0 0)
-        (gl:translate 0 0 0)
-        (glut:stroke-string +stroke-roman+ "hi this is nikhil")))
+    (gl:with-pushed-matrix
+      (gl:rotate -90 0 0 1)
+      (print string)
+      (glut:stroke-string +stroke-roman+ string))))
 
 ;; -----------------------------------------------------------------env-effects
 (defmethod run ((self background))
@@ -225,8 +228,11 @@ background
   ""
   (format t "Shape~%")
   (with-slots (containerField) self
-    (dolist (element containerField)
-      (run element))))
+    (let ((1st (first containerField))
+          (2nd (second containerField)))
+      (if (typep 1st (class-of (make-instance 'appearance)))
+          (progn (run 1st) (run 2nd))
+          (progn (run 2nd) (run 1st))))))
 
 ;; ------------------------------------------------------------------appearance
 (defmethod run ((self appearance))
