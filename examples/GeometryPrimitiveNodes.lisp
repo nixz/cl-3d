@@ -39,7 +39,7 @@
 
 (render
   <Scene>
-    <Transform translation='-5 0 -15'>
+    <Transform translation='-5 0 0'>
       <Shape DEF='DefaultShape'>
         <Box DEF='DefaultBox' size='2 2 2'/>
         <Appearance>
@@ -47,7 +47,7 @@
         </Appearance>
       </Shape>
     </Transform>
-    <Transform translation='-2.5 0 -15'>
+    <Transform translation='-2.5 0 0'>
       <Shape>
         <Cone DEF='DefaultCone' bottom='true' bottomRadius='1' height='2' side='true'/>
         <Appearance>
@@ -55,7 +55,7 @@
         </Appearance>
       </Shape>
     </Transform>
-    <Transform translation='0 0 -15'>
+    <Transform translation='0 0 0'>
       <Shape>
         <Cylinder DEF='DefaultCylinder' bottom='true' height='2' radius='1' side='true' top='true'/>
         <Appearance>
@@ -63,7 +63,7 @@
         </Appearance>
       </Shape>
     </Transform>
-    <Transform translation='2.5 0 -15'>
+    <Transform translation='2.5 0 0'>
       <Shape>
         <Sphere DEF='DefaultSphere' radius='1'/>
         <Appearance>
@@ -71,7 +71,7 @@
         </Appearance>
       </Shape>
     </Transform>
-    <Transform translation='4 0 -15'>
+    <Transform translation='4 0 0'>
       <Shape>
         <Text DEF='DefaultText' string='"hello" "X3D!"'>
           <FontStyle DEF='DefaultFontStyle'/>
