@@ -37,17 +37,6 @@
 (defgeneric run(self)
   (:documentation "Generic method to evaluate various nodes as they are traversed"))
 
-;; ---------------------------------------------------------------------grouping
-;; (defmethod run ((self transform))
-;;   (format t "Transform~%")
-;;   (let ((C (sb-cga:translate (center self)))
-;;         (R (apply #'sb-cga:rotate-around (rotation self)))
-;;         (S (sb-cga:scale (scale self)))
-;;         (SR (apply #'sb-cga:rotate-around (scale-orientation self)))
-;;         (Tx (sb-cga:translate (translation self))))
-;;     (let ((-SR (sb-cga:inverse-matrix SR))
-;;           (-C (sb-cga:inverse-matrix C)))
-;;       (sb-cga:matrix* Tx C R SR S -SR -C))))
 ;; -----------------------------------------------------------------------scene
 (defmethod run ((self scene))
   (with-slots (backgrounds viewpoints shapes transforms) self
@@ -69,6 +58,29 @@
       ;; (run (first (shapes self)))
       (dolist (tx transforms)
           (when tx (run tx))))))
+
+;; ---------------------------------------------------------------------grouping
+(defmethod run ((self transform))
+  (format t "Transform~%")
+  (with-slots (center rotation scale scaleOrientation translation containerField) self
+    (let ((center (SFVec3f center))
+          (rotation (SFRotation rotation))
+          (scale (SFVec3f scale))
+          (scaleOrientation (SFRotation scaleOrientation))
+          (translation (SFVec3f translation)))
+      (let ((C (sb-cga:translate center))
+            (R (apply #'sb-cga:rotate-around rotation))
+            (S (sb-cga:scale scale))
+            (SR (apply #'sb-cga:rotate-around scaleOrientation))
+            (Tx (sb-cga:translate translation)))
+        (let ((-SR (sb-cga:inverse-matrix SR))
+              (-C (sb-cga:inverse-matrix C)))
+          (let* ((mat (sb-cga:matrix* Tx C R SR S -SR -C))
+                 (-mat (sb-cga:inverse-matrix mat)))
+            (gl:mult-matrix mat)
+            (dolist (child containerField)
+              (run child))
+            (gl:mult-matrix -mat)))))))
 
 ;; ------------------------------------------------------------------navigation
 (defmethod run ((self viewpoint))
