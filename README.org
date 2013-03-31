@@ -33,11 +33,20 @@
 
   http://x3dgraphics.com/examples/X3dForWebAuthors/
 
-** [x] 1. Basic
+** [*] 1. Basic
 *** [x] make XMLisp accessable with asdf
 *** [x] Parse X3d using xmlisp
 *** [x] Implement run method and basic windowing
 **** [x] Implement GLUT windowing mechanism as scene
+*** [x] Add NOTICE.txt
+*** [_] Implement NavigationInfo
+*** [_] Try using the x3dForWebAuthors examples as-is
+   - The examples are in X3D.
+   - Figure out a way to directly load XML files.
+   - This will bring down the development time since we will have all
+     the examples already present and will help getting rid of the
+     boilerplate code in examples.
+
 ** [*] 2. GeometricPrimitives
 *** [x] Box.lisp example
 #    NOTE: http://x3dgraphics.com/examples/X3dForWebAuthors/Chapter02-GeometryPrimitives/_pages/page01.html
@@ -104,19 +113,12 @@
 # *** [_] Implement initialization pass
 
 * General notes and ideas
-** [x] Add NOTICE.txt
 # ** [_] Check if all docmentation has note to NOTICE.txt
 #    Notes:
 #    - It looks like windowing and gl are sort of implementation details
 #      and come at lower level.
 #    - Do we need the concept of a window? Things are going to be full
 #      screen anywayso no.
-** [_] Try using the x3dForWebAuthors examples as-is
-   - The examples are in X3D.
-   - Figure out a way to directly load XML files.
-   - This will bring down the development time since we will have all
-     the examples already present and will help getting rid of the
-     boilerplate code in examples.
 # ** [x] Shader object
 # ** [x] Program object
 # ** [x] Optionally use SDL example to set opengl context
