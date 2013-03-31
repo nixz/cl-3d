@@ -59,7 +59,30 @@
 *** [_] TextSpecialCharacters.lisp
 
 ** [_] 3. Grouping
+# *** [_] BoundingBoxIllustration.lisp
+# *** [_] CoordinateAxes.lisp
+# *** [_] CoordinateAxesInlineExample.lisp
+# *** [_] CoordinateAxesInlineNSEW.lisp
+# *** [_] Group.lisp
+# *** [_] GroupAnimated.lisp
+# *** [_] Inline.lisp
+# *** [_] LOD.lisp
+# *** [_] LodWithDifferentShapes.lisp
+# *** [_] OrderOfOperations1.lisp
+# *** [_] OrderOfOperations2.lisp
+# *** [_] StaticGroup.lisp
+# *** [_] Switch.lisp
+# *** [_] Transform.lisp
+# *** [_] TransformCenterOffsetForRotation.lisp
 ** [_] 4. Viewing Navigation
+# *** [_] AliasingExample.lisp
+# *** [_] Anchor.lisp
+# *** [_] AnchorComparison.lisp
+# *** [_] Bilboard.lisp
+# *** [_] BindingsOperations.lisp
+# *** [_] Collision
+# *** [_] NavigationInfo
+# *** [_] Viewpoint.x3d
 ** [_] 5. Appearence Material Textures
 ** [_] 6. Geometry Points Lines and Polygons
 ** [_] 7. Event Animation Interpolation
@@ -73,35 +96,39 @@
 ** [_] 15. MetaData
 
 * Phase II (Optimize)
-** [_] Use reactive programming / asynchronous programming using cl-async.
-** [_] Implement the basic logic of operation
-** [_] Implement default shader
-*** [_] Add genertic function to initialize Shader and Program
-*** [_] Initialize VAO and VBO
-*** [_] Implement initialization pass
+# ** [_] Use reactive programming / asynchronous programming using cl-async.
+# ** [_] Implement the basic logic of operation
+# ** [_] Implement default shader
+# *** [_] Add genertic function to initialize Shader and Program
+# *** [_] Initialize VAO and VBO
+# *** [_] Implement initialization pass
 
 * General notes and ideas
 ** [x] Add NOTICE.txt
-** [_] Check if all docmentation has note to NOTICE.txt
-
-Notes:
-
-- It looks like windowing and gl are sort of implementation details and come at
-  lower level.
-- Do we need the concept of a window? Things are going to be full screen anyway
-  so no.
-** [x] Shader object
-** [x] Program object
-** [_] (defuniform) macro
-*** [_] Extend support for Matrix, integer and vector
-** [_] (defattribute) macro
-** [_] Write small sample shader for 3d.
-** [_] Render box example using this sample shader
-** [_] Implement Sphere source
-** [_] Redo molecule application using custom spheres
-** [x] Optionally use SDL example to set opengl context
-** [_] Projection and model view calculations for VR
-** [_] Send inputs form mouse
-** [_] Handle events from gamepad
-** [_] Figure out how to render onto another display
-- Start a common lisp server of that session and let it go
+# ** [_] Check if all docmentation has note to NOTICE.txt
+#    Notes:
+#    - It looks like windowing and gl are sort of implementation details
+#      and come at lower level.
+#    - Do we need the concept of a window? Things are going to be full
+#      screen anywayso no.
+** [_] Try using the x3dForWebAuthors examples as-is
+   - The examples are in X3D.
+   - Figure out a way to directly load XML files.
+   - This will bring down the development time since we will have all
+     the examples already present and will help getting rid of the
+     boilerplate code in examples.
+# ** [x] Shader object
+# ** [x] Program object
+# ** [x] Optionally use SDL example to set opengl context
+# ** [_] (defuniform) macro
+# *** [_] Extend support for Matrix, integer and vector
+# ** [_] (defattribute) macro
+# ** [_] Write small sample shader for 3d.
+# ** [_] Render box example using this sample shader
+# ** [_] Implement Sphere source
+# ** [_] Redo molecule application using custom spheres
+# ** [_] Projection and model view calculations for VR
+# ** [_] Send inputs form mouse
+# ** [_] Handle events from gamepad
+# ** [_] Figure out how to render onto another display
+# - Start a common lisp server of that session and let it go
