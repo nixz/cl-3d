@@ -76,7 +76,11 @@
    (shapes
          :initform nil
          :accessor shapes
-         :documentation "Drawable object"))
+         :documentation "Drawable object")
+   (transforms
+         :initform nil
+         :accessor transforms
+         :documentation "List of transformation objects"))
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
                      :mode '(:single :rgb :depth)))
 
@@ -130,17 +134,6 @@
 
 (defun render (scene)
   (glut:display-window scene))
-
-(defmethod run ((self scene))
-  (let ((*BACKGROUND* (first (backgrounds self)))
-        (*VIEWPOINT* (first (viewpoints self)))
-        (*MODEL* (first (shapes self))))
-    (run (first (backgrounds self)))
-    (gl:matrix-mode :projection)          ; projection
-    (gl:load-matrix (get-projection (first (viewpoints self)) 1.0 1.5 20.0))
-    (gl:matrix-mode :modelview)           ; view
-    (gl:load-matrix (get-view (first (viewpoints self))))
-    (run (first (shapes self)))))
 
 ;; ;; ----------------------------------------------------------------------------
 ;; (defclass X3DChildNode (X3DNode)
