@@ -76,7 +76,11 @@
    (shapes
          :initform nil
          :accessor shapes
-         :documentation "Drawable object"))
+         :documentation "Drawable object")
+   (transforms
+         :initform nil
+         :accessor transforms
+         :documentation "List of transformation objects"))
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
                      :mode '(:single :rgb :depth)))
 
