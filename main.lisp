@@ -73,6 +73,10 @@
          :initform nil
          :accessor viewpoints
          :documentation "defines the point of view of the scene")
+   (navigationInfos
+         :initform nil
+         :accessor navigationInfos
+         :documentation "the list of all NavigationInfo nodes")
    (shapes
          :initform nil
          :accessor shapes
