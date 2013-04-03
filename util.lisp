@@ -99,18 +99,8 @@
     (apply #'cl:vector float-list)))
 
 ;; ----------------------------------------------------------------------------
-(defmethod SFVec3f(str)
-  (apply #'cl:vector 
-         (mapcar (lambda (x)
-                   (coerce x 'single-float))
-                 (with-input-from-string (in str)
-                   (loop for x = (read in nil nil) 
-                      while x 
-                      collect x)))))
-
-;; ----------------------------------------------------------------------------
 (defmethod BoundingBoxSizeType(str)
-  (apply #'cl:vector 
+  (apply #'cl:vector
          (mapcar (lambda (x)
                    (coerce x 'single-float))
                  (with-input-from-string (in str)
@@ -124,22 +114,21 @@
       t
       nil))
 
-;; ----------------------------------------------------------------------------
-(defmethod SFRotation(str)
-  (apply #'cl:vector 
-         (mapcar (lambda (x)
-                   (coerce x 'single-float))
-                 (with-input-from-string (in str)
-                   (loop for x = (read in nil nil) 
-                      while x 
-                      collect x)))))
+;; ;; ----------------------------------------------------------------------------
+;; (defmethod SFRotation((str string))
+;;   (apply #'cl:vector 
+;;          (mapcar (lambda (x)
+;;                    (coerce x 'single-float))
+;;                  (with-input-from-string (in str)
+;;                    (loop for x = (read in nil nil) 
+;;                       while x 
+;;                       collect x)))))
 
 ;; ----------------------------------------------------------------------------
 (defmethod SFFloat(str)
   (coerce (with-input-from-string(in str)
             (read in nil nil))
           'single-float))
-
 
 ;; ----------------------------------------------------------------------------
 (defun list<-str (str)
@@ -164,7 +153,34 @@
                       (third float-list))
           (fourth float-list))))
 
+(defmethod SFRotation((val cl:list))
+  val)
+
+
 ;; ----------------------------------------------------------------------------
-(defmethod SFVec3f (str)
+(defgeneric SFVec3f (x &optional y z))
+
+(defmethod SFVec3F(x &optional y z)
+  (SFVec3F (list x y z)))
+
+(defmethod SFVec3f ((str cl:string) &optional (y NIL) (z NIL))
   (let ((float-list (list<-str str)))
   (apply #'sb-cga:vec float-list)))
+
+(defmethod SFVec3F((val cl:list) &optional (y NIL) (z NIL))
+  (apply #'sb-cga:vec (mapcar (lambda (x)
+                               (coerce x 'single-float))
+                             val)))
+(defmethod SFVec3F((val cl:vector) &optional (y NIL) (z NIL))
+  val)
+
+;; ----------------------------------------------------------------------------
+(defun transform (translation center rotation scale scaleOrientation)
+  (let ((C (sb-cga:translate center))
+        (R (apply #'sb-cga:rotate-around rotation))
+        (S (sb-cga:scale scale))
+        (SR (apply #'sb-cga:rotate-around scaleOrientation))
+        (Tx (sb-cga:translate translation)))
+    (let ((-SR (sb-cga:inverse-matrix SR))
+          (-C (sb-cga:inverse-matrix C)))
+      (sb-cga:matrix* Tx C R SR S -SR -C))))

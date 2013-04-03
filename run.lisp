@@ -68,21 +68,15 @@
           (scale (SFVec3f scale))
           (scaleOrientation (SFRotation scaleOrientation))
           (translation (SFVec3f translation)))
-      (let ((C (sb-cga:translate center))
-            (R (apply #'sb-cga:rotate-around rotation))
-            (S (sb-cga:scale scale))
-            (SR (apply #'sb-cga:rotate-around scaleOrientation))
-            (Tx (sb-cga:translate translation)))
-        (let ((-SR (sb-cga:inverse-matrix SR))
-              (-C (sb-cga:inverse-matrix C)))
-          (let* ((mat (sb-cga:matrix* Tx C R SR S -SR -C))
-                 (-mat (sb-cga:inverse-matrix mat)))
-            (gl:mult-matrix mat)
-            (dolist (child containerField)
-              (run child))
-            (gl:mult-matrix -mat)))))))
-
+      (let ((mat (transform translation center rotation scale scaleOrientation))
+            (-mat (sb-cga:inverse-matrix mat)))
+        (gl:mult-matrix mat)
+        (dolist (child containerField)
+          (run child))
+        (gl:mult-matrix -mat)))))
+        
 ;; ------------------------------------------------------------------navigation
+;; ...................................................................Viewpoint
 (defmethod run ((self viewpoint))
   (format t "Viewpoint~%")
   (with-slots (centerOfRotation orientation position) self
