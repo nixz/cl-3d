@@ -42,6 +42,7 @@
                #:cl-package-locks)
   :components ((:file "package")
                (:file "util"                 :depends-on ("package"))
+               (:file "devices"              :depends-on ("package"))
                (:file "types"                :depends-on ("util"))
                (:file "core"                 :depends-on ("types"))
                (:file "environmental-effects" :depends-on ("core"))

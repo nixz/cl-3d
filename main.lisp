@@ -127,6 +127,13 @@
   (when (eql key #\Esc)
     (glut:destroy-current-window)))
 
+(defmethod glut:mouse ((w scene) button state x y)
+  (setf (Button-id *MOUSE-BUTTON*) button)
+  (setf (Button-state *MOUSE-BUTTON*) state)
+  (setf (Analog-channel *MOUSE-POSITION*) (list x y)))
+(defmethod glut:motion ((w scene) x y)
+  (setf (Analog-channel *MOUSE-POSITION*) (list x y))
+  (glut:post-redisplay))
 ;; (defun scene (&rest rest)
 ;;   ""
 ;;   (setf *SOUP* (apply #'list rest))
