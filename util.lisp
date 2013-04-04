@@ -33,6 +33,17 @@
 
 (in-package #:cl-3d)
 
+(defparameter *PROJECTION* nil)
+(defparameter *MODEL-VIEW* nil)
+
+(defun screen<-world (p)
+  "Transforms a point from world space to screen space"
+  )
+
+(defun world<-screen (p)
+  "Transform a point from screen space to world space"
+  )
+
 (defun deg->rad (x) (* x (/ pi 180)))
 (defun rad->deg (x) (* x (/ 180 pi)))
 
@@ -184,3 +195,35 @@
     (let ((-SR (sb-cga:inverse-matrix SR))
           (-C (sb-cga:inverse-matrix C)))
       (sb-cga:matrix* Tx C R SR S -SR -C))))
+
+
+(defun z-sphere(x y r)
+  (let ((X2 (* x x))
+        (Y2 (* y y))
+        (R2 (* r r)))
+    (let* ((X2+Y2 (+ X2 + Y2))
+           (R2-X2-Y2 (- R2 X2+Y2)))
+      (sqrt R2-X2-Y2))))
+
+(defun examine (viewpoint) 
+  (with-slots (orientation position) viewpoint
+      (let* ((orient (SFRotation orientation))
+             (channel (Analog-channel *MOUSE-POSITION*))
+             (x (first channel))
+             (y (second channel))
+             (pt (sb-cga:vec x y 0.0)
+        (let* ((current (sb-cga:normalize (SFVec3f position))
+               (dir-vec (sb-cga:normalize (sb-cga:vec- pt current))))
+          (print dir-vec)
+          (let ((rot-vector (sb-cga:normalize (sb-cga:cross-product dir-vec zaxis)))
+                (rot-value (sb-cga:vec-length dir-vec)))
+            (setf orientation (list rot-vector (coerce (radians rot-value) 'single-float)))))
+  ;;       ;; (setf orientation (list rot-vector (coerce (radians rot-value) 'single-float))))
+  ;;       ;; (setf view-rotx (+ (car origrot) (- y (cadr origclick))))
+  ;;       ;; (setf view-roty (+ (cadr origrot) (- x (car origclick))))
+  ;;       (glut:post-redisplay)))))
+
+;; (defun scene (&rest rest)
+;;   ""
+;;   (setf *SOUP* (apply #'list rest))
+;;   (glut:display-window (make-instance 'scene)))

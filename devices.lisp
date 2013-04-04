@@ -53,4 +53,4 @@
 )
 
 (defparameter *MOUSE-BUTTON* (make-Button :time nil :id nil :state nil))
-(defparameter *MOUSE-POSITION* (make-Analog :time :numChannel 2 :channel nil))
+(defparameter *MOUSE-POSITION* (make-Analog :time nil :numChannel 2 :channel nil))

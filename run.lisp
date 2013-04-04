@@ -46,13 +46,15 @@
           (VIEWPOINT (if (first viewpoints)
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
+      (setf *PROJECTION* (get-projection VIEWPOINT 1.0 1.5 1000.0))
+      (setf *MODEL-VIEW* (get-view VIEWPOINT))
       ;; (MODEL (first shapes)))
       (run BACKGROUND)
       (gl:matrix-mode :projection)          ; projection
-      (gl:load-matrix (get-projection VIEWPOINT 1.0 1.5 1000.0))
+      (gl:load-matrix *PROJECTION*)
       (gl:matrix-mode :modelview)           ; view
       (gl:load-identity)
-      (gl:mult-matrix (get-view VIEWPOINT))
+      (gl:mult-matrix *MODEL-VIEW*)
       (dolist (shape shapes)
         (when shape (run shape)))
       ;; (run (first (shapes self)))
@@ -87,7 +89,7 @@
             (R (apply #'sb-cga:rotate-around orientation))
             (Tx (sb-cga:translate position)))
     (let ((-C (sb-cga:inverse-matrix C)))
-      (sb-cga:inverse-matrix (sb-cga:matrix* Tx C R -C))))))) ;; this is the LOOKAT configuration
+      (sb-cga:inverse-matrix (sb-cga:matrix* Tx R))))))) ;; this is the LOOKAT configuration
 
 ;; ----------------------------------------------------------------------------
 (defmethod get-projection ((self viewpoint) aspect near far)
