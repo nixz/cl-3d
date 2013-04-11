@@ -50,13 +50,22 @@
                (:file "grouping"             :depends-on ("core"))
                (:file "navigation"           :depends-on ("core"))
                (:file "networking"           :depends-on ("package"))
+               (:file "pointing-device-sensor" :depends-on ("core"))
                (:file "programmable-shaders" :depends-on ("shape" "rendering" "networking"))
                (:file "rendering"            :depends-on ("core"))
                (:file "shape"                :depends-on ("core"))
                (:file "text"                 :depends-on ("core"))
                (:file "scene"                :depends-on ("package"))
-               (:file "main"                 :depends-on ("grouping" "geometry-3d" "navigation" "environmental-effects"))
-               (:file "run"                  :depends-on ("grouping" "geometry-3d" "navigation" "environmental-effects"))
+               (:file "main"                 :depends-on ("grouping"
+                                                          "geometry-3d"
+                                                          "navigation"
+                                                          "environmental-effects"
+                                                          "pointing-device-sensor"))
+               (:file "run"                  :depends-on ("grouping"
+                                                          "geometry-3d"
+                                                          "navigation"
+                                                          "environmental-effects"
+                                                          "pointing-device-sensor"))
                (:file "opengl"               :depends-on ("package"))))
    ;; (:file "graphics" :depends-on("package"
    ;;                               "opengl"))
