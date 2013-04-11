@@ -33,24 +33,133 @@
 
 (in-package #:cl-3d)
 
-(defstruct Button
-  time                                  ; time when state changed
-  id                                    ; button-id
-  state                                 ; state of the button
-)
+;; ----------------------------------------------------------------------------
+;; TODO: Implement VRPN device interface. The following structure is
+;; to read stuff from VRPN.
 
-(defstruct Analog
-  time                                  ; timestamp
-  numChannel                            ; total number of analog channels
-  channel                               ; the channel list
-)
+;; (defstruct Button
+;;   time                                  ; time when state changed
+;;   id                                    ; button-id
+;;   state                                 ; state of the button
+;; )
 
-(defstruct Tracker
-  time                                  ; timestamp
-  sensor                                ; which sensor is reporting
-  pos                                   ; position of the sensor
-  quat                                  ; orientation of the sensor
-)
+;; (defstruct Analog
+;;   time                                  ; timestamp
+;;   numChannel                            ; total number of analog channels
+;;   channel                               ; the channel list
+;; )
 
-(defparameter *MOUSE-BUTTON* (make-Button :time nil :id nil :state nil))
-(defparameter *MOUSE-POSITION* (make-Analog :time nil :numChannel 2 :channel nil))
+;; (defstruct Tracker
+;;   time                                  ; timestamp
+;;   sensor                                ; which sensor is reporting
+;;   pos                                   ; position of the sensor
+;;   quat                                  ; orientation of the sensor
+;; )
+
+;; ----------------------------------------------------------------------------
+(defclass  2d-mouse ()
+  ((rot-x :initform 0.0
+         :accessor rot-x
+         :documentation "rotation in x axis")
+   (rot-y :initform 0.0
+         :accessor rot-y
+         :documentation "rotation in y axis")
+   (trans-x :initform 0.0
+         :accessor trans-x
+         :documentation "translation in x axis")
+   (trans-y :initform 0.0
+         :accessor trans-y
+         :documentation "translation in y axis")
+   (trans-z :initform 0.0
+         :accessor trans-z
+         :documentation "translation in z axis")
+   (orig-click :initform nil
+         :accessor orig-click
+         :documentation "Initial position on click")
+   (orig-rot :initform nil
+         :accessor orig-rot
+         :documentation "Updated position")
+   (orig-trans :initform nil
+         :accessor orig-trans
+         :documentation "Updated position")
+   (button :initform :left-button
+         :accessor button
+         :documentation "rotation in y axis")
+   (state :initform :up
+         :accessor state
+         :documentation "rotation in y axis"))
+  (:documentation "Manages mouse interation. Left button click and
+  drag changes the rotation angles rot-x and rot-y. These keep track of
+  the orientation and is used to generate a rotation matrix." ))
+
+;; ----------------------------------------------------------------------------
+(defmethod rotation ((self 2d-mouse))
+  "Gets the rotation matrix of a 2d-mouse device"
+  (with-slots (rot-x rot-y) self
+    (sb-cga:matrix* (sb-cga:rotate-around (SFVec3F 1 0 0) (SFFloat (radians (SFFloat rot-x))))
+                    (sb-cga:rotate-around (SFVec3F 0 1 0) (SFFloat (radians (SFFloat rot-y))))
+                    (sb-cga:rotate-around (SFVec3F 0 0 1) 0.0))))
+
+(defmethod translation ((self 2d-mouse))
+  "Gets the translation matrix of a 2d-mouse device"
+  (with-slots (trans-z) self
+    (sb-cga:translate (sb-cga:vec 0.0 0.0 trans-z))))
+
+;; ----------------------------------------------------------------------------
+(defmethod initiate ((self 2d-mouse) b s x y)
+  "sets the initial state of the mouse"
+  (with-slots (rot-x rot-y trans-z orig-click orig-rot orig-trans button state) self
+    (setf button b)
+    (setf state s)
+    (when (eq button :left-button)
+        (if (eq state :down)
+            (progn (setf orig-rot (list rot-x rot-y))
+                   (setf orig-click (list x y)))
+            (setf orig-click ())))
+    (when (eq button :right-button)
+      (if (eq state :down)
+          (progn (setf orig-trans trans-z)
+                 (setf orig-click (list x y)))
+          (setf orig-click ())))))
+
+;; ----------------------------------------------------------------------------
+(defmethod update ((self 2d-mouse) x y)
+  "Handles updates on the mouse"
+  (with-slots (rot-x rot-y trans-z orig-click orig-rot orig-trans button state) self
+    (when (and (eq button :left-button)
+               (eq state :down))
+      (setf rot-x (+ (car orig-rot) (- y (cadr orig-click))))
+      (setf rot-y (+ (cadr orig-rot) (- x (car orig-click)))))
+    (print button)
+    (print state)
+    (when (and (eq button :right-button)
+               (eq state :down))
+      (let* ((x-x0 (- x (car orig-click)))
+             (y-y0 (- y (cadr orig-click)))
+             (direction (if (<  y-y0 0) .1 -.1))
+             (distance (* direction (sqrt (+ (* x-x0 x-x0) (* y-y0 y-y0))))))
+        (print x-x0)
+        (print y-y0)
+        (print distance)
+        (setf trans-z (+ orig-trans distance))))))
+
+;; ----------------------------------------------------------------------------
+(defparameter *MOUSE* (make-instance '2d-mouse))
+
+;; ----------------------------------------------------------------------------
+(defun mouse-reset()
+  (setf *MOUSE* (make-instance '2d-mouse)))
+
+;; ----------------------------------------------------------------------------
+(defun mouse-init (button state x y)
+  (initiate *MOUSE* button state x y))
+
+;; ----------------------------------------------------------------------------
+(defun mouse-update (x y)
+  ""
+  (update *MOUSE* x y))
+
+;; ----------------------------------------------------------------------------
+(defun mouse-rotate()
+  ""
+  (sb-cga:matrix* (translation *MOUSE*) (rotation *MOUSE*)))

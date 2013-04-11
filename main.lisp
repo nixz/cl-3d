@@ -131,18 +131,11 @@
   (when (eql key #\Esc)
     (glut:destroy-current-window)))
 
-;; (defvar origclick)
-;; (defvar origrot)
-(defvar pt (sb-cga:vec 0.0 0.0 0.0))
-(defvar zaxis (sb-cga:vec 0.0 0.0 1.0))
+(defmethod glut:mouse ((window scene) button state x y)
+  (mouse-init button state x y))
 
-(defmethod glut:mouse ((w scene) button state x y)
-  (setf (Button-id *MOUSE-BUTTON*) button)
-  (setf (Button-state *MOUSE-BUTTON*) state)
-  (setf (Analog-channel *MOUSE-POSITION*) (list x y)))
-          
-(defmethod glut:motion ((w scene) x y)
-  (setf (Analog-channel *MOUSE-POSITION*) (list x y))
+(defmethod glut:motion ((window scene) x y)
+  (mouse-update x y)
   (glut:post-redisplay))
 
 (defun render (scene)
