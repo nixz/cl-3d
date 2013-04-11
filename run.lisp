@@ -38,29 +38,33 @@
   (:documentation "Generic method to evaluate various nodes as they are traversed"))
 
 ;; -----------------------------------------------------------------------scene
-(defmethod run ((self scene))
-  (with-slots (backgrounds viewpoints shapes transforms) self
+(defmethod run ((self Scene))
+  (with-slots (backgrounds navigationInfos viewpoints shapes transforms) self
     (let ((BACKGROUND (if (first backgrounds)
                           (first backgrounds)
                           (make-instance 'Background)))
+          (NAVIGATION (if (first navigationInfos)
+                          (first navigationInfos)
+                          (make-instance 'NavigationInfo)))
           (VIEWPOINT (if (first viewpoints)
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
-      ;; (MODEL (first shapes)))
-      (run BACKGROUND)
-      (gl:matrix-mode :projection)          ; projection
-      (gl:load-matrix (get-projection VIEWPOINT 1.0 1.5 1000.0))
-      (gl:matrix-mode :modelview)           ; view
-      (gl:load-identity)
-      (gl:mult-matrix (get-view VIEWPOINT))
-      (dolist (shape shapes)
-        (when shape (run shape)))
-      ;; (run (first (shapes self)))
-      (dolist (tx transforms)
-          (when tx (run tx))))))
+      (let ((*PROJECTION* (projection VIEWPOINT 1.0 0.000001 100000.0))
+            (*VIEW* (view VIEWPOINT))
+            (*MODEL* (mouse-rotate)))
+        (run BACKGROUND)
+        (gl:matrix-mode :projection)          ; projection
+        (gl:load-matrix *PROJECTION*)
+        (gl:matrix-mode :modelview)           ; view
+        (gl:load-identity)
+        (gl:mult-matrix (sb-cga:matrix* *VIEW* *MODEL*))
+        (dolist (shape shapes)
+          (when shape (run shape)))
+        (dolist (tx transforms)
+          (when tx (run tx)))))))
 
 ;; ---------------------------------------------------------------------grouping
-(defmethod run ((self transform))
+(defmethod run ((self Transform))
   (format t "Transform~%")
   (with-slots (center rotation scale scaleOrientation translation containerField) self
     (let ((center (SFVec3f center))
@@ -68,22 +72,15 @@
           (scale (SFVec3f scale))
           (scaleOrientation (SFRotation scaleOrientation))
           (translation (SFVec3f translation)))
-      (let ((C (sb-cga:translate center))
-            (R (apply #'sb-cga:rotate-around rotation))
-            (S (sb-cga:scale scale))
-            (SR (apply #'sb-cga:rotate-around scaleOrientation))
-            (Tx (sb-cga:translate translation)))
-        (let ((-SR (sb-cga:inverse-matrix SR))
-              (-C (sb-cga:inverse-matrix C)))
-          (let* ((mat (sb-cga:matrix* Tx C R SR S -SR -C))
-                 (-mat (sb-cga:inverse-matrix mat)))
-            (gl:mult-matrix mat)
-            (dolist (child containerField)
-              (run child))
-            (gl:mult-matrix -mat)))))))
+      (let* ((mat (transform translation center rotation scale scaleOrientation))
+             (-mat (sb-cga:inverse-matrix mat)))
+        (gl:mult-matrix mat)
+        (dolist (child containerField)
+          (run child))
+        (gl:mult-matrix -mat)))))
 
-;; ------------------------------------------------------------------navigation
-(defmethod run ((self viewpoint))
+;; ...................................................................Viewpoint
+(defmethod run ((self Viewpoint))
   (format t "Viewpoint~%")
   (with-slots (centerOfRotation orientation position) self
     (let ((centerOfRotation (SFVec3f centerOfRotation))
@@ -92,22 +89,23 @@
       (let ((C (sb-cga:translate centerOfRotation))
             (R (apply #'sb-cga:rotate-around orientation))
             (Tx (sb-cga:translate position)))
-    (let ((-C (sb-cga:inverse-matrix C)))
-      (sb-cga:inverse-matrix (sb-cga:matrix* Tx C R -C))))))) ;; this is the LOOKAT configuration
+        (let ((-C (sb-cga:inverse-matrix C))
+              (-R (sb-cga:inverse-matrix R)))
+          (sb-cga:inverse-matrix (sb-cga:matrix* Tx C R -C))))))) ;; this is the LOOKAT configuration
 
 ;; ----------------------------------------------------------------------------
-(defmethod get-projection ((self viewpoint) aspect near far)
+(defmethod projection ((self Viewpoint) aspect near far)
   (with-slots (fieldOfView) self
     (let ((fieldOfView (degrees (SFFloat fieldOfView))))
       (perspective fieldOfView aspect near far))))
 
 ;; ----------------------------------------------------------------------------
-(defmethod get-view ((self viewpoint))
+(defmethod view ((self Viewpoint))
   (run self))
 
 ;; -----------------------------------------------------------------geometry-3d
 ;; .........................................................................Box
-(defmethod run ((self box))
+(defmethod run ((self Box))
   "create a vertex and index buffers"
   (format t "Box~%")
   (with-slots (size solid) self
@@ -123,7 +121,7 @@
               (glut:wire-cube 1)))))))
 
 ;; ........................................................................Cone
-(defmethod run ((self cone))
+(defmethod run ((self Cone))
   "create a vertex and index buffers"
   (format t "Cone~%")
   (with-slots (bottomRadius height side bottom solid) self
@@ -211,7 +209,7 @@
       (glut:stroke-string +stroke-roman+ string))))
 
 ;; -----------------------------------------------------------------env-effects
-(defmethod run ((self background))
+(defmethod run ((self Background))
   "
 TODO: Make an actual background. For now just use the sky color and set he
 background
@@ -224,7 +222,7 @@ background
         (gl:clear :color-buffer :depth-buffer)))))
 
 ;; -----------------------------------------------------------------------shape
-(defmethod run ((self shape))
+(defmethod run ((self Shape))
   ""
   (format t "Shape~%")
   (with-slots (containerField) self
@@ -234,16 +232,16 @@ background
           (progn (run 1st) (run 2nd))
           (progn (run 2nd) (run 1st))))))
 
-;; ------------------------------------------------------------------appearance
-(defmethod run ((self appearance))
+;; ------------------------------------------------------------------Appearance
+(defmethod run ((self Appearance))
   ""
   (format t "Appearance~%")
   (with-slots (containerField) self
     (dolist (element containerField)
       (run element))))
 
-;; ------------------------------------------------------------------appearance
-(defmethod run((self material))
+;; --------------------------------------------------------------------Material
+(defmethod run((self Material))
   ""
   (format t "Material~%")
   ;; (gl:light :light0 :specular '(1.0 1.0 1.0 0)) ;white-specular-light

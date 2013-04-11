@@ -36,7 +36,7 @@
 
 ;; ------------------------------------------------------------------------lisp
 (in-package #:cl-3d)
-(render
+
 <Scene>
   <Background skyColor='1 1 1'/>
   <Viewpoint description='Book View'
@@ -48,7 +48,7 @@
       <Material/>
     </Appearance>
   </Shape>
-</Scene>)
+</Scene>
 
 ;; ----------------------------------------------------------------------------
 ;; purely in lisp this should probably look like the following

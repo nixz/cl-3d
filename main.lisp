@@ -73,6 +73,10 @@
          :initform nil
          :accessor viewpoints
          :documentation "defines the point of view of the scene")
+   (navigationInfos
+         :initform nil
+         :accessor navigationInfos
+         :documentation "the list of all NavigationInfo nodes")
    (shapes
          :initform nil
          :accessor shapes
@@ -83,6 +87,12 @@
          :documentation "List of transformation objects"))
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
                      :mode '(:single :rgb :depth)))
+
+
+(defmethod initialize-instance :after ((self Scene) &key)
+  "initialize the scene"
+  (mouse-reset)
+  (glut:display-window self))
 
 (defmethod glut:display-window :before ((w scene))
   (gl:clear-color 0 0 0 0)
@@ -102,20 +112,6 @@
   (run w)
   (gl:flush))
 
-  ;; ;; (gl:clear-color 0 0 0 0)              ;background
-  ;; ;; (gl:clear :color-buffer)              ; clear the background background
-  ;; (run *BACKGROUND*)
-
-  ;; (gl:matrix-mode :projection)          ; projection
-  ;; (gl:load-matrix (get-projection *VIEWPOINT* 1.0 1.5 20.0))
-  ;; (gl:matrix-mode :modelview)           ; view
-  ;; (gl:load-matrix (get-view *VIEWPOINT*))
-  ;; ;; modeling transformation
-  ;; (run *MODEL*)
- 
-  ;; (gl:flush))
-
-
 (defmethod glut:reshape ((w scene) width height)
   "Whenever the window is changed then this event is triggered"
   (progn
@@ -127,33 +123,13 @@
   (when (eql key #\Esc)
     (glut:destroy-current-window)))
 
-;; (defun scene (&rest rest)
-;;   ""
-;;   (setf *SOUP* (apply #'list rest))
-;;   (glut:display-window (make-instance 'scene)))
+(defmethod glut:mouse ((window scene) button state x y)
+  (mouse-init button state x y))
 
-(defun render (scene)
-  (glut:display-window scene))
+(defmethod glut:motion ((window scene) x y)
+  (mouse-update x y)
+  (glut:post-redisplay))
 
-;; ;; ----------------------------------------------------------------------------
-;; (defclass X3DChildNode (X3DNode)
-;;   (
-;;    (childrens
-;;          :initform NIL
-;;          :accessor childrens
-;;          :type X3DChildNode
-;;          :documentation "The collection of all the children")
-;;    ;; (containerField :initarg :containerField
-;;    ;;      :initform (xs:NMTOKEN children)
-;;    ;;      :accessor containerField
-;;    ;;      :type xs:NMTOKEN
-;;    ;;      :documentation "")
-;;   )
-;;   (:documentation ""))
-
-;; ;; ----------------------------------------------------------------------------
-;; (defmethod add-subobject ((self X3DChildNode) (child X3DChildNode))
-;;    (add-object-to-slot self child 'childrens))
 
 ;; --------------------------------------------------------------------grouping
 ;; (defun transform(&key
