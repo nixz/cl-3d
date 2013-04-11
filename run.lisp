@@ -131,11 +131,11 @@
           (bottom (SFBool bottom))
           (solid (SFBool solid)))
       (gl:with-pushed-matrix
-      (gl:rotate -90 1 0 0)
-      (gl:translate 0 0 (- (/ height 2)))
-      (if solid       
-          (glut:solid-cone bottomRadius height 20 1)                   ; shape
-          (glut:wire-cone bottomRadius height 20 1))))))
+        (gl:rotate -90 1 0 0)
+        (gl:translate 0 0 (- (/ height 2)))
+        (if solid
+            (glut:solid-cone bottomRadius height 20 1)                   ; shape
+            (glut:wire-cone bottomRadius height 20 1))))))
 
 ;; ....................................................................Cylinder
 (defmethod run ((self Cylinder))
@@ -148,10 +148,10 @@
           (bottom (SFBool bottom))
           (top (SFBool top))
           (solid (SFBool solid)))
-        (gl:with-pushed-matrix
-      (gl:rotate -90 1 0 0)
-      (gl:translate 0 0 (- (/ height 2)))
-      (glut:solid-cylinder radius height 20 1)))))
+      (gl:with-pushed-matrix
+        (gl:rotate -90 1 0 0)
+        (gl:translate 0 0 (- (/ height 2)))
+        (glut:solid-cylinder radius height 20 1)))))
 
 
 ;; ......................................................................Sphere
@@ -161,11 +161,11 @@
   (with-slots (radius solid) self
     (let ((radius (SFFloat radius))
           (solid (SFBool solid)))
-        (gl:with-pushed-matrix
-      (gl:rotate -90 1 0 0)
-      (if solid
-          (glut:solid-sphere radius 30 30)
-          (glut:wire-sphere radius 30 30))))))
+      (gl:with-pushed-matrix
+        (gl:rotate -90 1 0 0)
+        (if solid
+            (glut:solid-sphere radius 30 30)
+            (glut:wire-sphere radius 30 30))))))
 
 ;; (let* ((+x (abs (/ (elt size 0) 2)))
 ;;        (+y (abs (/ (elt size 1) 2)))
