@@ -251,6 +251,13 @@ void sfrotation::add(sfrotation* r) {
 ;;           (print angle)
 ;;           (list vec angle)))))
 
+(defun trans<-matrix (mat)
+  "Returns the translation component from matrix"
+  (let ((m03 (sb-cga:mref mat 0 0))
+        (m13 (sb-cga:mref mat 0 1))
+        (m23 (sb-cga:mref mat 0 2)))
+    (SFVec3F m03 m13 m23)))
+
 (defun rotate<-matrix(mat)
   "Takes a matrix and gives a SFRotation
 
