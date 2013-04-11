@@ -49,7 +49,7 @@
           (VIEWPOINT (if (first viewpoints)
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
-      (let ((*PROJECTION* (projection VIEWPOINT 1.0 0.000001 100000.0))
+      (let ((*PROJECTION* (projection VIEWPOINT 1.0 0.1 1000.0))
             (*VIEW* (view VIEWPOINT))
             (*MODEL* (mouse-rotate)))
         (run BACKGROUND)
