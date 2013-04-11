@@ -32,7 +32,6 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 
-(render
   <Scene>
     <Background skyColor='1 1 1'/>
     <Transform translation='-5 0 0'>
@@ -78,4 +77,4 @@
       </Shape>
     </Transform>
   </Scene>
-)
+

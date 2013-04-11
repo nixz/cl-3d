@@ -37,7 +37,6 @@
 
 (in-package #:cl-3d)
 
-(render
   <Scene>
     <Transform translation='-5 0 0'>
       <Shape DEF='DefaultShape'>
@@ -82,4 +81,3 @@
       </Shape>
     </Transform>
   </Scene>
-)

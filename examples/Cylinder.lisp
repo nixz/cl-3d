@@ -36,7 +36,6 @@
 
 (in-package #:cl-3d)
 
-(render
   <Scene>
     <Background skyColor='1 1 1'/>
     <Viewpoint description='Book View' orientation='-1 0. 0 0.68' position='0 2.9 4.83'/>
@@ -47,4 +46,3 @@
       </Appearance>
     </Shape>
   </Scene>
-)

@@ -88,6 +88,12 @@
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
                      :mode '(:single :rgb :depth)))
 
+
+(defmethod initialize-instance :after ((self Scene) &key)
+  "initialize the scene"
+  (mouse-reset)
+  (glut:display-window self))
+
 (defmethod glut:display-window :before ((w scene))
   (gl:clear-color 0 0 0 0)
   (gl:cull-face :back)
@@ -123,9 +129,6 @@
 (defmethod glut:motion ((window scene) x y)
   (mouse-update x y)
   (glut:post-redisplay))
-
-(defun render (scene)
-  (glut:display-window scene))
 
 
 ;; --------------------------------------------------------------------grouping

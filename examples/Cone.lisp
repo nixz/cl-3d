@@ -36,7 +36,6 @@
 
 (in-package #:cl-3d)
 
-(render
 <Scene>
   <Background skyColor='1 1 1'/> 
   <Viewpoint description='Side View' position='0 0 3'/> 
@@ -48,7 +47,6 @@
     </Appearance>
   </Shape>
 </Scene>
-)
 
 ;; (Scene
 ;;  (Background :skyColor'(1 1 1)) 
