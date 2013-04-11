@@ -38,28 +38,30 @@
   (:documentation "Generic method to evaluate various nodes as they are traversed"))
 
 ;; -----------------------------------------------------------------------scene
-  (with-slots (backgrounds viewpoints shapes transforms) self
 (defmethod run ((self Scene))
+  (with-slots (backgrounds navigationInfos viewpoints shapes transforms) self
     (let ((BACKGROUND (if (first backgrounds)
                           (first backgrounds)
                           (make-instance 'Background)))
+          (NAVIGATION (if (first navigationInfos)
+                          (first navigationInfos)
+                          (make-instance 'NavigationInfo)))
           (VIEWPOINT (if (first viewpoints)
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
-      (setf *PROJECTION* (get-projection VIEWPOINT 1.0 1.5 1000.0))
-      (setf *MODEL-VIEW* (get-view VIEWPOINT))
-      ;; (MODEL (first shapes)))
-      (run BACKGROUND)
-      (gl:matrix-mode :projection)          ; projection
-      (gl:load-matrix *PROJECTION*)
-      (gl:matrix-mode :modelview)           ; view
-      (gl:load-identity)
-      (gl:mult-matrix *MODEL-VIEW*)
-      (dolist (shape shapes)
-        (when shape (run shape)))
-      ;; (run (first (shapes self)))
-      (dolist (tx transforms)
-          (when tx (run tx))))))
+      (let ((*PROJECTION* (projection VIEWPOINT 1.0 0.000001 100000.0))
+            (*VIEW* (view VIEWPOINT))
+            (*MODEL* (mouse-rotate)))
+        (run BACKGROUND)
+        (gl:matrix-mode :projection)          ; projection
+        (gl:load-matrix *PROJECTION*)
+        (gl:matrix-mode :modelview)           ; view
+        (gl:load-identity)
+        (gl:mult-matrix (sb-cga:matrix* *VIEW* *MODEL*))
+        (dolist (shape shapes)
+          (when shape (run shape)))
+        (dolist (tx transforms)
+          (when tx (run tx)))))))
 
 ;; ---------------------------------------------------------------------grouping
 (defmethod run ((self Transform))
