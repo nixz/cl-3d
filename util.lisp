@@ -62,9 +62,8 @@
 
 ;; ----------------------------------------------------------------------------
 (defun perspective (fov aspect znear zfar)
-  (let* ((ymax (coerce (* znear
-                          (tan (deg->rad (/ fov 2))))
-                       'single-float))
+  (let* ((ymax (SFFloat (* znear
+                          (tan (radians (SFFloat (/ fov 2)))))))
          (ymin (- ymax))
          (xmin (* ymin aspect))
          (xmax (* ymax aspect)))
