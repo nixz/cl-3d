@@ -38,8 +38,8 @@
   (:documentation "Generic method to evaluate various nodes as they are traversed"))
 
 ;; -----------------------------------------------------------------------scene
-(defmethod run ((self scene))
   (with-slots (backgrounds viewpoints shapes transforms) self
+(defmethod run ((self Scene))
     (let ((BACKGROUND (if (first backgrounds)
                           (first backgrounds)
                           (make-instance 'Background)))
@@ -62,7 +62,7 @@
           (when tx (run tx))))))
 
 ;; ---------------------------------------------------------------------grouping
-(defmethod run ((self transform))
+(defmethod run ((self Transform))
   (format t "Transform~%")
   (with-slots (center rotation scale scaleOrientation translation containerField) self
     (let ((center (SFVec3f center))
@@ -76,10 +76,9 @@
         (dolist (child containerField)
           (run child))
         (gl:mult-matrix -mat)))))
-        
-;; ------------------------------------------------------------------navigation
+
 ;; ...................................................................Viewpoint
-(defmethod run ((self viewpoint))
+(defmethod run ((self Viewpoint))
   (format t "Viewpoint~%")
   (with-slots (centerOfRotation orientation position) self
     (let ((centerOfRotation (SFVec3f centerOfRotation))
@@ -92,18 +91,18 @@
       (sb-cga:inverse-matrix (sb-cga:matrix* Tx R))))))) ;; this is the LOOKAT configuration
 
 ;; ----------------------------------------------------------------------------
-(defmethod get-projection ((self viewpoint) aspect near far)
+(defmethod projection ((self Viewpoint) aspect near far)
   (with-slots (fieldOfView) self
     (let ((fieldOfView (degrees (SFFloat fieldOfView))))
       (perspective fieldOfView aspect near far))))
 
 ;; ----------------------------------------------------------------------------
-(defmethod get-view ((self viewpoint))
+(defmethod view ((self Viewpoint))
   (run self))
 
 ;; -----------------------------------------------------------------geometry-3d
 ;; .........................................................................Box
-(defmethod run ((self box))
+(defmethod run ((self Box))
   "create a vertex and index buffers"
   (format t "Box~%")
   (with-slots (size solid) self
@@ -119,7 +118,7 @@
               (glut:wire-cube 1)))))))
 
 ;; ........................................................................Cone
-(defmethod run ((self cone))
+(defmethod run ((self Cone))
   "create a vertex and index buffers"
   (format t "Cone~%")
   (with-slots (bottomRadius height side bottom solid) self
@@ -207,7 +206,7 @@
       (glut:stroke-string +stroke-roman+ string))))
 
 ;; -----------------------------------------------------------------env-effects
-(defmethod run ((self background))
+(defmethod run ((self Background))
   "
 TODO: Make an actual background. For now just use the sky color and set he
 background
@@ -220,7 +219,7 @@ background
         (gl:clear :color-buffer :depth-buffer)))))
 
 ;; -----------------------------------------------------------------------shape
-(defmethod run ((self shape))
+(defmethod run ((self Shape))
   ""
   (format t "Shape~%")
   (with-slots (containerField) self
@@ -230,16 +229,16 @@ background
           (progn (run 1st) (run 2nd))
           (progn (run 2nd) (run 1st))))))
 
-;; ------------------------------------------------------------------appearance
-(defmethod run ((self appearance))
+;; ------------------------------------------------------------------Appearance
+(defmethod run ((self Appearance))
   ""
   (format t "Appearance~%")
   (with-slots (containerField) self
     (dolist (element containerField)
       (run element))))
 
-;; ------------------------------------------------------------------appearance
-(defmethod run((self material))
+;; --------------------------------------------------------------------Material
+(defmethod run((self Material))
   ""
   (format t "Material~%")
   ;; (gl:light :light0 :specular '(1.0 1.0 1.0 0)) ;white-specular-light

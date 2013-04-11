@@ -106,20 +106,6 @@
   (run w)
   (gl:flush))
 
-  ;; ;; (gl:clear-color 0 0 0 0)              ;background
-  ;; ;; (gl:clear :color-buffer)              ; clear the background background
-  ;; (run *BACKGROUND*)
-
-  ;; (gl:matrix-mode :projection)          ; projection
-  ;; (gl:load-matrix (get-projection *VIEWPOINT* 1.0 1.5 20.0))
-  ;; (gl:matrix-mode :modelview)           ; view
-  ;; (gl:load-matrix (get-view *VIEWPOINT*))
-  ;; ;; modeling transformation
-  ;; (run *MODEL*)
- 
-  ;; (gl:flush))
-
-
 (defmethod glut:reshape ((w scene) width height)
   "Whenever the window is changed then this event is triggered"
   (progn
@@ -141,25 +127,6 @@
 (defun render (scene)
   (glut:display-window scene))
 
-;; ;; ----------------------------------------------------------------------------
-;; (defclass X3DChildNode (X3DNode)
-;;   (
-;;    (childrens
-;;          :initform NIL
-;;          :accessor childrens
-;;          :type X3DChildNode
-;;          :documentation "The collection of all the children")
-;;    ;; (containerField :initarg :containerField
-;;    ;;      :initform (xs:NMTOKEN children)
-;;    ;;      :accessor containerField
-;;    ;;      :type xs:NMTOKEN
-;;    ;;      :documentation "")
-;;   )
-;;   (:documentation ""))
-
-;; ;; ----------------------------------------------------------------------------
-;; (defmethod add-subobject ((self X3DChildNode) (child X3DChildNode))
-;;    (add-object-to-slot self child 'childrens))
 
 ;; --------------------------------------------------------------------grouping
 ;; (defun transform(&key

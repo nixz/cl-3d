@@ -33,23 +33,12 @@
 
 (in-package #:cl-3d)
 
-(defparameter *PROJECTION* nil)
-(defparameter *MODEL-VIEW* nil)
 
-(defun screen<-world (p)
-  "Transforms a point from world space to screen space"
-  )
-
-(defun world<-screen (p)
-  "Transform a point from screen space to world space"
-  )
-
-(defun deg->rad (x) (* x (/ pi 180)))
-(defun rad->deg (x) (* x (/ 180 pi)))
 
 (defun radians (x) (* x (/ pi 180)))
 (defun degrees (x) (* x (/ 180 pi)))
 
+;; ----------------------------------------------------------------------------
 (defun frustum (xmin xmax ymin ymax znear zfar)
   (let ((a (/ (* 2 znear)
               (- xmax xmin)))
@@ -68,6 +57,7 @@
                    0.0  0.0     e    f
                    0.0  0.0  -1.0  0.0)))
 
+;; ----------------------------------------------------------------------------
 (defun perspective (fov aspect znear zfar)
   (let* ((ymax (coerce (* znear
                           (tan (deg->rad (/ fov 2))))
@@ -79,6 +69,7 @@
              ymin ymax
              znear zfar)))
 
+;; ----------------------------------------------------------------------------
 (defmethod sf-color (x y z)
   (let ((a (coerce x 'single-float))
         (b (coerce y 'single-float))
@@ -91,6 +82,7 @@
 ;;         (c (coerce z 'single-float)))
 ;;     (cl:vector a b c 1.0)))
 
+;; ----------------------------------------------------------------------------
 (defmethod IntensityType(str)
   (coerce (read-from-string str) 'single-float))
 
@@ -125,18 +117,8 @@
       t
       nil))
 
-;; ;; ----------------------------------------------------------------------------
-;; (defmethod SFRotation((str string))
-;;   (apply #'cl:vector 
-;;          (mapcar (lambda (x)
-;;                    (coerce x 'single-float))
-;;                  (with-input-from-string (in str)
-;;                    (loop for x = (read in nil nil) 
-;;                       while x 
-;;                       collect x)))))
-
 ;; ----------------------------------------------------------------------------
-(defmethod SFFloat(str)
+(defmethod SFFloat((str cl:string))
   (coerce (with-input-from-string(in str)
             (read in nil nil))
           'single-float))
@@ -180,8 +162,8 @@
 
 (defmethod SFVec3F((val cl:list) &optional (y NIL) (z NIL))
   (apply #'sb-cga:vec (mapcar (lambda (x)
-                               (coerce x 'single-float))
-                             val)))
+                                (coerce x 'single-float))
+                              val)))
 (defmethod SFVec3F((val cl:vector) &optional (y NIL) (z NIL))
   val)
 
@@ -197,33 +179,8 @@
       (sb-cga:matrix* Tx C R SR S -SR -C))))
 
 
-(defun z-sphere(x y r)
-  (let ((X2 (* x x))
-        (Y2 (* y y))
-        (R2 (* r r)))
-    (let* ((X2+Y2 (+ X2 + Y2))
-           (R2-X2-Y2 (- R2 X2+Y2)))
-      (sqrt R2-X2-Y2))))
-
-(defun examine (viewpoint) 
-  (with-slots (orientation position) viewpoint
-      (let* ((orient (SFRotation orientation))
-             (channel (Analog-channel *MOUSE-POSITION*))
-             (x (first channel))
-             (y (second channel))
-             (pt (sb-cga:vec x y 0.0)
-        (let* ((current (sb-cga:normalize (SFVec3f position))
-               (dir-vec (sb-cga:normalize (sb-cga:vec- pt current))))
-          (print dir-vec)
-          (let ((rot-vector (sb-cga:normalize (sb-cga:cross-product dir-vec zaxis)))
-                (rot-value (sb-cga:vec-length dir-vec)))
-            (setf orientation (list rot-vector (coerce (radians rot-value) 'single-float)))))
   ;;       ;; (setf orientation (list rot-vector (coerce (radians rot-value) 'single-float))))
   ;;       ;; (setf view-rotx (+ (car origrot) (- y (cadr origclick))))
   ;;       ;; (setf view-roty (+ (cadr origrot) (- x (car origclick))))
   ;;       (glut:post-redisplay)))))
 
-;; (defun scene (&rest rest)
-;;   ""
-;;   (setf *SOUP* (apply #'list rest))
-;;   (glut:display-window (make-instance 'scene)))
