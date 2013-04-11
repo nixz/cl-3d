@@ -89,8 +89,9 @@
       (let ((C (sb-cga:translate centerOfRotation))
             (R (apply #'sb-cga:rotate-around orientation))
             (Tx (sb-cga:translate position)))
-    (let ((-C (sb-cga:inverse-matrix C)))
-      (sb-cga:inverse-matrix (sb-cga:matrix* Tx R))))))) ;; this is the LOOKAT configuration
+        (let ((-C (sb-cga:inverse-matrix C))
+              (-R (sb-cga:inverse-matrix R)))
+          (sb-cga:inverse-matrix (sb-cga:matrix* Tx C R -C))))))) ;; this is the LOOKAT configuration
 
 ;; ----------------------------------------------------------------------------
 (defmethod projection ((self Viewpoint) aspect near far)
