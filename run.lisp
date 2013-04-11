@@ -193,19 +193,23 @@
 (defmethod run ((self Text))
   (format t "Text~%")
   (with-slots (length maxExtent string lineBounds origin textBounds solid) self
-    ;; (let ((length (MFFloat length))
+    ;; (let ((length (SFFloat (cl:length string))))
     ;;       (maxExtent (SFFloat maxExtent))
     ;;       (string (MFString string))
     ;;       (lineBounds (MFVec2f lineBounds))
     ;; (let ((origin (SFVec3f origin))))
     ;;       (textBounds (SFVec2f textBounds))
     ;;       (solid (SFBool solid))))
-      ;; (let ((x (elt origin 0))
-      ;;       (y (elt origin 1))
-      ;;       (z (elt origin 2)))
+    ;;   (let ((x (elt origin 0))
+    ;;         (y (elt origin 1))
+    ;;         (z (elt origin 2)))
     (gl:with-pushed-matrix
-      (gl:rotate -90 0 0 1)
+      (gl:scale (/ 1 104.76) (/ 1 104.76) 0.0)
+      (gl:translate 0 -119.05 0)      ; Origin is upper left corner
+                                      ; alternatively can use
+                                      ; (gl:translate (* -26.19 length) -119.05 0)
       (print string)
+      (gl:line-width 5)
       (glut:stroke-string +stroke-roman+ string))))
 
 ;; -----------------------------------------------------------------env-effects
