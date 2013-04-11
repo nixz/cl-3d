@@ -251,7 +251,7 @@ void sfrotation::add(sfrotation* r) {
 ;;           (print angle)
 ;;           (list vec angle)))))
 
-(defun SFRotation<-SFMatrix4F(mat)
+(defun rotate<-matrix(mat)
   "Takes a matrix and gives a SFRotation
 
 void SFMatrix::getSFRotation(SFRotation *rotation)
