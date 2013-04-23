@@ -64,12 +64,6 @@
    (rot-y :initform 0.0
          :accessor rot-y
          :documentation "rotation in y axis")
-   (trans-x :initform 0.0
-         :accessor trans-x
-         :documentation "translation in x axis")
-   (trans-y :initform 0.0
-         :accessor trans-y
-         :documentation "translation in y axis")
    (trans-z :initform 0.0
          :accessor trans-z
          :documentation "translation in z axis")
@@ -96,10 +90,13 @@
 (defmethod rotation ((self 2d-mouse))
   "Gets the rotation matrix of a 2d-mouse device"
   (with-slots (rot-x rot-y) self
-    (sb-cga:matrix* (sb-cga:rotate-around (SFVec3F 1 0 0) (SFFloat (radians (SFFloat rot-x))))
-                    (sb-cga:rotate-around (SFVec3F 0 1 0) (SFFloat (radians (SFFloat rot-y))))
+    (sb-cga:matrix* (sb-cga:rotate-around (SFVec3F 1 0 0)
+                                          (SFFloat (radians (SFFloat rot-x))))
+                    (sb-cga:rotate-around (SFVec3F 0 1 0)
+                                          (SFFloat (radians (SFFloat rot-y))))
                     (sb-cga:rotate-around (SFVec3F 0 0 1) 0.0))))
 
+;; ----------------------------------------------------------------------------
 (defmethod translation ((self 2d-mouse))
   "Gets the translation matrix of a 2d-mouse device"
   (with-slots (trans-z) self
