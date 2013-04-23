@@ -57,6 +57,64 @@
 ;; )
 
 ;; ----------------------------------------------------------------------------
+(defclass Screen ()
+  ((o
+         :initform (SFVec3F -1.0 -1.0 -2.4142075) ;
+         :accessor o
+         :documentation "The lower left corder of the display (Origin)")
+   (x
+         :initform (SFVec3F  1.0 -1.0 -2.4142075)
+         :accessor x
+         :documentation "The lower right corder of the display")
+   (y
+         :initform (SFVec3F -1.0  1.0 -2.4142075)
+         :accessor y
+         :documentation "about-slot"))
+  (:documentation "Class to configure display coordinates wrt some base coordinates"))
+
+;; ----------------------------------------------------------------------------
+;; Until there is real head tracking this class is dummy. The run
+;; method of this class returns the transformation matrix for the
+;; tracker
+(defclass  Head ()
+  ((position
+         :initform (SFVec3F 0 0 0)
+         :accessor position
+         :documentation "The position of the tracker")
+   (orientiation
+         :initform NIL
+         :accessor orientiation
+         :documentation "the orientation of the tracker (usually a quaternion)"))
+  (:documentation "The tracked head. Returns a transformation matrix on run."))
+
+;; ----------------------------------------------------------------------------
+;; Screen to tracking base
+(defparameter *Screen* (make-instance 'Screen))
+(defparameter *width* 2)
+(defparameter *height* 2)
+(defparameter *Head* (make-instance 'Head))
+(defparameter *IPD* 0.0)
+
+;; ----------------------------------------------------------------------------
+(defmethod run ((self Screen))
+  "Returns the transformation matrix of the screen"
+  (with-slots (o x y) self
+    (let* ((x-> (sb-cga:vec- x o))
+          (y-> (sb-cga:vec- y o))
+          (center (sb-cga:vec/ (sb-cga:vec+ x y) 2.0)))
+      (print center)
+      (let ((z-> (sb-cga:cross-product x-> y->))
+            (oz-> (SFVec3f 0 0 1)))
+        (let ((rot (sb-cga:reorient oz-> z->))
+              (trans (sb-cga:translate center)))
+          (sb-cga:matrix* trans rot))))))
+
+
+(defmethod run ((self Head))
+  "For now there is no head transformation. And we simply return the identity matrix"
+  (sb-cga:identity-matrix))
+
+;; ----------------------------------------------------------------------------
 (defclass  2d-mouse ()
   ((rot-x :initform 0.0
          :accessor rot-x
