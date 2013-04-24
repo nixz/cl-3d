@@ -93,7 +93,8 @@
 (defparameter *width* 2)
 (defparameter *height* 2)
 (defparameter *Head* (make-instance 'Head))
-(defparameter *IPD* 0.0)
+(defparameter *IPD* 0.063)              ; This is in meters
+(defparameter *STEREO* NIL)
 
 ;; ----------------------------------------------------------------------------
 (defmethod run ((self Screen))

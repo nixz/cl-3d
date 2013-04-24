@@ -57,6 +57,37 @@
           (sb-cga:matrix* (sb-cga:inverse-matrix (sb-cga:matrix* Tx R nTx))
                           nR))))))
 
+;; ----------------------------------------------------------------------------
+(defun projection (mat)
+  "Sets the projection matrix based on the center of the screen"
+  (gl:matrix-mode :projection)          ; projection
+  (let ((x (sb-cga:mref mat 0 3))
+        (y (sb-cga:mref mat 1 3))
+        (z (sb-cga:mref mat 2 3)))
+    (let ((left (- x (/ *width* 2)))
+          (right (+ x (/ *width* 2)))
+          (bottom (- y (/ *height* 2)))
+          (top (+ y (/ *height* 2)))
+          (near 0.1)
+          (far 1000.0))
+      (let* ((scale (/ (- near) z))
+             (proj (frustum (* scale left)
+                            (* scale right)
+                            (* scale bottom)
+                            (* scale top)
+                            near
+                            far)))
+        (gl:load-matrix proj)))))
+
+;; ----------------------------------------------------------------------------
+(defun model-view (mat eye)
+  "Uses the matrix to set the model-view matris"
+  (gl:matrix-mode :modelview) ; view
+  (cond ((eq eye :right) (gl:draw-buffer :back-right))
+        (t (gl:draw-buffer :back-left)))
+  (gl:load-identity)
+  (gl:mult-matrix mat))
+
 ;; -----------------------------------------------------------------------scene
 (defmethod run ((self Scene))
   (with-slots (backgrounds navigationInfos viewpoints shapes transforms) self
@@ -75,40 +106,61 @@
              (Head<-Base (sb-cga:inverse-matrix Base<-Head))
              (Base<-VWorld (navigate Viewpoint (mouse-rotate))) ; Virtual world (const)
              (Head<-Screen (sb-cga:matrix* Head<-Base Base<-Screen))
-             (Head<-AlignedEye (sb-cga:matrix*
-                                (sb-cga:translate (SFVec3F *IPD* 0.0 0.0))
+             ;; Center eye calculations
+             (Head<-AlignedEyeCenter (sb-cga:matrix*
+                                (sb-cga:translate (SFVec3F 0.0 0.0 0.0))
                                 (extract-rotation Head<-Screen)))
-             (AlignedEye<-Head (sb-cga:inverse-matrix Head<-AlignedEye))
-             (AlignedEye<-VWorld (sb-cga:matrix* AlignedEye<-Head
+             (AlignedEyeCenter<-Head (sb-cga:inverse-matrix Head<-AlignedEyeCenter))
+             (AlignedEyeCenter<-VWorld (sb-cga:matrix* AlignedEyeCenter<-Head
                                                  Head<-Base
                                                  Base<-VWorld))
-             (AlignedEye<-Screen (sb-cga:matrix* AlignedEye<-Head
+             (AlignedEyeCenter<-Screen (sb-cga:matrix* AlignedEyeCenter<-Head
+                                                 Head<-Screen))
+             ;; Left eye calculations
+             (Head<-AlignedEyeLeft (sb-cga:matrix*
+                                (sb-cga:translate (SFVec3F (/ *IPD* -2) 0.0 0.0))
+                                (extract-rotation Head<-Screen)))
+             (AlignedEyeLeft<-Head (sb-cga:inverse-matrix Head<-AlignedEyeLeft))
+             (AlignedEyeLeft<-VWorld (sb-cga:matrix* AlignedEyeLeft<-Head
+                                                 Head<-Base
+                                                 Base<-VWorld))
+             (AlignedEyeLeft<-Screen (sb-cga:matrix* AlignedEyeLeft<-Head
+                                                 Head<-Screen))
+             ;; Right eye calculations
+             (Head<-AlignedEyeRight (sb-cga:matrix*
+                                (sb-cga:translate (SFVec3F (/ *IPD* 2) 0.0 0.0))
+                                (extract-rotation Head<-Screen)))
+             (AlignedEyeRight<-Head (sb-cga:inverse-matrix Head<-AlignedEyeRight))
+             (AlignedEyeRight<-VWorld (sb-cga:matrix* AlignedEyeRight<-Head
+                                                 Head<-Base
+                                                 Base<-VWorld))
+             (AlignedEyeRight<-Screen (sb-cga:matrix* AlignedEyeRight<-Head
                                                  Head<-Screen)))
-        (gl:matrix-mode :projection)          ; projection
-        (let ((x (sb-cga:mref AlignedEye<-Screen 0 3))
-              (y (sb-cga:mref AlignedEye<-Screen 1 3))
-              (z (sb-cga:mref AlignedEye<-Screen 2 3)))
-          (let ((left (- x (/ *width* 2)))
-                (right (+ x (/ *width* 2)))
-                (bottom (- y (/ *height* 2)))
-                (top (+ y (/ *height* 2)))
-                (near 0.1)
-                (far 1000.0))
-            (let* ((scale (/ (- near) z))
-                   (proj (frustum (* scale left)
-                                  (* scale right)
-                                  (* scale bottom)
-                                  (* scale top)
-                                  near
-                                  far)))
-              (gl:load-matrix proj))))
-        (gl:matrix-mode :modelview) ; view
-        (gl:load-identity)
-        (gl:mult-matrix (sb-cga:matrix* AlignedEye<-VWorld)))
-      (dolist (shape shapes)
-        (when shape (run shape)))
-      (dolist (tx transforms)
-        (when tx (run tx))))))
+        (if *STEREO*
+            (progn
+              ;; Left pass
+              (projection AlignedEyeLeft<-Screen)
+              (model-view AlignedEyeLeft<-VWorld :left)
+              (dolist (shape shapes)
+                (when shape (run shape)))
+              (dolist (tx transforms)
+                (when tx (run tx)))
+
+              ;; Right pass
+              (projection AlignedEyeRight<-Screen)
+              (model-view AlignedEyeRight<-VWorld :right)
+              (dolist (shape shapes)
+                (when shape (run shape)))
+              (dolist (tx transforms)
+                (when tx (run tx))))
+            (progn                      ; No stereo (Center Eye)
+              (projection AlignedEyeCenter<-Screen)
+              (model-view AlignedEyeCenter<-VWorld :center)
+              (dolist (shape shapes)
+                (when shape (run shape)))
+              (dolist (tx transforms)
+                (when tx (run tx)))))))))
+
 
 ;; ---------------------------------------------------------------------grouping
 (defmethod run ((self Transform))
@@ -141,10 +193,10 @@
           (sb-cga:inverse-matrix (sb-cga:matrix* Tx C R -C))))))) ;; this is the LOOKAT configuration
 
 ;; ----------------------------------------------------------------------------
-(defmethod projection ((self Viewpoint) aspect near far)
-  (with-slots (fieldOfView) self
-    (let ((fieldOfView (degrees (SFFloat fieldOfView))))
-      (perspective fieldOfView aspect near far))))
+;; (defmethod projection ((self Viewpoint) aspect near far)
+;;   (with-slots (fieldOfView) self
+;;     (let ((fieldOfView (degrees (SFFloat fieldOfView))))
+;;       (perspective fieldOfView aspect near far))))
 
 ;; -----------------------------------------------------------------geometry-3d
 ;; .........................................................................Box

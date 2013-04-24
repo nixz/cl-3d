@@ -86,8 +86,7 @@
          :accessor transforms
          :documentation "List of transformation objects"))
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
-                     :mode '(:double :rgb :depth)))
-
+                     :mode '(:double :rgb :depth :stereo)))
 
 (defmethod initialize-instance :after ((self Scene) &key)
   "initialize the scene"
@@ -105,6 +104,14 @@
   (gl:enable :light0 :lighting :cull-face :depth-test)) ; global stuff
 
 (defmethod glut:display ((w scene))
+  (if *STEREO*
+      (progn
+        (gl:draw-buffer :back-left)
+        (gl:clear :color-buffer-bit :depth-buffer-bit)
+        (gl:draw-buffer :back-right)
+        (gl:clear :color-buffer-bit :depth-buffer-bit))
+      (progn
+        (gl:clear :color-buffer-bit :depth-buffer-bit)))
   (run w)
   (glut:swap-buffers))
 
