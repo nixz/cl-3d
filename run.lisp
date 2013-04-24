@@ -69,19 +69,46 @@
           (VIEWPOINT (if (first viewpoints)
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
-      (let ((*PROJECTION* (projection VIEWPOINT 1.0 0.1 1000.0))
-            (*VIEW* (view VIEWPOINT))
-            (*MODEL* (mouse-rotate)))
-        (run BACKGROUND)
+      (run BACKGROUND)
+      (let* ((Base<-Screen (run *Screen*)) ; In Real world
+             (Base<-Head (run *Head*))     ; In Real world
+             (Head<-Base (sb-cga:inverse-matrix Base<-Head))
+             (Base<-VWorld (navigate Viewpoint (mouse-rotate))) ; Virtual world (const)
+             (Head<-Screen (sb-cga:matrix* Head<-Base Base<-Screen))
+             (Head<-AlignedEye (sb-cga:matrix*
+                                (sb-cga:translate (SFVec3F *IPD* 0.0 0.0))
+                                (extract-rotation Head<-Screen)))
+             (AlignedEye<-Head (sb-cga:inverse-matrix Head<-AlignedEye))
+             (AlignedEye<-VWorld (sb-cga:matrix* AlignedEye<-Head
+                                                 Head<-Base
+                                                 Base<-VWorld))
+             (AlignedEye<-Screen (sb-cga:matrix* AlignedEye<-Head
+                                                 Head<-Screen)))
         (gl:matrix-mode :projection)          ; projection
-        (gl:load-matrix *PROJECTION*)
-        (gl:matrix-mode :modelview)           ; view
+        (let ((x (sb-cga:mref AlignedEye<-Screen 0 3))
+              (y (sb-cga:mref AlignedEye<-Screen 1 3))
+              (z (sb-cga:mref AlignedEye<-Screen 2 3)))
+          (let ((left (- x (/ *width* 2)))
+                (right (+ x (/ *width* 2)))
+                (bottom (- y (/ *height* 2)))
+                (top (+ y (/ *height* 2)))
+                (near 0.1)
+                (far 1000.0))
+            (let* ((scale (/ (- near) z))
+                   (proj (frustum (* scale left)
+                                  (* scale right)
+                                  (* scale bottom)
+                                  (* scale top)
+                                  near
+                                  far)))
+              (gl:load-matrix proj))))
+        (gl:matrix-mode :modelview) ; view
         (gl:load-identity)
-        (gl:mult-matrix (sb-cga:matrix* *VIEW* *MODEL*))
-        (dolist (shape shapes)
-          (when shape (run shape)))
-        (dolist (tx transforms)
-          (when tx (run tx)))))))
+        (gl:mult-matrix (sb-cga:matrix* AlignedEye<-VWorld)))
+      (dolist (shape shapes)
+        (when shape (run shape)))
+      (dolist (tx transforms)
+        (when tx (run tx))))))
 
 ;; ---------------------------------------------------------------------grouping
 (defmethod run ((self Transform))
@@ -118,10 +145,6 @@
   (with-slots (fieldOfView) self
     (let ((fieldOfView (degrees (SFFloat fieldOfView))))
       (perspective fieldOfView aspect near far))))
-
-;; ----------------------------------------------------------------------------
-(defmethod view ((self Viewpoint))
-  (run self))
 
 ;; -----------------------------------------------------------------geometry-3d
 ;; .........................................................................Box
