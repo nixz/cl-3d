@@ -33,13 +33,26 @@
 
 (in-package #:cl-3d)
 
+;; ----------------------------------------------------------------------------
 (defun radians (x)
   (declare (single-float x))
   (* x (/ pi 180)))
 
+;; ----------------------------------------------------------------------------
 (defun degrees (x)
   (declare (single-float x))
   (* x (/ 180 pi)))
+
+;; ----------------------------------------------------------------------------
+(defun transform (translation center rotation scale scaleOrientation)
+  (let ((C (sb-cga:translate center))
+        (R (apply #'sb-cga:rotate-around rotation))
+        (S (sb-cga:scale scale))
+        (SR (apply #'sb-cga:rotate-around scaleOrientation))
+        (Tx (sb-cga:translate translation)))
+    (let ((-SR (sb-cga:inverse-matrix SR))
+          (-C (sb-cga:inverse-matrix C)))
+      (sb-cga:matrix* Tx C R SR S -SR -C))))
 
 ;; ----------------------------------------------------------------------------
 (defun frustum (xmin xmax ymin ymax znear zfar)
@@ -55,15 +68,15 @@
               (- zfar znear)))
         (f (/ (* -2 znear zfar)
               (- zfar znear))))
-    (sb-cga:matrix   a  0.0     c  0.0
-                   0.0    b     d  0.0
-                   0.0  0.0     e    f
-                   0.0  0.0  -1.0  0.0)))
+    (sb-cga:matrix   a    0.0     c  0.0
+                     0.0    b     d  0.0
+                     0.0  0.0     e    f
+                     0.0  0.0  -1.0  0.0)))
 
 ;; ----------------------------------------------------------------------------
 (defun perspective (fov aspect znear zfar)
   (let* ((ymax (SFFloat (* znear
-                          (tan (radians (SFFloat (/ fov 2)))))))
+                           (tan (radians (SFFloat (/ fov 2)))))))
          (ymin (- ymax))
          (xmin (* ymin aspect))
          (xmax (* ymax aspect)))
@@ -77,12 +90,6 @@
         (b (coerce y 'single-float))
         (c (coerce z 'single-float)))
     (vector a b c 1.0)))
-
-;; (defmethod MFColor (x y z)
-;;   (let ((a (coerce x 'single-float))
-;;         (b (coerce y 'single-float))
-;;         (c (coerce z 'single-float)))
-;;     (cl:vector a b c 1.0)))
 
 ;; ----------------------------------------------------------------------------
 (defmethod IntensityType(str)
@@ -144,6 +151,68 @@
           'single-float))
 
 ;; ----------------------------------------------------------------------------
+(defgeneric SFVec3f (x &optional y z))
+
+(defmethod SFVec3F(x &optional y z)
+  (SFVec3F (list x y z)))
+
+(defmethod SFVec3f ((str cl:string) &optional (y NIL) (z NIL))
+  (let ((float-list (list<-str str)))
+    (apply #'sb-cga:vec float-list)))
+
+(defmethod SFVec3F((val cl:list) &optional (y NIL) (z NIL))
+  (apply #'sb-cga:vec (mapcar (lambda (x)
+                                (coerce x 'single-float))
+                              val)))
+(defmethod SFVec3F((val cl:vector) &optional (y NIL) (z NIL))
+  val)
+
+;; ----------------------------------------------------------------------------
+(defun SFTranslation+ (a b)
+  (sb-cga:vec+ a b))
+
+;; ----------------------------------------------------------------------------
+(defun SFTranslation<-SFMatrix4F (mat)
+  "Returns the translation component from matrix"
+  (let ((m03 (sb-cga:mref mat 0 3))
+        (m13 (sb-cga:mref mat 1 3))
+        (m23 (sb-cga:mref mat 2 3)))
+    (SFVec3F m03 m13 m23)))
+
+;; ----------------------------------------------------------------------------
+(defun SFMatrix4F<-SFTranslation(vec)
+  "Makes a transformation matrix from translations"
+  (sb-cga:translate vec))
+
+;; ----------------------------------------------------------------------------
+(defun extract-translation(mat)
+  "Returns the translation matrix"
+  (let ((m03 (sb-cga:mref mat 0 3))
+        (m13 (sb-cga:mref mat 1 3))
+        (m23 (sb-cga:mref mat 2 3)))
+    (sb-cga:matrix 1.0 0.0 0.0 m03
+                   0.0 1.0 0.0 m13
+                   0.0 0.0 1.0 m23
+                   0.0 0.0 0.0 1.0)))
+
+;; ----------------------------------------------------------------------------
+(defun extract-rotation (mat)
+  "Return the rotation matrix"
+  (let ((m00 (sb-cga:mref mat 0 0))
+        (m01 (sb-cga:mref mat 0 1))
+        (m02 (sb-cga:mref mat 0 2))
+        (m10 (sb-cga:mref mat 1 0))
+				(m11 (sb-cga:mref mat 1 1))
+				(m12 (sb-cga:mref mat 1 2))
+        (m20 (sb-cga:mref mat 2 0))
+				(m21 (sb-cga:mref mat 2 1))
+				(m22 (sb-cga:mref mat 2 2)))
+    (sb-cga:matrix m00 m01 m02 0.0
+                   m10 m11 m12 0.0
+                   m20 m21 m22 0.0
+                   0.0 0.0 0.0 1.0)))
+
+;; ----------------------------------------------------------------------------
 (defgeneric SFRotation (x &optional y z a))
 
 (defmethod SFRotation(x &optional y z a)
@@ -169,96 +238,12 @@
 (defmethod SFRotation ((vec cl:vector) &optional y (z NIL) (a NIL))
   (list vec (coerce y 'single-float)))
 
-;; ---------------------------------------------------------------------SFVec2F
-;; (defgeneric SFVec2F (x &optional y))
-
-;; (defmethod SFVec2F(x &optional y)
-;;   (SFVec2F (list x y)))
-
-;; (defmethod SFVec2F((val cl:list) &optional (y NIL))
-;;   (apply #'sb-cga:vec (mapcar (lambda (x)
-;;                                (coerce x 'single-float))
-;;                              val)))
+;; ----------------------------------------------------------------------------
+(defmethod SFMatrix4F<-SFRotation (rot)
+  (apply #'sb-cga:rotate-around (SFRotation rot)))
 
 ;; ----------------------------------------------------------------------------
-(defgeneric SFVec3f (x &optional y z))
-
-(defmethod SFVec3F(x &optional y z)
-  (SFVec3F (list x y z)))
-
-(defmethod SFVec3f ((str cl:string) &optional (y NIL) (z NIL))
-  (let ((float-list (list<-str str)))
-  (apply #'sb-cga:vec float-list)))
-
-(defmethod SFVec3F((val cl:list) &optional (y NIL) (z NIL))
-  (apply #'sb-cga:vec (mapcar (lambda (x)
-                                (coerce x 'single-float))
-                              val)))
-(defmethod SFVec3F((val cl:vector) &optional (y NIL) (z NIL))
-  val)
-
-;; ----------------------------------------------------------------------------
-(defun transform (translation center rotation scale scaleOrientation)
-  (let ((C (sb-cga:translate center))
-        (R (apply #'sb-cga:rotate-around rotation))
-        (S (sb-cga:scale scale))
-        (SR (apply #'sb-cga:rotate-around scaleOrientation))
-        (Tx (sb-cga:translate translation)))
-    (let ((-SR (sb-cga:inverse-matrix SR))
-          (-C (sb-cga:inverse-matrix C)))
-      (sb-cga:matrix* Tx C R SR S -SR -C))))
-
-;; ----------------------------------------------------------------------------
-(defmethod SFRotation+ (a b)
-  "Add the two rotations a b and returns new rotation a+b
-void sfrotation::add(sfrotation* r) {
-   double tx = (r->x * r->angle) + (x * angle);
-   double ty = (r->y * r->angle) + (y * angle);
-   double tz = (r->z * r->angle) + (z * angle);
-   angle = Math::Sqrt(tx*tx + ty*ty + tz*tz);
-   if (angle == 0) {x=1;y=z=0;return;}
-   x = tx/angle;
-   y = ty/angle;
-   z = tz/angle;
-   }
-"
-  (let ((vec-a (first a))
-        (angle-a (second b))
-        (vec-b (first b))
-        (angle-b (second b)))
-    (let ((va (sb-cga:vec* vec-a angle-a))
-          (vb (sb-cga:vec* vec-b angle-b)))
-      (let* ((v (sb-cga:vec+ vb va))
-            (angle (sb-cga:vec-length v)))
-        (if (= angle 0.0)
-            (SFRotation 0.0 0.0 1.0 0.0)
-            (SFRotation v angle))))))
-
-;; ;; ----------------------------------------------------------------------------
-;; (defmethod SFRotation-reorient (v1 v2)
-;;   ""
-;;   (let ((nv1 (sb-cga:normalize v1))
-;;         (nv2 (sb-cga:normalize v2)))
-;;     (print nv1)
-;;     (print nv2)
-;;     (if (sb-cga:vec~ nv1 nv2)
-;;         (list (SFVec3f 0 0 1) (SFFloat 0.0))
-;;         (let* ((vec (sb-cga:normalize (sb-cga:cross-product nv1 nv2)))
-;;                (cross (sb-cga:dot-product nv1 nv2))
-;;                (angle  (SFFloat (radians 1.0))))
-;;                 ;(SFFloat (realpart (acos (sb-cga:dot-product nv1 nv2))))))
-;;           (print vec)
-;;           (print angle)
-;;           (list vec angle)))))
-
-(defun trans<-matrix (mat)
-  "Returns the translation component from matrix"
-  (let ((m03 (sb-cga:mref mat 0 0))
-        (m13 (sb-cga:mref mat 0 1))
-        (m23 (sb-cga:mref mat 0 2)))
-    (SFVec3F m03 m13 m23)))
-
-(defun rotate<-matrix(mat)
+(defmethod SFRotation<-SFMatrix4F (mat)
   "Takes a matrix and gives a SFRotation
 
 void SFMatrix::getSFRotation(SFRotation *rotation)
@@ -380,22 +365,25 @@ void SFMatrix::getSFRotation(SFRotation *rotation)
           (SFRotation (SFVec3f x y z) angle))
         (SFRotation 0 0 1 0))))
 
-;; (defun examine (viewpoint)
-;;   (with-slots (orientation position) viewpoint
-;;       (let* ((orient (SFRotation orientation))
-;;              (channel (Analog-channel *MOUSE-POSITION*))
-;;              (x (first channel))
-;;              (y (second channel))
-;;              (pt (sb-cga:vec x y 0.0)))
-;;         (let* ((current (sb-cga:normalize (SFVec3f position))
-;;                (dir-vec (sb-cga:normalize (sb-cga:vec- pt current)))))
-;;           (print dir-vec)
-;;           (let ((rot-vector (sb-cga:normalize (sb-cga:cross-product dir-vec zaxis)))
-;;                 (rot-value (sb-cga:vec-length dir-vec)))
-;;             (setf orientation (list rot-vector (coerce (radians rot-value) 'single-float))))))))
+;; ----------------------------------------------------------------------------
+(defmethod SFRotation+ (a b)
+  (let ((a (SFMatrix4F<-SFRotation a))
+        (b (SFMatrix4F<-SFRotation b)))
+    (SFRotation<-SFMatrix4F (sb-cga:matrix* a b))))
 
-  ;;       ;; (setf orientation (list rot-vector (coerce (radians rot-value) 'single-float))))
-  ;;       ;; (setf view-rotx (+ (car origrot) (- y (cadr origclick))))
-  ;;       ;; (setf view-roty (+ (cadr origrot) (- x (car origclick))))
-  ;;       (glut:post-redisplay)))))
-
+;; ----------------------------------------------------------------------------
+(defmethod SFRotation-reorient (v1 v2)
+  ""
+  (let ((nv1 (sb-cga:normalize v1))
+        (nv2 (sb-cga:normalize v2)))
+    (print nv1)
+    (print nv2)
+    (if (sb-cga:vec~ nv1 nv2)
+        (list (SFVec3f 0 0 1) (SFFloat 0.0))
+        (let* ((vec (sb-cga:normalize (sb-cga:cross-product nv1 nv2)))
+               (cross (sb-cga:dot-product nv1 nv2))
+               (angle  (SFFloat (radians 1.0))))
+                                        ;(SFFloat (realpart (acos (sb-cga:dot-product nv1 nv2))))))
+          (print vec)
+          (print angle)
+          (list vec angle)))))
