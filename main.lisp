@@ -105,18 +105,17 @@
   (gl:enable :light0 :lighting :cull-face :depth-test)) ; global stuff
 
 (defmethod glut:display ((w scene))
-  (gl:viewport 0
-               0
-               (slot-value w 'glut::width)
-               (slot-value w 'glut::height))        ; this should be
-                                                    ; commands to the
-                                                    ; environment
   (run w)
   (glut:swap-buffers))
 
 (defmethod glut:reshape ((w scene) width height)
   "Whenever the window is changed then this event is triggered"
   (progn
+    (gl:clear :color-buffer-bit :depth-buffer-bit)
+    (gl:viewport 0
+                 0
+                 (slot-value w 'glut::width)
+                 (slot-value w 'glut::height))
     (setf (slot-value w 'glut::width) width)
     (setf (slot-value w 'glut::height) height)))
 
