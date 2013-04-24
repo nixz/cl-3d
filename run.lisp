@@ -37,6 +37,26 @@
 (defgeneric run(self)
   (:documentation "Generic method to evaluate various nodes as they are traversed"))
 
+;; --------------------------------------------------------------------navigation
+(defmethod navigate ((view Viewpoint) nav-mat)
+  ""
+  (with-slots (centerOfRotation orientation position) view
+    (let ((centerOfRotation (SFVec3f centerOfRotation))
+          (orientation (SFRotation orientation))
+          (position (SFVec3f position)))
+      (let ((C (sb-cga:translate centerOfRotation))
+            (R (apply #'sb-cga:rotate-around orientation))
+            (Tx (sb-cga:translate position))
+            (nTx (extract-translation nav-mat))
+            (nR (extract-rotation nav-mat)))
+        (let ((-C (sb-cga:inverse-matrix C))
+              (-R (sb-cga:inverse-matrix R))
+              (-Tx (sb-cga:inverse-matrix Tx))
+              (-nTx (sb-cga:inverse-matrix nTx))
+              (-nR (sb-cga:inverse-matrix nR)))
+          (sb-cga:matrix* (sb-cga:inverse-matrix (sb-cga:matrix* Tx R nTx))
+                          nR))))))
+
 ;; -----------------------------------------------------------------------scene
 (defmethod run ((self Scene))
   (with-slots (backgrounds navigationInfos viewpoints shapes transforms) self
