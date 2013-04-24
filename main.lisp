@@ -86,7 +86,7 @@
          :accessor transforms
          :documentation "List of transformation objects"))
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
-                     :mode '(:single :rgb :depth)))
+                     :mode '(:double :rgb :depth)))
 
 
 (defmethod initialize-instance :after ((self Scene) &key)
@@ -112,7 +112,7 @@
                                                     ; commands to the
                                                     ; environment
   (run w)
-  (gl:flush))
+  (glut:swap-buffers))
 
 (defmethod glut:reshape ((w scene) width height)
   "Whenever the window is changed then this event is triggered"
