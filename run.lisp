@@ -303,7 +303,6 @@
       (gl:translate 0 -119.05 0)      ; Origin is upper left corner
                                       ; alternatively can use
                                       ; (gl:translate (* -26.19 length) -119.05 0)
-      (print string)
       (gl:line-width 5)
       (glut:stroke-string +stroke-roman+ string))))
 

@@ -70,7 +70,9 @@
          :initform (SFVec3F -1.0  1.0 -2.4142075)
          :accessor y
          :documentation "about-slot"))
-  (:documentation "Class to configure display coordinates wrt some base coordinates"))
+  (:documentation "Class to configure display coordinates wrt some
+  base coordinates"))
+
 
 ;; ----------------------------------------------------------------------------
 ;; Until there is real head tracking this class is dummy. The run
@@ -80,11 +82,13 @@
   ((position
          :initform (SFVec3F 0 0 0)
          :accessor position
-         :documentation "The position of the tracker")
+         :documentation "The position of the tracker. We use the
+         default units to be meters")
    (orientiation
          :initform NIL
          :accessor orientiation
-         :documentation "the orientation of the tracker (usually a quaternion)"))
+         :documentation "the orientation of the tracker (usually a
+         quaternion)")
   (:documentation "The tracked head. Returns a transformation matrix on run."))
 
 ;; ----------------------------------------------------------------------------
@@ -103,7 +107,6 @@
     (let* ((x-> (sb-cga:vec- x o))
           (y-> (sb-cga:vec- y o))
           (center (sb-cga:vec/ (sb-cga:vec+ x y) 2.0)))
-      (print center)
       (let ((z-> (sb-cga:cross-product x-> y->))
             (oz-> (SFVec3f 0 0 1)))
         (let ((rot (sb-cga:reorient oz-> z->))
@@ -112,7 +115,8 @@
 
 
 (defmethod run ((self Head))
-  "For now there is no head transformation. And we simply return the identity matrix"
+  "For now there is no head transformation. And we simply return the
+identity matrix"
   (sb-cga:identity-matrix))
 
 ;; ----------------------------------------------------------------------------
@@ -186,17 +190,12 @@
                (eq state :down))
       (setf rot-x (+ (car orig-rot) (- y (cadr orig-click))))
       (setf rot-y (+ (cadr orig-rot) (- x (car orig-click)))))
-    (print button)
-    (print state)
     (when (and (eq button :right-button)
                (eq state :down))
       (let* ((x-x0 (- x (car orig-click)))
              (y-y0 (- y (cadr orig-click)))
              (direction (if (<  y-y0 0) .1 -.1))
              (distance (* direction (sqrt (+ (* x-x0 x-x0) (* y-y0 y-y0))))))
-        (print x-x0)
-        (print y-y0)
-        (print distance)
         (setf trans-z (+ orig-trans distance))))))
 
 ;; ----------------------------------------------------------------------------
