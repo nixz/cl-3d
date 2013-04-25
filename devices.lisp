@@ -73,6 +73,17 @@
   (:documentation "Class to configure display coordinates wrt some
   base coordinates"))
 
+;; ............................................................................
+(defmethod width ((self Screen))
+  "Calculates the width of the screen"
+  (with-slots (o x) self
+    (sb-cga:vec-length (sb-cga:vec- o x))))
+
+;; ............................................................................
+(defmethod height ((self Screen))
+  "Calculates the width of the screen"
+  (with-slots (o y) self
+    (sb-cga:vec-length (sb-cga:vec- o y))))
 
 ;; ----------------------------------------------------------------------------
 ;; Until there is real head tracking this class is dummy. The run
@@ -89,16 +100,25 @@
          :accessor orientiation
          :documentation "the orientation of the tracker (usually a
          quaternion)")
+   (iod
+         :initform 0.063
+         :accessor iod
+         :documentation "Inter occular distance. Default = 0.063
+         meters")
+   (is-stereo
+         :initform nil
+         :accessor is-stereo
+         :documentation "If the head (user) has stereo capability"))
   (:documentation "The tracked head. Returns a transformation matrix on run."))
 
 ;; ----------------------------------------------------------------------------
 ;; Screen to tracking base
 (defparameter *Screen* (make-instance 'Screen))
-(defparameter *width* 2)
-(defparameter *height* 2)
+(defparameter *width* (width *Screen*))
+(defparameter *height* (height *Screen*))
 (defparameter *Head* (make-instance 'Head))
-(defparameter *IPD* 0.063)              ; This is in meters
-(defparameter *STEREO* NIL)
+(defparameter *IPD* (iod *Head*))
+(defparameter *STEREO* (is-stereo *Head*))
 
 ;; ----------------------------------------------------------------------------
 (defmethod run ((self Screen))
@@ -113,7 +133,7 @@
               (trans (sb-cga:translate center)))
           (sb-cga:matrix* trans rot))))))
 
-
+;; ----------------------------------------------------------------------------
 (defmethod run ((self Head))
   "For now there is no head transformation. And we simply return the
 identity matrix"
