@@ -58,16 +58,16 @@
                           nR))))))
 
 ;; ----------------------------------------------------------------------------
-(defun projection (mat)
+(defun projection (mat width height)
   "Sets the projection matrix based on the center of the screen"
   (gl:matrix-mode :projection)          ; projection
   (let ((x (sb-cga:mref mat 0 3))
         (y (sb-cga:mref mat 1 3))
         (z (sb-cga:mref mat 2 3)))
-    (let ((left (- x (/ *width* 2)))
-          (right (+ x (/ *width* 2)))
-          (bottom (- y (/ *height* 2)))
-          (top (+ y (/ *height* 2)))
+    (let ((left (- x (/ width 2)))
+          (right (+ x (/ width 2)))
+          (bottom (- y (/ height 2)))
+          (top (+ y (/ height 2)))
           (near 0.1)
           (far 1000.0))
       (let* ((scale (/ (- near) z))
@@ -90,7 +90,8 @@
 
 ;; -----------------------------------------------------------------------scene
 (defmethod run ((self Scene))
-  (with-slots (backgrounds navigationInfos viewpoints shapes transforms) self
+  (with-slots (backgrounds navigationInfos viewpoints shapes transforms device) self
+    (with-slots (screen head 2d-mouse) device
     (let ((BACKGROUND (if (first backgrounds)
                           (first backgrounds)
                           (make-instance 'Background)))
@@ -101,10 +102,14 @@
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
       (run BACKGROUND)
-      (let* ((Base<-Screen (run *Screen*)) ; In Real world
-             (Base<-Head (run *Head*))     ; In Real world
+      (let* ((width (width screen))
+             (height (height screen))
+             (ipd (iod head))
+             (is-stereo (is-stereo head))
+             (Base<-Screen (run screen)) ; In Real world
+             (Base<-Head (run head))     ; In Real world
              (Head<-Base (sb-cga:inverse-matrix Base<-Head))
-             (Base<-VWorld (navigate Viewpoint (mouse-rotate))) ; Virtual world (const)
+             (Base<-VWorld (navigate Viewpoint (run 2d-mouse))) ; Virtual world (const)
              (Head<-Screen (sb-cga:matrix* Head<-Base Base<-Screen))
              ;; Center eye calculations
              (Head<-AlignedEyeCenter (sb-cga:matrix*
@@ -118,7 +123,7 @@
                                                  Head<-Screen))
              ;; Left eye calculations
              (Head<-AlignedEyeLeft (sb-cga:matrix*
-                                (sb-cga:translate (SFVec3F (/ *IPD* -2) 0.0 0.0))
+                                (sb-cga:translate (SFVec3F (/ ipd -2) 0.0 0.0))
                                 (extract-rotation Head<-Screen)))
              (AlignedEyeLeft<-Head (sb-cga:inverse-matrix Head<-AlignedEyeLeft))
              (AlignedEyeLeft<-VWorld (sb-cga:matrix* AlignedEyeLeft<-Head
@@ -128,7 +133,7 @@
                                                  Head<-Screen))
              ;; Right eye calculations
              (Head<-AlignedEyeRight (sb-cga:matrix*
-                                (sb-cga:translate (SFVec3F (/ *IPD* 2) 0.0 0.0))
+                                (sb-cga:translate (SFVec3F (/ ipd 2) 0.0 0.0))
                                 (extract-rotation Head<-Screen)))
              (AlignedEyeRight<-Head (sb-cga:inverse-matrix Head<-AlignedEyeRight))
              (AlignedEyeRight<-VWorld (sb-cga:matrix* AlignedEyeRight<-Head
@@ -136,10 +141,10 @@
                                                  Base<-VWorld))
              (AlignedEyeRight<-Screen (sb-cga:matrix* AlignedEyeRight<-Head
                                                  Head<-Screen)))
-        (if *STEREO*
+        (if is-stereo
             (progn
               ;; Left pass
-              (projection AlignedEyeLeft<-Screen)
+              (projection AlignedEyeLeft<-Screen width height)
               (model-view AlignedEyeLeft<-VWorld :left)
               (dolist (shape shapes)
                 (when shape (run shape)))
@@ -147,19 +152,19 @@
                 (when tx (run tx)))
 
               ;; Right pass
-              (projection AlignedEyeRight<-Screen)
+              (projection AlignedEyeRight<-Screen width height)
               (model-view AlignedEyeRight<-VWorld :right)
               (dolist (shape shapes)
                 (when shape (run shape)))
               (dolist (tx transforms)
                 (when tx (run tx))))
             (progn                      ; No stereo (Center Eye)
-              (projection AlignedEyeCenter<-Screen)
+              (projection AlignedEyeCenter<-Screen width height)
               (model-view AlignedEyeCenter<-VWorld :center)
               (dolist (shape shapes)
                 (when shape (run shape)))
               (dolist (tx transforms)
-                (when tx (run tx)))))))))
+                (when tx (run tx))))))))))
 
 
 ;; ---------------------------------------------------------------------grouping

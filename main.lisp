@@ -84,15 +84,20 @@
    (transforms
          :initform nil
          :accessor transforms
-         :documentation "List of transformation objects"))
+         :documentation "List of transformation objects")
+   (device
+         :initform (make-instance 'Devices)
+         :accessor device
+         :documentation "The list of input and output devices"))
   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
                      :mode '(:double :rgb :depth :stereo)))
 
+;; ----------------------------------------------------------------------------
 (defmethod initialize-instance :after ((self Scene) &key)
   "initialize the scene"
-  (mouse-reset)
   (glut:display-window self))
 
+;; ----------------------------------------------------------------------------
 (defmethod glut:display-window :before ((w scene))
   (gl:clear-color 0 0 0 0)
   (gl:cull-face :back)
@@ -103,8 +108,9 @@
   (gl:color-material :front :ambient-and-diffuse)
   (gl:enable :light0 :lighting :cull-face :depth-test)) ; global stuff
 
+;; ----------------------------------------------------------------------------
 (defmethod glut:display ((w scene))
-  (if *STEREO*
+  (if (is-stereo (head (device w)))
       (progn
         (gl:draw-buffer :back-left)
         (gl:clear :color-buffer-bit :depth-buffer-bit)
@@ -115,6 +121,7 @@
   (run w)
   (glut:swap-buffers))
 
+;; ----------------------------------------------------------------------------
 (defmethod glut:reshape ((w scene) width height)
   "Whenever the window is changed then this event is triggered"
   (progn
@@ -126,14 +133,17 @@
     (setf (slot-value w 'glut::width) width)
     (setf (slot-value w 'glut::height) height)))
 
+;; ----------------------------------------------------------------------------
 (defmethod glut:keyboard ((w scene) key x y)
   (declare (ignore x y))
   (when (eql key #\Esc)
     (glut:destroy-current-window)))
 
+;; ----------------------------------------------------------------------------
 (defmethod glut:mouse ((window scene) button state x y)
-  (mouse-init button state x y))
+  (initiate (2d-mouse (device window)) button state x y))
 
+;; ----------------------------------------------------------------------------
 (defmethod glut:motion ((window scene) x y)
-  (mouse-update x y)
+  (update (2d-mouse (device window)) x y)
   (glut:post-redisplay))

@@ -113,12 +113,20 @@
 
 ;; ----------------------------------------------------------------------------
 ;; Screen to tracking base
-(defparameter *Screen* (make-instance 'Screen))
-(defparameter *width* (width *Screen*))
-(defparameter *height* (height *Screen*))
-(defparameter *Head* (make-instance 'Head))
-(defparameter *IPD* (iod *Head*))
-(defparameter *STEREO* (is-stereo *Head*))
+(defclass Devices (xml-serializer)
+  ((screen
+         :initform (make-instance 'Screen)
+         :accessor screen
+         :documentation "Defines the screen device")
+   (head
+         :initform (make-instance 'Head)
+         :accessor head
+         :documentation "Tracked head device")
+   (2d-mouse
+         :initform (make-instance '2d-mouse)
+         :accessor 2d-mouse
+         :documentation "Mouse interaction device"))
+  (:documentation "doc"))
 
 ;; ----------------------------------------------------------------------------
 (defmethod run ((self Screen))
@@ -219,22 +227,7 @@ identity matrix"
         (setf trans-z (+ orig-trans distance))))))
 
 ;; ----------------------------------------------------------------------------
-(defparameter *MOUSE* (make-instance '2d-mouse))
-
-;; ----------------------------------------------------------------------------
-(defun mouse-reset()
-  (setf *MOUSE* (make-instance '2d-mouse)))
-
-;; ----------------------------------------------------------------------------
-(defun mouse-init (button state x y)
-  (initiate *MOUSE* button state x y))
-
-;; ----------------------------------------------------------------------------
-(defun mouse-update (x y)
-  ""
-  (update *MOUSE* x y))
-
-;; ----------------------------------------------------------------------------
-(defun mouse-rotate()
-  ""
-  (sb-cga:matrix* (translation *MOUSE*) (rotation *MOUSE*)))
+(defmethod run ((self 2d-mouse))
+  "multiplies the translation and rotation matrices to provide a
+transformation matrix"
+  (sb-cga:matrix* (translation self) (rotation self)))
