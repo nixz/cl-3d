@@ -42,30 +42,14 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass CADAssembly (X3DProductStructureChildNode)
+(defclass CADAssembly (X3DProductStructureChildNode X3DGroupingNode)
   (
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass CADFace (X3DProductStructureChildNode)
+(defclass CADFace (X3DProductStructureChildNode X3DBoundedObject)
   (
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
   )
   (:documentation ""))
 
@@ -84,7 +68,7 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass CADPart (X3DProductStructureChildNode)
+(defclass CADPart (X3DProductStructureChildNode X3DGroupingNode)
   (
     (center :initarg :center
         :initform  "0 0 0"
@@ -105,14 +89,6 @@
     (translation :initarg :translation
         :initform  "0 0 0"
         :accessor translation
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
         :documentation "")
   )
   (:documentation ""))

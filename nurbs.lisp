@@ -250,19 +250,11 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass NurbsSet (X3DChildNode)
+(defclass NurbsSet (X3DChildNode X3DBoundedObject)
   (
     (tessellationScale :initarg :tessellationScale
         :initform  "1.0"
         :accessor tessellationScale
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
         :documentation "")
   )
   (:documentation ""))

@@ -66,19 +66,11 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass Inline (X3DChildNode)
+(defclass Inline (X3DChildNode X3DBoundedObject)
   (
     (load :initarg :load
         :initform  "true"
         :accessor load
-        :documentation "")
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
         :documentation "")
     (url :initarg :url
         :initform  `()

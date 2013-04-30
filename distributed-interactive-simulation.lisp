@@ -338,16 +338,8 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass ReceiverPdu (X3DNetworkSensorNode)
+(defclass ReceiverPdu (X3DNetworkSensorNode X3DBoundedObject)
   (
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
     (whichGeometry :initarg :whichGeometry
         :initform  "1"
         :accessor whichGeometry
@@ -436,16 +428,8 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass SignalPdu (X3DNetworkSensorNode)
+(defclass SignalPdu (X3DNetworkSensorNode X3DBoundedObject)
   (
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
     (whichGeometry :initarg :whichGeometry
         :initform  "1"
         :accessor whichGeometry
@@ -534,16 +518,8 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass TransmitterPdu (X3DNetworkSensorNode)
+(defclass TransmitterPdu (X3DNetworkSensorNode X3DBoundedObject)
   (
-    (bboxCenter :initarg :bboxCenter
-        :initform  "0 0 0"
-        :accessor bboxCenter
-        :documentation "")
-    (bboxSize :initarg :bboxSize
-        :initform  "-1 -1 -1"
-        :accessor bboxSize
-        :documentation "")
     (whichGeometry :initarg :whichGeometry
         :initform  "1"
         :accessor whichGeometry
