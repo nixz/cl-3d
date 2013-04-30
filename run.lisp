@@ -57,6 +57,22 @@
           (sb-cga:matrix* (sb-cga:inverse-matrix (sb-cga:matrix* Tx R nTx))
                           nR))))))
 
+
+(defmethod run ((self Viewpoint))
+  ""
+  (with-slots (centerOfRotation orientation position) self
+    (let ((centerOfRotation (SFVec3f centerOfRotation))
+          (orientation (SFRotation orientation))
+          (position (SFVec3f position)))
+      (let ((C (sb-cga:translate centerOfRotation))
+            (R (apply #'sb-cga:rotate-around orientation))
+            (Tx (sb-cga:translate position)))
+        (let ((-C (sb-cga:inverse-matrix C))
+              (-R (sb-cga:inverse-matrix R))
+              (-Tx (sb-cga:inverse-matrix Tx)))
+          ;; We are moving the world so invert the matrix
+          (sb-cga:matrix* Tx R))))))
+  
 ;; ----------------------------------------------------------------------------
 (defun projection (mat width height)
   "Sets the projection matrix based on the center of the screen"
