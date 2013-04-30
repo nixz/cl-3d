@@ -74,12 +74,12 @@
           (sb-cga:matrix* Tx R))))))
   
 ;; ----------------------------------------------------------------------------
-(defun projection (mat width height)
+(defun projection (Eye<-Screen Eye<-VWorld width height &key eye)
   "Sets the projection matrix based on the center of the screen"
   (gl:matrix-mode :projection)          ; projection
-  (let ((x (sb-cga:mref mat 0 3))
-        (y (sb-cga:mref mat 1 3))
-        (z (sb-cga:mref mat 2 3)))
+  (let ((x (sb-cga:mref Eye<-Screen 0 3))
+        (y (sb-cga:mref Eye<-Screen 1 3))
+        (z (sb-cga:mref Eye<-Screen 2 3)))
     (let ((left (- x (/ width 2)))
           (right (+ x (/ width 2)))
           (bottom (- y (/ height 2)))
@@ -93,21 +93,13 @@
                             (* scale top)
                             near
                             far)))
-        (gl:load-matrix proj)))))
-
-;; ----------------------------------------------------------------------------
-(defun model-view (mat eye)
-  "Uses the matrix to set the model-view matris"
-  (gl:matrix-mode :modelview) ; view
+        (gl:load-matrix (sb-cga:matrix* proj Eye<-VWorld)))))
   (cond ((eq eye :right) (gl:draw-buffer :back-right))
-        (t (gl:draw-buffer :back-left)))
-  (gl:load-identity)
-  (gl:mult-matrix mat))
+        (t (gl:draw-buffer :back-left))))
 
 ;; -----------------------------------------------------------------------scene
-(defmethod run ((self Scene))
-  (with-slots (backgrounds navigationInfos viewpoints shapes transforms device) self
-    (with-slots (screen head 2d-mouse) device
+(defmethod run((self Scene))
+  (with-slots (backgrounds navigationInfos viewpoints shapes transforms) self
     (let ((BACKGROUND (if (first backgrounds)
                           (first backgrounds)
                           (make-instance 'Background)))
@@ -118,6 +110,18 @@
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
       (run BACKGROUND)
+      (gl:matrix-mode :modelview)       ; model-view
+      (gl:with-pushed-matrix
+        (gl:mult-matrix (run Viewpoint))
+        (dolist (shape shapes)
+          (when shape (run shape)))
+        (dolist (tx transforms)
+          (when tx (run tx)))))))
+
+;; --------------------------------------------------------------------------VR
+(defmethod run ((self VR))
+  (when *SCENE*
+    (with-slots (screen head 2d-mouse) (device self)
       (let* ((width (width screen))
              (height (height screen))
              (ipd (iod head))
@@ -160,28 +164,24 @@
         (if is-stereo
             (progn
               ;; Left pass
-              (projection AlignedEyeLeft<-Screen width height)
-              (model-view AlignedEyeLeft<-VWorld :left)
-              (dolist (shape shapes)
-                (when shape (run shape)))
-              (dolist (tx transforms)
-                (when tx (run tx)))
+              (projection AlignedEyeLeft<-Screen
+                          AlignedEyeLeft<-VWorld
+                          width height
+                          :eye :left)
+              (run *SCENE*)
 
               ;; Right pass
-              (projection AlignedEyeRight<-Screen width height)
-              (model-view AlignedEyeRight<-VWorld :right)
-              (dolist (shape shapes)
-                (when shape (run shape)))
-              (dolist (tx transforms)
-                (when tx (run tx))))
+              (projection AlignedEyeRight<-Screen
+                          AlignedEyeRight<-VWorld
+                          width height
+                          :eye :right)
+              (run *SCENE*))
             (progn                      ; No stereo (Center Eye)
-              (projection AlignedEyeCenter<-Screen width height)
-              (model-view AlignedEyeCenter<-VWorld :center)
-              (dolist (shape shapes)
-                (when shape (run shape)))
-              (dolist (tx transforms)
-                (when tx (run tx))))))))))
-
+              (projection AlignedEyeCenter<-Screen
+                          AlignedEyeCenter<-VWorld
+                          width height
+                          :eye :center)
+              (run *SCENE*)))))))
 
 ;; ---------------------------------------------------------------------grouping
 (defmethod run ((self Transform))
