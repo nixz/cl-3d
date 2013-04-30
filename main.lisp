@@ -58,7 +58,75 @@
 ;; These are mosly like callbacks but are automatically invoked when the values
 ;; are changed or perhaps these are handles to threads
 
-;; -----------------------------------------------------------------------scene
+;; ---------------------------------------------------------------------*SCENE*
+(defparameter *SCENE* NIL)
+
+;; --------------------------------------------------------------------------VR
+(defclass VR (glut:window xml-serializer)
+  ((device
+         :initform (make-instance 'Devices)
+         :accessor device
+         :documentation "The list of input and output devices")
+   (scenes
+         :initform *SCENE*
+         :accessor scenes
+         :documentation "The list of all virtual x3d scenes"))
+   (:default-initargs :width 500 :height 500 :title "Drawing a simple scene"
+                      :mode '(:double :rgb :depth)))
+
+  ;; (:documentation "The VR is analogous to a complex number with a Real
+  ;; Part (aka physical device descriptions) and Virtual Part (the scene
+  ;; defined in X3d"))
+
+;; ----------------------------------------------------------------------------
+(defmethod initialize-instance :after ((self VR) &key)
+  "Simply displays the window when the object is initialized"
+  (glut:display-window self))
+
+;; ----------------------------------------------------------------------------
+(defmethod glut:display-window :before ((self VR))
+  (gl:clear-color 0 0 0 0)
+  (gl:cull-face :back)
+  (gl:depth-func :less)
+  (gl:disable :dither)
+  (gl:shade-model :smooth)              ; (gl:shade-model :flat)
+  ;; (gl:light-model :light-model-local-viewer 1)
+  (gl:light-model :light-model-two-side 1)
+  (gl:color-material :front :ambient-and-diffuse)
+  (gl:enable :light0 :lighting :cull-face :depth-test)) ; global stuff
+
+;; ----------------------------------------------------------------------------
+(defmethod glut:reshape ((self VR) width height)
+  "Whenever the window is changed then this event is triggered"
+  (progn
+    (gl:clear :color-buffer-bit :depth-buffer-bit)
+    (gl:viewport 0
+                 0
+                 (slot-value self 'glut::width)
+                 (slot-value self 'glut::height))
+    (setf (slot-value self 'glut::width) width)
+    (setf (slot-value self 'glut::height) height)))
+
+;; ----------------------------------------------------------------------------
+(defmethod glut:display ((self VR))
+  (gl:clear :color-buffer-bit :depth-buffer-bit)
+  (run self)
+  (glut:swap-buffers))
+
+;; ----------------------------------------------------------------------------
+(defmethod glut:keyboard ((self VR) key x y)
+  (declare (ignore x y))
+  (when (eql key #\Esc)
+    (glut:destroy-current-window)))
+
+;; ----------------------------------------------------------------------------
+(defmethod glut:mouse ((self VR) button state x y)
+  (initiate (2d-mouse (device self)) button state x y))
+
+;; ----------------------------------------------------------------------------
+(defmethod glut:motion ((self VR) x y)
+  (update (2d-mouse (device self)) x y)
+  (glut:post-redisplay))
 
 ;; ============================================================================
 ;; CONSTRUCTOR FUNCTIONS
