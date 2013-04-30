@@ -154,8 +154,8 @@
 (defmethod run ((self Screen))
   "Returns the transformation matrix of the screen"
   (with-slots (o x y) self
-    (let* ((x-> (sb-cga:vec- x o))
-          (y-> (sb-cga:vec- y o))
+    (let* ((x-> (sb-cga:vec- o x))
+          (y-> (sb-cga:vec- o y))
           (center (sb-cga:vec/ (sb-cga:vec+ x y) 2.0)))
       (let ((z-> (sb-cga:cross-product x-> y->))
             (oz-> (SFVec3f 0 0 1)))
