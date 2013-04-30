@@ -83,6 +83,12 @@
   "Simply displays the window when the object is initialized"
   (glut:display-window self))
 
+;; ------------------------------------------------------------------------*VR*
+(defun main (id)
+  (setf *news* id)
+  (make-instance 'VR)
+)
+
 ;; ----------------------------------------------------------------------------
 (defmethod glut:display-window :before ((self VR))
   (gl:clear-color 0 0 0 0)

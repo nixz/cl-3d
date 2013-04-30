@@ -383,3 +383,34 @@ void SFMatrix::getSFRotation(SFRotation *rotation)
                (angle  (SFFloat (radians 1.0))))
                                         ;(SFFloat (realpart (acos (sb-cga:dot-product nv1 nv2))))))
           (list vec angle)))))
+
+;; ;; ----------------------------------------------------------------------------
+;; ;; To start a remote sbcl and have input output stream attached
+;; (defun start-remote-test ()
+;;   (let* ((sbcl (external-program:start "ssh"
+;;                                        `("localhost" "sbcl"
+;;                                                      "--noinform"
+;;                                                      "--eval" "(ql:quickload :cl-3d)"
+;;                                                      "--load" "/home/nikhil/cl-3d/examples/Sphere.lisp"
+;;                                                      "--eval" "(cl-3d::main 0)")
+;;                                        :input :stream
+;;                                        :output :stream)))
+;;     (princ "(quit)" (external-program:process-input-stream sbcl))
+;;     (princ #\Newline (external-program:process-input-stream sbcl))
+;;     (finish-output (external-program:process-input-stream sbcl))
+;;     (read-line (external-program:process-output-stream sbcl))))
+
+;; ;; ----------------------------------------------------------------------------
+;; ;; Save to executable
+;; (defun save-core (core-fn)
+;;   (progn
+;;     #+sbcl
+;;     (let ((fork-result (sb-posix:fork)))
+;;       (case fork-result
+;;         (-1 (error "fork failed"))
+;;         (0 (sb-ext:save-lisp-and-die core-fn :toplevel #'main :executable t))
+;;         (otherwise (sb-posix:wait)))
+;;       (format t "stand-alone core ~a saved" core-fn))
+;;     #-sbcl
+;;     (error "not available on this lisp")
+;;     (values)))
