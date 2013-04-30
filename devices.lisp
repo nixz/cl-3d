@@ -58,15 +58,15 @@
 
 ;; ----------------------------------------------------------------------------
 (defclass Screen ()
-  ((o
+  ((o    :initarg :o
          :initform (SFVec3F -1.0 -1.0 -2.4142075) ;
          :accessor o
          :documentation "The lower left corder of the display (Origin)")
-   (x
+   (x    :initarg :x
          :initform (SFVec3F  1.0 -1.0 -2.4142075)
          :accessor x
          :documentation "The lower right corder of the display")
-   (y
+   (y    :initarg :y
          :initform (SFVec3F -1.0  1.0 -2.4142075)
          :accessor y
          :documentation "about-slot"))
@@ -111,13 +111,110 @@
          :documentation "If the head (user) has stereo capability"))
   (:documentation "The tracked head. Returns a transformation matrix on run."))
 
+
+;; ----------------------------------------------------------------------------
+(defmethod compute-projection ((head Head) (screen Screen))
+  "uses the head and the screen and computes three projections i.e the
+left eye the right eye and the center"
+  (let* ((width (width screen))
+         (height (height screen))
+         (ipd (iod head))
+         (Base<-Screen (run screen)) ; In Real world
+         (Base<-Head (run head))     ; In Real world
+         (Head<-Base (sb-cga:inverse-matrix Base<-Head))
+         (Base<-VWorld (sb-cga:identity-matrix)) ; Virtual world (const)
+         (Head<-Screen (sb-cga:matrix* Head<-Base Base<-Screen))
+         ;; Center eye calculations
+         (Head<-AlignedEyeCenter (sb-cga:matrix*
+                                  (sb-cga:translate (SFVec3F 0.0 0.0 0.0))
+                                  (extract-rotation Head<-Screen)))
+         (AlignedEyeCenter<-Head (sb-cga:inverse-matrix Head<-AlignedEyeCenter))
+         (AlignedEyeCenter<-VWorld (sb-cga:matrix* AlignedEyeCenter<-Head
+                                                   Head<-Base
+                                                   Base<-VWorld))
+         (AlignedEyeCenter<-Screen (sb-cga:matrix* AlignedEyeCenter<-Head
+                                                   Head<-Screen))
+         ;; Left eye calculations
+         (Head<-AlignedEyeLeft (sb-cga:matrix*
+                                (sb-cga:translate (SFVec3F (/ ipd -2) 0.0 0.0))
+                                (extract-rotation Head<-Screen)))
+         (AlignedEyeLeft<-Head (sb-cga:inverse-matrix Head<-AlignedEyeLeft))
+         (AlignedEyeLeft<-VWorld (sb-cga:matrix* AlignedEyeLeft<-Head
+                                                 Head<-Base
+                                                 Base<-VWorld))
+         (AlignedEyeLeft<-Screen (sb-cga:matrix* AlignedEyeLeft<-Head
+                                                 Head<-Screen))
+         ;; Right eye calculations
+         (Head<-AlignedEyeRight (sb-cga:matrix*
+                                 (sb-cga:translate (SFVec3F (/ ipd 2) 0.0 0.0))
+                                 (extract-rotation Head<-Screen)))
+         (AlignedEyeRight<-Head (sb-cga:inverse-matrix Head<-AlignedEyeRight))
+         (AlignedEyeRight<-VWorld (sb-cga:matrix* AlignedEyeRight<-Head
+                                                  Head<-Base
+                                                  Base<-VWorld))
+         (AlignedEyeRight<-Screen (sb-cga:matrix* AlignedEyeRight<-Head
+                                                  Head<-Screen)))
+    (flet ((projection (Eye<-Screen Eye<-VWorld width height)
+             (let ((x (sb-cga:mref Eye<-Screen 0 3))
+                   (y (sb-cga:mref Eye<-Screen 1 3))
+                   (z (sb-cga:mref Eye<-Screen 2 3)))
+               (let ((left (- x (/ width 2)))
+                     (right (+ x (/ width 2)))
+                     (bottom (- y (/ height 2)))
+                     (top (+ y (/ height 2)))
+                     (near 0.1)
+                     (far 1000.0))
+                 (let* ((scale (/ (- near) z))
+                        (proj (frustum (* scale left)
+                                       (* scale right)
+                                       (* scale bottom)
+                                       (* scale top)
+                                       near
+                                       far)))
+                   (sb-cga:matrix* proj Eye<-VWorld))))))
+        (list :left
+              (projection AlignedEyeLeft<-Screen
+                          AlignedEyeLeft<-VWorld
+                          width height)
+              :right
+              (projection AlignedEyeRight<-Screen
+                          AlignedEyeRight<-VWorld
+                          width height)
+              :center
+              (projection AlignedEyeCenter<-Screen
+                          AlignedEyeCenter<-VWorld
+                          width height)))))
+
+;; ----------------------------------------------------------------------------
+(defparameter *news* nil)
+
 ;; ----------------------------------------------------------------------------
 ;; Screen to tracking base
 (defclass Devices (xml-serializer)
-  ((screen
-         :initform (make-instance 'Screen)
-         :accessor screen
-         :documentation "Defines the screen device")
+  (;; (screen
+   ;;       :initform (make-instance 'Screen)
+   ;;       :accessor screen
+   ;;       :documentation "Defines the screen device")
+   (screen
+         :initform 
+         (cond ((eq *news* 0) (make-instance 'Screen
+                                             :o (SFVec3F -1.0 -1.0 -1.0)
+                                             :x (SFVec3F  1.0 -1.0 -1.0)
+                                             :y (SFVec3F -1.0  1.0 -1.0)))
+               ((eq *news* 1)  (make-instance 'Screen
+                                             :o (SFVec3F -1.0 -1.0  1.0)
+                                             :x (SFVec3F -1.0 -1.0 -1.0)
+                                             :y (SFVec3F -1.0  1.0  1.0)))
+               ((eq *news* 2) (make-instance 'Screen
+                                             :o (SFVec3F  1.0 -1.0 -1.0)
+                                             :x (SFVec3F  1.0 -1.0  1.0)
+                                             :y (SFVec3F  1.0  1.0 -1.0)))
+                ((eq *news* 3)  (make-instance 'Screen
+                                             :o (SFVec3F -1.0 -1.0  1.0)
+                                             :x (SFVec3F  1.0 -1.0  1.0)
+                                             :y (SFVec3F -1.0 -1.0 -1.0)))
+                (t (make-instance 'Screen)))
+         :accessor screen)
    (head
          :initform (make-instance 'Head)
          :accessor head
@@ -132,8 +229,8 @@
 (defmethod run ((self Screen))
   "Returns the transformation matrix of the screen"
   (with-slots (o x y) self
-    (let* ((x-> (sb-cga:vec- x o))
-          (y-> (sb-cga:vec- y o))
+    (let* ((x-> (sb-cga:vec- o x))
+          (y-> (sb-cga:vec- o y))
           (center (sb-cga:vec/ (sb-cga:vec+ x y) 2.0)))
       (let ((z-> (sb-cga:cross-product x-> y->))
             (oz-> (SFVec3f 0 0 1)))
