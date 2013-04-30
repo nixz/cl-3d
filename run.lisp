@@ -54,9 +54,11 @@
               (-Tx (sb-cga:inverse-matrix Tx))
               (-nTx (sb-cga:inverse-matrix nTx))
               (-nR (sb-cga:inverse-matrix nR)))
-          (sb-cga:matrix* (sb-cga:inverse-matrix (sb-cga:matrix* Tx R nTx))
-                          nR))))))
+          ;; We are moving the world so invert the matrix
+          (sb-cga:matrix* (sb-cga:inverse-matrix (sb-cga:matrix* Tx R nTx nR))))))))
 
+          ;; (sb-cga:matrix* (sb-cga:inverse-matrix (sb-cga:matrix* Tx R nTx))
+          ;;                 nR))))))
 
 (defmethod run ((self Viewpoint))
   ""
@@ -129,7 +131,8 @@
              (Base<-Screen (run screen)) ; In Real world
              (Base<-Head (run head))     ; In Real world
              (Head<-Base (sb-cga:inverse-matrix Base<-Head))
-             (Base<-VWorld (navigate Viewpoint (run 2d-mouse))) ; Virtual world (const)
+             ;; (Base<-VWorld (navigate Viewpoint (run 2d-mouse))) ; Virtual world (const)
+             (Base<-VWorld (run 2d-mouse)) ; Virtual world (const)
              (Head<-Screen (sb-cga:matrix* Head<-Base Base<-Screen))
              ;; Center eye calculations
              (Head<-AlignedEyeCenter (sb-cga:matrix*
