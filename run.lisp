@@ -123,68 +123,24 @@
 ;; --------------------------------------------------------------------------VR
 (defmethod run ((self VR))
   (when *SCENE*
-    (with-slots (screen head 2d-mouse) (device self)
-      (let* ((width (width screen))
-             (height (height screen))
-             (ipd (iod head))
-             (is-stereo (is-stereo head))
-             (Base<-Screen (run screen)) ; In Real world
-             (Base<-Head (run head))     ; In Real world
-             (Head<-Base (sb-cga:inverse-matrix Base<-Head))
-             ;; (Base<-VWorld (navigate Viewpoint (run 2d-mouse))) ; Virtual world (const)
-             (Base<-VWorld (run 2d-mouse)) ; Virtual world (const)
-             (Head<-Screen (sb-cga:matrix* Head<-Base Base<-Screen))
-             ;; Center eye calculations
-             (Head<-AlignedEyeCenter (sb-cga:matrix*
-                                (sb-cga:translate (SFVec3F 0.0 0.0 0.0))
-                                (extract-rotation Head<-Screen)))
-             (AlignedEyeCenter<-Head (sb-cga:inverse-matrix Head<-AlignedEyeCenter))
-             (AlignedEyeCenter<-VWorld (sb-cga:matrix* AlignedEyeCenter<-Head
-                                                 Head<-Base
-                                                 Base<-VWorld))
-             (AlignedEyeCenter<-Screen (sb-cga:matrix* AlignedEyeCenter<-Head
-                                                 Head<-Screen))
-             ;; Left eye calculations
-             (Head<-AlignedEyeLeft (sb-cga:matrix*
-                                (sb-cga:translate (SFVec3F (/ ipd -2) 0.0 0.0))
-                                (extract-rotation Head<-Screen)))
-             (AlignedEyeLeft<-Head (sb-cga:inverse-matrix Head<-AlignedEyeLeft))
-             (AlignedEyeLeft<-VWorld (sb-cga:matrix* AlignedEyeLeft<-Head
-                                                 Head<-Base
-                                                 Base<-VWorld))
-             (AlignedEyeLeft<-Screen (sb-cga:matrix* AlignedEyeLeft<-Head
-                                                 Head<-Screen))
-             ;; Right eye calculations
-             (Head<-AlignedEyeRight (sb-cga:matrix*
-                                (sb-cga:translate (SFVec3F (/ ipd 2) 0.0 0.0))
-                                (extract-rotation Head<-Screen)))
-             (AlignedEyeRight<-Head (sb-cga:inverse-matrix Head<-AlignedEyeRight))
-             (AlignedEyeRight<-VWorld (sb-cga:matrix* AlignedEyeRight<-Head
-                                                 Head<-Base
-                                                 Base<-VWorld))
-             (AlignedEyeRight<-Screen (sb-cga:matrix* AlignedEyeRight<-Head
-                                                 Head<-Screen)))
-        (if is-stereo
-            (progn
-              ;; Left pass
-              (projection AlignedEyeLeft<-Screen
-                          AlignedEyeLeft<-VWorld
-                          width height
-                          :eye :left)
-              (run *SCENE*)
-
-              ;; Right pass
-              (projection AlignedEyeRight<-Screen
-                          AlignedEyeRight<-VWorld
-                          width height
-                          :eye :right)
-              (run *SCENE*))
-            (progn                      ; No stereo (Center Eye)
-              (projection AlignedEyeCenter<-Screen
-                          AlignedEyeCenter<-VWorld
-                          width height
-                          :eye :center)
-              (run *SCENE*)))))))
+  (with-slots (screen head 2d-mouse) (device self)
+    (let ((projections (compute-projection head screen))
+          (is-stereo (is-stereo head)))
+      (if is-stereo
+          (progn
+            (gl:matrix-mode :projection)          ; projection
+            (gl:load-matrix (getf projections :left))
+            (gl:draw-buffer :back-left)
+            (run *SCENE*)
+            (gl:matrix-mode :projection)          ; projection
+            (gl:load-matrix (getf projections :right))
+            (gl:draw-buffer :back-right)
+            (run *SCENE*))
+          (progn
+            (gl:matrix-mode :projection)          ; projection
+            (gl:load-matrix (getf projections :center))
+            (gl:draw-buffer :back-left)
+            (run *SCENE*)))))))
 
 ;; ---------------------------------------------------------------------grouping
 (defmethod run ((self Transform))
