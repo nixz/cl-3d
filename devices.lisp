@@ -58,15 +58,15 @@
 
 ;; ----------------------------------------------------------------------------
 (defclass Screen ()
-  ((o
+  ((o    :initarg :o
          :initform (SFVec3F -1.0 -1.0 -2.4142075) ;
          :accessor o
          :documentation "The lower left corder of the display (Origin)")
-   (x
+   (x    :initarg :x
          :initform (SFVec3F  1.0 -1.0 -2.4142075)
          :accessor x
          :documentation "The lower right corder of the display")
-   (y
+   (y    :initarg :y
          :initform (SFVec3F -1.0  1.0 -2.4142075)
          :accessor y
          :documentation "about-slot"))
@@ -111,13 +111,35 @@
          :documentation "If the head (user) has stereo capability"))
   (:documentation "The tracked head. Returns a transformation matrix on run."))
 
+(defparameter *news* nil)
+
 ;; ----------------------------------------------------------------------------
 ;; Screen to tracking base
 (defclass Devices (xml-serializer)
-  ((screen
-         :initform (make-instance 'Screen)
-         :accessor screen
-         :documentation "Defines the screen device")
+  (;; (screen
+   ;;       :initform (make-instance 'Screen)
+   ;;       :accessor screen
+   ;;       :documentation "Defines the screen device")
+   (screen
+         :initform 
+         (cond ((eq *news* 0) (make-instance 'Screen
+                                             :o (SFVec3F -1.0 -1.0 -1.0)
+                                             :x (SFVec3F  1.0 -1.0 -1.0)
+                                             :y (SFVec3F -1.0  1.0 -1.0)))
+               ((eq *news* 1)  (make-instance 'Screen
+                                             :o (SFVec3F -1.0 -1.0  1.0)
+                                             :x (SFVec3F -1.0 -1.0 -1.0)
+                                             :y (SFVec3F -1.0  1.0  1.0)))
+               ((eq *news* 2) (make-instance 'Screen
+                                             :o (SFVec3F  1.0 -1.0 -1.0)
+                                             :x (SFVec3F  1.0 -1.0  1.0)
+                                             :y (SFVec3F  1.0  1.0 -1.0)))
+                ((eq *news* 3)  (make-instance 'Screen
+                                             :o (SFVec3F -1.0 -1.0  1.0)
+                                             :x (SFVec3F  1.0 -1.0  1.0)
+                                             :y (SFVec3F -1.0 -1.0 -1.0)))
+                (t (make-instance 'Screen)))
+         :accessor screen)
    (head
          :initform (make-instance 'Head)
          :accessor head
