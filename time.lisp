@@ -32,12 +32,13 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
+(with-packages-unlocked (cl)
 (defclass X3DTimeDependentNode (X3DChildNode)
   (
-    ;; (loop :initarg :loop
-    ;;     :initform  "false"
-    ;;     :accessor loop
-    ;;     :documentation "")
+    ( loop :initarg :loop
+        :initform  "false"
+        :accessor loop
+        :documentation "")
     (pauseTime :initarg :pauseTime
         :initform  "0"
         :accessor pauseTime
@@ -56,7 +57,7 @@
         :documentation "")
   )
   (:documentation ""))
-
+t)
 ;; ----------------------------------------------------------------------------
 (defclass TimeSensor (X3DTimeDependentNode)
   (

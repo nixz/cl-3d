@@ -258,8 +258,24 @@
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
-(defclass TextureTransform (X3DTextureTransform2DNode)
+(defclass TextureTransform (X3DTextureTransformNode)
   (
+    (center :initarg :center
+        :initform  "0 0"
+        :accessor center
+        :documentation "")
+    (rotation :initarg :rotation
+        :initform  "0"
+        :accessor rotation
+        :documentation "")
+    (scale :initarg :scale
+        :initform  "1 1"
+        :accessor scale
+        :documentation "")
+    (translation :initarg :translation
+        :initform  "0 0"
+        :accessor translation
+        :documentation "")
   )
   (:documentation ""))
 

@@ -39,7 +39,8 @@
                #:bordeaux-threads
                #:xmlisp
                #:usocket
-               #:cl-package-locks)
+               #:cl-package-locks
+               #:sb-cga)
   :components ((:file "package")
                (:file "util"                 :depends-on ("package"))
                (:file "devices"              :depends-on ("package" "util"))
@@ -62,6 +63,12 @@
                (:file "scene"                :depends-on ("package"))
                (:file "event-utilities"      :depends-on ("core"))
                (:file "scripting"            :depends-on ("core"))
+               (:file "interpolation"        :depends-on ("core"))
+               (:file "key-device-sensor"    :depends-on ("core"))
+               (:file "lighting"             :depends-on ("core"))
+               (:file "geometry-2d"          :depends-on ("rendering"))
+               (:file "environment-sensor"   :depends-on ("core"))
+               (:file "cad-geometry"         :depends-on ("grouping"))
                (:file "main"                 :depends-on ("concepts"
                                                           "grouping"
                                                           "geometry-3d"

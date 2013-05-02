@@ -80,24 +80,8 @@
    (add-object-to-slot self stuff 'containerField))
 
 ;; ----------------------------------------------------------------------------
-(defclass X3DNode (xml-serializer)
+(defclass X3DNode (SceneGraphStructureNodeType)
   (
-    (DEF :initarg :DEF
-        :initform  ""
-        :accessor DEF
-        :documentation "")
-    (USE :initarg :USE
-        :initform  ""
-        :accessor USE
-        :documentation "")
-    (ROUTES
-        :initform  nil
-        :accessor ROUTES
-        :documentation "")
-   (!--s
-         :initform nil
-         :accessor !--s
-         :documentation "")
   )
   (:documentation ""))
 
@@ -133,6 +117,16 @@
 
 ;; ----------------------------------------------------------------------------
 (defclass MetadataInteger (X3DMetadataObject)
+  (
+    (value :initarg :value
+        :initform  ""
+        :accessor value
+        :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass MetadataBoolean (X3DMetadataObject)
   (
     (value :initarg :value
         :initform  ""

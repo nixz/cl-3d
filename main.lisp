@@ -185,6 +185,162 @@
          :initform nil
          :accessor billboards
          :documentation "List of billboard objects")
+   (externProtoDeclares
+         :initform nil
+         :accessor externProtoDeclares
+         :documentation "List of externProtoDeclare objects")
+   (protoDeclares
+         :initform nil
+         :accessor protoDeclares
+         :documentation "")
+   (worldinfos
+         :initform nil
+         :accessor worldinfos
+         :documentation "")
+   (timesensors
+         :initform nil
+         :accessor timesensors
+         :documentation "")
+   (orientationInterpolators
+         :initform nil
+         :accessor orientationInterpolators
+         :documentation "")
+   (coordinateInterpolators
+         :initform nil
+         :accessor coordinateInterpolators
+         :documentation "")
+   (scalarInterpolators
+         :initform nil
+         :accessor scalarInterpolators
+         :documentation "")
+   (integertriggers
+         :initform nil
+         :accessor integertriggers
+         :documentation "")
+   (booleantriggers
+         :initform nil
+         :accessor booleantriggers
+         :documentation "")
+   (booleanfilters
+         :initform nil
+         :accessor booleanfilters
+         :documentation "")
+   (booleantoggles
+         :initform nil
+         :accessor booleantoggles
+         :documentation "")
+   (timetriggers
+         :initform nil
+         :accessor timetriggers
+         :documentation "")
+   (colorInterpolators
+         :initform nil
+         :accessor colorInterpolators
+         :documentation "")
+   (integersequencers
+         :initform nil
+         :accessor integersequencers
+         :documentation "")
+   (booleansequencers
+         :initform nil
+         :accessor booleansequencers
+         :documentation "")
+   (normalinterpolators
+         :initform nil
+         :accessor normalinterpolators
+         :documentation "")
+   (coordinateinterpolator2ds
+         :initform nil
+         :accessor coordinateinterpolator2ds
+         :documentation "")
+   (positioninterpolators
+         :initform nil
+         :accessor positioninterpolators
+         :documentation "")
+   (positioninterpolator2ds
+         :initform nil
+         :accessor positioninterpolator2ds
+         :documentation "")
+   (sounds
+         :initform nil
+         :accessor sounds
+         :documentation "")
+   (stringsensors
+         :initform nil
+         :accessor stringsensors
+         :documentation "")
+    (keysensors
+         :initform nil
+         :accessor keysensors
+         :documentation "")
+    (scripts
+         :initform nil
+         :accessor scripts
+         :documentation "")
+    (spotlights
+         :initform nil
+         :accessor spotlights
+         :documentation "")
+    (directionallights
+         :initform nil
+         :accessor directionallights
+         :documentation "")
+   (pointlights
+         :initform nil
+         :accessor pointlights
+         :documentation "")
+   (texturebackgrounds
+         :initform nil
+         :accessor texturebackgrounds
+         :documentation "")
+   (fogs
+         :initform nil
+         :accessor fogs
+         :documentation "")
+   (visibilitysensors
+         :initform nil
+         :accessor visibilitysensors
+         :documentation "")
+   (loadsensors
+         :initform nil
+         :accessor loadsensors
+         :documentation "")
+   (proximitysensors
+         :initform nil
+         :accessor proximitysensors
+         :documentation "")
+   (anchors
+         :initform nil
+         :accessor anchors
+         :documentation "")
+   (metadatabooleans
+         :initform nil
+         :accessor metadatabooleans
+         :documentation "")
+   (metadatadouble
+         :initform nil
+         :accessor metadatadouble
+         :documentation "")
+   (metadatafloat
+         :initform nil
+         :accessor metadatafloat
+         :documentation "")
+   (metadatainteger
+         :initform nil
+         :accessor metadatainteger
+         :documentation "")
+   (metadatastring
+         :initform nil
+         :accessor metadatastring
+         :documentation "")
+   (metadataset
+         :initform nil
+         :accessor metadataset
+         :documentation "")
+   (viewpointgroups
+         :initform nil
+         :accessor viewpointgroups
+         :documentation "")
    )
   (:documentation "X3D scene class"))
 

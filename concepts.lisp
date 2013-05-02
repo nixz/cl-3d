@@ -48,6 +48,26 @@
 ;; ----------------------------------------------------------------------------
 (defclass SceneGraphStructureNodeType (xml-serializer)
   (
+    (DEF :initarg :DEF
+        :initform  ""
+        :accessor DEF
+        :documentation "")
+    (USE :initarg :USE
+        :initform  ""
+        :accessor USE
+        :documentation "")
+    (ROUTES
+        :initform  nil
+        :accessor ROUTES
+        :documentation "")
+    (ISS
+        :initform  nil
+        :accessor ISS
+        :documentation "")
+    (protoInstances
+         :initform nil
+         :accessor protoInstances
+         :documentation "List of protoInstance objects")
    (!--s
          :initform nil
          :accessor !--s
@@ -118,6 +138,11 @@
 ;; ----------------------------------------------------------------------------
 (defclass IS (SceneGraphStructureNodeType)
   (
+    (connects
+        :initform NIL
+        :accessor connects
+        :documentation "")
+
   )
   (:documentation ""))
 
@@ -142,6 +167,10 @@
 ;; ----------------------------------------------------------------------------
 (defclass field (SceneGraphStructureNodeType)
   (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
     (name
         :initform NIL
         :accessor name
@@ -162,10 +191,10 @@
         :initform  ""
         :accessor appinfo
         :documentation "")
-    ;; (documentation :initarg :documentation
-    ;;     :initform  ""
-    ;;     :accessor documentation
-    ;;     :documentation "")
+    (documentation :initarg :documentation
+        :initform  ""
+        :accessor documentation
+        :documentation "")
   )
   (:documentation ""))
 
@@ -176,6 +205,10 @@
 ;; ----------------------------------------------------------------------------
 (defclass fieldValue (SceneGraphStructureNodeType)
   (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
     (name
         :initform NIL
         :accessor name
@@ -246,10 +279,14 @@
         :initform  ""
         :accessor appinfo
         :documentation "")
-    ;; (documentation :initarg :documentation
-    ;;     :initform  ""
-    ;;     :accessor documentation
-    ;;     :documentation "")
+    (fields
+        :initform  nil
+        :accessor fields
+        :documentation "")
+    (documentation :initarg :documentation
+        :initform  ""
+        :accessor documentation
+        :documentation "")
   )
   (:documentation ""))
 
@@ -260,22 +297,66 @@
         :initform  ""
         :accessor appinfo
         :documentation "")
-    ;; (documentation :initarg :documentation
-    ;;     :initform  ""
-    ;;     :accessor documentation
-    ;;     :documentation "")
+    (protoInterface :initarg :protoInterface
+        :initform ""
+        :accessor protoInterface
+        :documentation "")
+    (protoBody :initarg :protoBody
+        :initform ""
+        :accessor protoBody
+        :documentation "")
+    (documentation :initarg :documentation
+        :initform  ""
+        :accessor documentation
+        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
 (defclass ProtoInterface (SceneGraphStructureNodeType)
   (
+    (fields
+        :initform  nil
+        :accessor fields
+        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
 (defclass ProtoBody (SceneGraphStructureNodeType)
   (
+   (transforms
+         :initform nil
+         :accessor transforms
+         :documentation "List of transformation objects")
+   (groups
+         :initform nil
+         :accessor groups
+         :documentation "List of transformation objects")
+   (materials
+         :initform nil
+         :accessor materials
+         :documentation "List of transformation objects")
+   (scripts
+         :initform nil
+         :accessor scripts
+         :documentation "List of transformation objects")
+   (timesensors
+         :initform nil
+         :accessor timesensors
+         :documentation "")
+   (proximitysensors
+         :initform nil
+         :accessor proximitysensors
+         :documentation "")
+   (switchs
+         :initform nil
+         :accessor switchs
+         :documentation "List of switch objects")
+   (lods
+         :initform nil
+         :accessor lods
+         :documentation "List of LOD objects")
   )
   (:documentation ""))
 
@@ -285,6 +366,10 @@
     (containerField
         :initform NIL
         :accessor containerField
+        :documentation "")
+    (fieldvalues
+        :initform  nil
+        :accessor fieldvalues
         :documentation "")
   )
   (:documentation ""))
