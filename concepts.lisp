@@ -48,6 +48,10 @@
 ;; ----------------------------------------------------------------------------
 (defclass SceneGraphStructureNodeType (xml-serializer)
   (
+   (!--s
+         :initform nil
+         :accessor !--s
+         :documentation "")
   )
   (:documentation ""))
 

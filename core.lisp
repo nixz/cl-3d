@@ -90,6 +90,10 @@
         :initform  ""
         :accessor USE
         :documentation "")
+   (!--s
+         :initform nil
+         :accessor !--s
+         :documentation "")
   )
   (:documentation ""))
 
