@@ -56,7 +56,12 @@
                (:file "rendering"            :depends-on ("core"))
                (:file "shape"                :depends-on ("core"))
                (:file "text"                 :depends-on ("core"))
+               (:file "time"                 :depends-on ("core"))
+               (:file "sound"                :depends-on ("time"))
+               (:file "texturing"            :depends-on ("shape" "rendering" "sound"))
                (:file "scene"                :depends-on ("package"))
+               (:file "event-utilities"      :depends-on ("core"))
+               (:file "scripting"            :depends-on ("core"))
                (:file "main"                 :depends-on ("concepts"
                                                           "grouping"
                                                           "geometry-3d"

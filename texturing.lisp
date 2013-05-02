@@ -192,10 +192,10 @@
         :initform  "1 1 1"
         :accessor color
         :documentation "")
-    (function :initarg :function
-        :initform  `()
-        :accessor function
-        :documentation "")
+    ;; (function :initarg :function
+    ;;     :initform  `()
+    ;;     :accessor function
+    ;;     :documentation "")
     (mode :initarg :mode
         :initform  `()
         :accessor mode

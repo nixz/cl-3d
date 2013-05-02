@@ -90,6 +90,10 @@
         :initform  ""
         :accessor USE
         :documentation "")
+    (ROUTES
+        :initform  nil
+        :accessor ROUTES
+        :documentation "")
    (!--s
          :initform nil
          :accessor !--s

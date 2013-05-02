@@ -34,10 +34,10 @@
 ;; ----------------------------------------------------------------------------
 (defclass X3DTimeDependentNode (X3DChildNode)
   (
-    (loop :initarg :loop
-        :initform  "false"
-        :accessor loop
-        :documentation "")
+    ;; (loop :initarg :loop
+    ;;     :initform  "false"
+    ;;     :accessor loop
+    ;;     :documentation "")
     (pauseTime :initarg :pauseTime
         :initform  "0"
         :accessor pauseTime

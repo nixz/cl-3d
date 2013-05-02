@@ -32,7 +32,7 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DScriptNode ()
+(defclass X3DScriptNode (X3DChildNode) ; ? where is this  X3DURLObject)
   (
     (containerField
         :initform NIL

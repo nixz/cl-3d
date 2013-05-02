@@ -136,7 +136,8 @@
 
 ;; -----------------------------------------------------------------------scene
 (defclass scene (SceneGraphStructureNodeType)
-  ((backgrounds
+  (
+   (backgrounds
          :initform nil
          :accessor backgrounds
          :documentation "defines the background color")
@@ -155,7 +156,36 @@
    (transforms
          :initform nil
          :accessor transforms
-         :documentation "List of transformation objects"))
+         :documentation "List of transformation objects")
+   (groups
+         :initform nil
+         :accessor groups
+         :documentation "List of grouping objects")
+   (collisions
+         :initform nil
+         :accessor collisions
+         :documentation "List of collision objects")
+   (lods
+         :initform nil
+         :accessor lods
+         :documentation "List of LOD objects")
+   (switchs
+         :initform nil
+         :accessor switchs
+         :documentation "List of switch objects")
+   (inlines
+         :initform nil
+         :accessor inlines
+         :documentation "List of inlines objects")
+   (staticgroups
+         :initform nil
+         :accessor staticgroups
+         :documentation "List of staticgroup objects")
+   (billboards
+         :initform nil
+         :accessor billboards
+         :documentation "List of billboard objects")
+   )
   (:documentation "X3D scene class"))
 
 ;; ----------------------------------------------------------------------------
