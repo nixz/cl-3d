@@ -35,6 +35,7 @@
 (ql:quickload :sb-cga)
 
 (defpackage #:cl-3d
+  (:nicknames #:xsd #:xmlns #:x3d)
   (:use #:cl
         #:cl-glut
         #:cl-glu
