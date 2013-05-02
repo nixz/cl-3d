@@ -86,6 +86,10 @@
         :initform  ""
         :accessor DEF
         :documentation "")
+    (USE :initarg :USE
+        :initform  ""
+        :accessor USE
+        :documentation "")
   )
   (:documentation ""))
 
