@@ -45,6 +45,7 @@
                (:file "devices"              :depends-on ("package" "util"))
                (:file "types"                :depends-on ("util"))
                (:file "core"                 :depends-on ("types"))
+               (:file "concepts"             :depends-on ("core"))
                (:file "environmental-effects" :depends-on ("core"))
                (:file "geometry-3d"          :depends-on ("rendering" "shape"))
                (:file "grouping"             :depends-on ("core"))
@@ -56,7 +57,8 @@
                (:file "shape"                :depends-on ("core"))
                (:file "text"                 :depends-on ("core"))
                (:file "scene"                :depends-on ("package"))
-               (:file "main"                 :depends-on ("grouping"
+               (:file "main"                 :depends-on ("concepts"
+                                                          "grouping"
                                                           "geometry-3d"
                                                           "navigation"
                                                           "environmental-effects"

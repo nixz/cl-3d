@@ -135,7 +135,7 @@
   (glut:post-redisplay))
 
 ;; -----------------------------------------------------------------------scene
-(defclass scene (xml-serializer)
+(defclass scene (SceneGraphStructureNodeType)
   ((backgrounds
          :initform nil
          :accessor backgrounds
