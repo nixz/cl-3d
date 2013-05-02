@@ -123,9 +123,9 @@
 ;; --------------------------------------------------------------------------VR
 (defmethod run ((self VR))
   (when *SCENE*
-  (with-slots (screen head 2d-mouse) (device self)
-    (let ((projections (compute-projection head screen))
-          (is-stereo (is-stereo head)))
+  (with-slots (screen user-head 2d-mouse) (device self)
+    (let ((projections (compute-projection user-head screen))
+          (is-stereo (is-stereo user-head)))
       (if is-stereo
           (progn
             (gl:matrix-mode :projection)          ; projection

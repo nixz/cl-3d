@@ -89,7 +89,7 @@
 ;; Until there is real head tracking this class is dummy. The run
 ;; method of this class returns the transformation matrix for the
 ;; tracker
-(defclass  Head ()
+(defclass  User-Head ()
   ((position
          :initform (SFVec3F 0 0 0)
          :accessor position
@@ -108,19 +108,19 @@
    (is-stereo
          :initform nil
          :accessor is-stereo
-         :documentation "If the head (user) has stereo capability"))
-  (:documentation "The tracked head. Returns a transformation matrix on run."))
+         :documentation "If the user-head has stereo capability"))
+  (:documentation "The tracked user-head. Returns a transformation matrix on run."))
 
 
 ;; ----------------------------------------------------------------------------
-(defmethod compute-projection ((head Head) (screen Screen))
-  "uses the head and the screen and computes three projections i.e the
+(defmethod compute-projection ((user-head User-Head) (screen Screen))
+  "uses the user-head and the screen and computes three projections i.e the
 left eye the right eye and the center"
   (let* ((width (width screen))
          (height (height screen))
-         (ipd (iod head))
+         (ipd (iod user-head))
          (Base<-Screen (run screen)) ; In Real world
-         (Base<-Head (run head))     ; In Real world
+         (Base<-Head (run user-head))     ; In Real world
          (Head<-Base (sb-cga:inverse-matrix Base<-Head))
          (Base<-VWorld (sb-cga:identity-matrix)) ; Virtual world (const)
          (Head<-Screen (sb-cga:matrix* Head<-Base Base<-Screen))
@@ -215,10 +215,10 @@ left eye the right eye and the center"
                                              :y (SFVec3F -1.0 -1.0 -1.0)))
                 (t (make-instance 'Screen)))
          :accessor screen)
-   (head
-         :initform (make-instance 'Head)
-         :accessor head
-         :documentation "Tracked head device")
+   (user-head
+         :initform (make-instance 'User-Head)
+         :accessor user-head
+         :documentation "Tracked user-head device")
    (2d-mouse
          :initform (make-instance '2d-mouse)
          :accessor 2d-mouse
@@ -239,7 +239,7 @@ left eye the right eye and the center"
           (sb-cga:matrix* trans rot))))))
 
 ;; ----------------------------------------------------------------------------
-(defmethod run ((self Head))
+(defmethod run ((self User-Head))
   "For now there is no head transformation. And we simply return the
 identity matrix"
   (sb-cga:identity-matrix))
