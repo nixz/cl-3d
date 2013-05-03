@@ -32,9 +32,9 @@
 ;;;; ==========================================================================
 
 (in-package #:cl-user)
-(ql:quickload :sb-cga)
 
 (defpackage #:cl-3d
+  (:nicknames #:xsd #:xmlns #:x3d)
   (:use #:cl
         #:cl-glut
         #:cl-glu
@@ -51,7 +51,9 @@
            :type
            :speed
            :length
-           :string)
+           :string
+           :loop
+           :documentation)
   (:export :scene
            :transform
            :appearance

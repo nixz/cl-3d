@@ -32,12 +32,6 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass SceneGraphStructureNodeType ()
-  (
-  )
-  (:documentation ""))
-
-;; ----------------------------------------------------------------------------
 (defclass X3DPrototype (SceneGraphStructureNodeType)
   (
     (name
@@ -50,6 +44,36 @@
 ;; ----------------------------------------------------------------------------
 (defmethod add-subobject ((self X3DPrototype) (stuff X3DNode))
    (add-object-to-slot self stuff 'containerField))
+
+;; ----------------------------------------------------------------------------
+(defclass SceneGraphStructureNodeType (xml-serializer)
+  (
+    (DEF :initarg :DEF
+        :initform  ""
+        :accessor DEF
+        :documentation "")
+    (USE :initarg :USE
+        :initform  ""
+        :accessor USE
+        :documentation "")
+    (ROUTES
+        :initform  nil
+        :accessor ROUTES
+        :documentation "")
+    (ISS
+        :initform  nil
+        :accessor ISS
+        :documentation "")
+    (protoInstances
+         :initform nil
+         :accessor protoInstances
+         :documentation "List of protoInstance objects")
+   (!--s
+         :initform nil
+         :accessor !--s
+         :documentation "")
+  )
+  (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
 (defclass WildcardNodeType (X3DNode)
@@ -71,49 +95,54 @@
   )
   (:documentation ""))
 
-;; ----------------------------------------------------------------------------
-(defclass EXPORT (SceneGraphStructureNodeType)
-  (
-    (localDEF :initarg :localDEF
-        :initform  ""
-        :accessor localDEF
-        :documentation "")
-    (AS
-        :initform NIL
-        :accessor AS
-        :documentation "")
-  )
-  (:documentation ""))
+;; ;; ----------------------------------------------------------------------------
+;; (defclass EXPORT (SceneGraphStructureNodeType)
+;;   (
+;;     (localDEF :initarg :localDEF
+;;         :initform  ""
+;;         :accessor localDEF
+;;         :documentation "")
+;;     (AS
+;;         :initform NIL
+;;         :accessor AS
+;;         :documentation "")
+;;   )
+;;   (:documentation ""))
 
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self EXPORT) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
+;; ;; ----------------------------------------------------------------------------
+;; (defmethod add-subobject ((self EXPORT) (stuff X3DNode))
+;;    (add-object-to-slot self stuff 'containerField))
 
-;; ----------------------------------------------------------------------------
-(defclass IMPORT (SceneGraphStructureNodeType)
-  (
-    (inlineDEF :initarg :inlineDEF
-        :initform  ""
-        :accessor inlineDEF
-        :documentation "")
-    (importedDEF
-        :initform NIL
-        :accessor importedDEF
-        :documentation "")
-    (AS :initarg :AS
-        :initform  ""
-        :accessor AS
-        :documentation "")
-  )
-  (:documentation ""))
+;; ;; ----------------------------------------------------------------------------
+;; (defclass IMPORT (SceneGraphStructureNodeType)
+;;   (
+;;     (inlineDEF :initarg :inlineDEF
+;;         :initform  ""
+;;         :accessor inlineDEF
+;;         :documentation "")
+;;     (importedDEF
+;;         :initform NIL
+;;         :accessor importedDEF
+;;         :documentation "")
+;;     (AS :initarg :AS
+;;         :initform  ""
+;;         :accessor AS
+;;         :documentation "")
+;;   )
+;;   (:documentation ""))
 
-;; ----------------------------------------------------------------------------
-(defmethod add-subobject ((self IMPORT) (stuff X3DNode))
-   (add-object-to-slot self stuff 'containerField))
+;; ;; ----------------------------------------------------------------------------
+;; (defmethod add-subobject ((self IMPORT) (stuff X3DNode))
+;;    (add-object-to-slot self stuff 'containerField))
 
 ;; ----------------------------------------------------------------------------
 (defclass IS (SceneGraphStructureNodeType)
   (
+    (connects
+        :initform NIL
+        :accessor connects
+        :documentation "")
+
   )
   (:documentation ""))
 
@@ -138,6 +167,10 @@
 ;; ----------------------------------------------------------------------------
 (defclass field (SceneGraphStructureNodeType)
   (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
     (name
         :initform NIL
         :accessor name
@@ -172,6 +205,10 @@
 ;; ----------------------------------------------------------------------------
 (defclass fieldValue (SceneGraphStructureNodeType)
   (
+    (containerField
+        :initform NIL
+        :accessor containerField
+        :documentation "")
     (name
         :initform NIL
         :accessor name
@@ -190,6 +227,44 @@
 ;; ----------------------------------------------------------------------------
 (defclass head (SceneGraphStructureNodeType)
   (
+   (metas
+         :initform nil
+         :accessor metas
+         :documentation "")
+   (components
+         :initform nil
+         :accessor components
+         :documentation "")
+  )
+  (:documentation ""))
+
+;; ----------------------------------------------------------------------------
+(defclass meta (SceneGraphStructureNodeType)
+  (
+    (name :initarg :name
+        :initform  ""
+        :accessor name
+        :documentation "")
+    (content :initarg :content
+        :initform  ""
+        :accessor content
+        :documentation "")
+    (dir :initarg :dir
+        :initform  ""
+        :accessor dir
+        :documentation "")
+    (http-equiv :initarg :http-equiv
+        :initform  ""
+        :accessor http-equiv
+        :documentation "")
+    (lang :initarg :lang
+        :initform  ""
+        :accessor lang
+        :documentation "")
+    (scheme :initarg :scheme
+        :initform  ""
+        :accessor scheme
+        :documentation "")
   )
   (:documentation ""))
 
@@ -203,6 +278,10 @@
     (appinfo :initarg :appinfo
         :initform  ""
         :accessor appinfo
+        :documentation "")
+    (fields
+        :initform  nil
+        :accessor fields
         :documentation "")
     (documentation :initarg :documentation
         :initform  ""
@@ -218,6 +297,14 @@
         :initform  ""
         :accessor appinfo
         :documentation "")
+    (protoInterface :initarg :protoInterface
+        :initform ""
+        :accessor protoInterface
+        :documentation "")
+    (protoBody :initarg :protoBody
+        :initform ""
+        :accessor protoBody
+        :documentation "")
     (documentation :initarg :documentation
         :initform  ""
         :accessor documentation
@@ -228,12 +315,48 @@
 ;; ----------------------------------------------------------------------------
 (defclass ProtoInterface (SceneGraphStructureNodeType)
   (
+    (fields
+        :initform  nil
+        :accessor fields
+        :documentation "")
   )
   (:documentation ""))
 
 ;; ----------------------------------------------------------------------------
 (defclass ProtoBody (SceneGraphStructureNodeType)
   (
+   (transforms
+         :initform nil
+         :accessor transforms
+         :documentation "List of transformation objects")
+   (groups
+         :initform nil
+         :accessor groups
+         :documentation "List of transformation objects")
+   (materials
+         :initform nil
+         :accessor materials
+         :documentation "List of transformation objects")
+   (scripts
+         :initform nil
+         :accessor scripts
+         :documentation "List of transformation objects")
+   (timesensors
+         :initform nil
+         :accessor timesensors
+         :documentation "")
+   (proximitysensors
+         :initform nil
+         :accessor proximitysensors
+         :documentation "")
+   (switchs
+         :initform nil
+         :accessor switchs
+         :documentation "List of switch objects")
+   (lods
+         :initform nil
+         :accessor lods
+         :documentation "List of LOD objects")
   )
   (:documentation ""))
 
@@ -243,6 +366,10 @@
     (containerField
         :initform NIL
         :accessor containerField
+        :documentation "")
+    (fieldvalues
+        :initform  nil
+        :accessor fieldvalues
         :documentation "")
   )
   (:documentation ""))
@@ -288,6 +415,22 @@
         :initform  ""
         :accessor profile
         :documentation "")
+    (xsd
+        :initform ""
+        :accessor xsd
+        :documentation "")
+    (noNamespaceSchemaLocation
+        :initform ""
+        :accessor noNamespaceSchemaLocation
+        :documentation "")
+    (head
+        :initform ""
+        :accessor head
+        :documentation "")
+    (scene
+          :initform ""
+          :accessor scene
+          :documentation "")
   )
   (:documentation ""))
 

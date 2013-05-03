@@ -32,7 +32,7 @@
 ;;;; ==========================================================================
 (in-package #:cl-3d)
 ;; ----------------------------------------------------------------------------
-(defclass X3DScriptNode ()
+(defclass X3DScriptNode (X3DChildNode) ; ? where is this  X3DURLObject)
   (
     (containerField
         :initform NIL
@@ -59,6 +59,22 @@
     (url :initarg :url
         :initform  `()
         :accessor url
+        :documentation "")
+    (fields
+        :initform  nil
+        :accessor fields
+        :documentation "")
+    (![CDATA[S
+        :initform nil
+        :accessor ![CDATA[S
+        :documentation "")
+    (![CDATA[ecmascripts
+        :initform nil
+        :accessor ![CDATA[ecmascripts
+        :documentation "")
+    (![CDATA[javascripts
+        :initform nil
+        :accessor ![CDATA[javascripts
         :documentation "")
   )
   (:documentation ""))
