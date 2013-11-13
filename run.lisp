@@ -34,7 +34,8 @@
 
 (in-package #:cl-3d)
 
-(defgeneric run(self)
+;; ----------------------------------------------------------------------------
+(defgeneric run(model env)
   (:documentation "Generic method to evaluate various nodes as they are traversed"))
 
 ;; --------------------------------------------------------------------navigation
@@ -60,7 +61,8 @@
           ;; (sb-cga:matrix* (sb-cga:inverse-matrix (sb-cga:matrix* Tx R nTx))
           ;;                 nR))))))
 
-(defmethod run ((self Viewpoint))
+;; -------------------------------------------------------------------Viewpoint
+(defmethod run ((self Viewpoint) (env VR))
   ""
   (with-slots (centerOfRotation orientation position) self
     (let ((centerOfRotation (SFVec3f centerOfRotation))
@@ -100,7 +102,8 @@
         (t (gl:draw-buffer :back-left))))
 
 ;; -----------------------------------------------------------------------scene
-(defmethod run((self Scene))
+(defmethod run((self Scene) (env VR))
+  (print "inside scene")
   (with-slots (backgrounds navigationInfos viewpoints shapes transforms) self
     (let ((BACKGROUND (if (first backgrounds)
                           (first backgrounds)
@@ -111,39 +114,42 @@
           (VIEWPOINT (if (first viewpoints)
                          (first viewpoints)
                          (make-instance 'Viewpoint))))
-      (run BACKGROUND)
+      (run BACKGROUND env)
       (gl:matrix-mode :modelview)       ; model-view
       (gl:with-pushed-matrix
-        (gl:mult-matrix (run Viewpoint))
+        (gl:mult-matrix (run Viewpoint env))
         (dolist (shape shapes)
-          (when shape (run shape)))
+          (when shape (run shape env)))
         (dolist (tx transforms)
-          (when tx (run tx)))))))
+          (when tx (run tx env)))))))
 
 ;; --------------------------------------------------------------------------VR
-(defmethod run ((self VR))
-  (when *SCENE*
-  (with-slots (screen user-head 2d-mouse) (device self)
-    (let ((projections (compute-projection user-head screen))
-          (is-stereo (is-stereo user-head)))
-      (if is-stereo
-          (progn
-            (gl:matrix-mode :projection)          ; projection
-            (gl:load-matrix (getf projections :left))
-            (gl:draw-buffer :back-left)
-            (run *SCENE*)
-            (gl:matrix-mode :projection)          ; projection
-            (gl:load-matrix (getf projections :right))
-            (gl:draw-buffer :back-right)
-            (run *SCENE*))
-          (progn
-            (gl:matrix-mode :projection)          ; projection
-            (gl:load-matrix (getf projections :center))
-            (gl:draw-buffer :back-left)
-            (run *SCENE*)))))))
+(defmethod run ((self VR) (env VR) )
+  "This is the main VR class with virtual components (scene
+   specification) and real (physical) components"
+  (with-slots ((out opengl) (in device)) self
+    (when *SCENE*
+      (with-slots (screen user-head 2d-mouse) in
+        (let ((projections (compute-projection user-head screen))
+              (is-stereo (is-stereo user-head)))
+          (if is-stereo
+              (progn
+                (gl:matrix-mode :projection)          ; projection
+                (gl:load-matrix (getf projections :left))
+                (gl:draw-buffer :back-left)
+                (run *SCENE* env)
+                (gl:matrix-mode :projection)          ; projection
+                (gl:load-matrix (getf projections :right))
+                (gl:draw-buffer :back-right)
+                (run *SCENE* env))
+              (progn
+                (gl:matrix-mode :projection)          ; projection
+                (gl:load-matrix (getf projections :center))
+                (gl:draw-buffer :back-left)
+                (run *SCENE* env))))))))
 
 ;; ---------------------------------------------------------------------grouping
-(defmethod run ((self Transform))
+(defmethod run ((self Transform) (env VR))
   (format t "Transform~%")
   (with-slots (center rotation scale scaleOrientation translation containerField) self
     (let ((center (SFVec3f center))
@@ -155,11 +161,11 @@
              (-mat (sb-cga:inverse-matrix mat)))
         (gl:mult-matrix mat)
         (dolist (child containerField)
-          (run child))
+          (run child env))
         (gl:mult-matrix -mat)))))
 
 ;; ...................................................................Viewpoint
-(defmethod run ((self Viewpoint))
+(defmethod run ((self Viewpoint) (env VR))
   (format t "Viewpoint~%")
   (with-slots (centerOfRotation orientation position) self
     (let ((centerOfRotation (SFVec3f centerOfRotation))
@@ -180,7 +186,7 @@
 
 ;; -----------------------------------------------------------------geometry-3d
 ;; .........................................................................Box
-(defmethod run ((self Box))
+(defmethod run ((self Box) (env VR))
   "create a vertex and index buffers"
   (format t "Box~%")
   (with-slots (size solid) self
@@ -196,7 +202,7 @@
               (glut:wire-cube 1)))))))
 
 ;; ........................................................................Cone
-(defmethod run ((self Cone))
+(defmethod run ((self Cone) (env VR))
   "create a vertex and index buffers"
   (format t "Cone~%")
   (with-slots (bottomRadius height side bottom solid) self
@@ -213,7 +219,7 @@
             (glut:wire-cone bottomRadius height 20 1))))))
 
 ;; ....................................................................Cylinder
-(defmethod run ((self Cylinder))
+(defmethod run ((self Cylinder) (env VR))
   "create a vertex and index buffers"
   (format t "Cylinder~%")
   (with-slots (radius height side bottom top solid) self
@@ -230,7 +236,7 @@
 
 
 ;; ......................................................................Sphere
-(defmethod run ((self Sphere))
+(defmethod run ((self Sphere) (env VR))
   "TODO: Eventually create a vertex and index buffers"
   (format t "Sphere~%")
   (with-slots (radius solid) self
@@ -265,7 +271,7 @@
 ;;   (list :vertex-array verts :index-array indexes)))))
 
 ;; ------------------------------------------------------------------------Text
-(defmethod run ((self Text))
+(defmethod run ((self Text) (env VR))
   (format t "Text~%")
   (with-slots (length maxExtent string lineBounds origin textBounds solid) self
     ;; (let ((length (SFFloat (cl:length string))))
@@ -287,7 +293,7 @@
       (glut:stroke-string +stroke-roman+ string))))
 
 ;; -----------------------------------------------------------------env-effects
-(defmethod run ((self Background))
+(defmethod run ((self Background) (env VR))
   "
 TODO: Make an actual background. For now just use the sky color and set he
 background
@@ -300,26 +306,26 @@ background
         (gl:clear :color-buffer :depth-buffer)))))
 
 ;; -----------------------------------------------------------------------shape
-(defmethod run ((self Shape))
+(defmethod run ((self Shape) (env VR))
   ""
   (format t "Shape~%")
   (with-slots (containerField) self
     (let ((1st (first containerField))
           (2nd (second containerField)))
       (if (typep 1st (class-of (make-instance 'appearance)))
-          (progn (run 1st) (run 2nd))
-          (progn (run 2nd) (run 1st))))))
+          (progn (run 1st env) (run 2nd env))
+          (progn (run 2nd env) (run 1st env))))))
 
 ;; ------------------------------------------------------------------Appearance
-(defmethod run ((self Appearance))
+(defmethod run ((self Appearance) (env VR))
   ""
   (format t "Appearance~%")
   (with-slots (containerField) self
     (dolist (element containerField)
-      (run element))))
+      (run element env))))
 
 ;; --------------------------------------------------------------------Material
-(defmethod run((self Material))
+(defmethod run((self Material) (env VR))
   ""
   (format t "Material~%")
   ;; (gl:light :light0 :specular '(1.0 1.0 1.0 0)) ;white-specular-light

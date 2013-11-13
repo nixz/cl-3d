@@ -63,7 +63,12 @@
 
 ;; --------------------------------------------------------------------------VR
 (defclass VR (glut:window xml-serializer)
-  ((device
+  (
+   (opengl
+         :initform (make-instance 'OpenGL)
+         :accessor opengl
+         :documentation "Specify the output object which")
+   (device
          :initform (make-instance 'Devices)
          :accessor device
          :documentation "The list of input and output devices")
@@ -86,8 +91,7 @@
 ;; ------------------------------------------------------------------------*VR*
 (defun main (id)
   (setf *news* id)
-  (make-instance 'VR)
-)
+  (make-instance 'VR))
 
 ;; ----------------------------------------------------------------------------
 (defmethod glut:display-window :before ((self VR))
@@ -116,7 +120,7 @@
 ;; ----------------------------------------------------------------------------
 (defmethod glut:display ((self VR))
   (gl:clear :color-buffer-bit :depth-buffer-bit)
-  (run self)
+  (run self self)
   (glut:swap-buffers))
 
 ;; ----------------------------------------------------------------------------
