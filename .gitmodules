@@ -1,0 +1,3 @@
+[submodule "XMLisp"]
+	path = XMLisp
+	url = git@github.com:nixz/XMLisp.git
