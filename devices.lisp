@@ -226,7 +226,7 @@ left eye the right eye and the center"
   (:documentation "doc"))
 
 ;; ----------------------------------------------------------------------------
-(defmethod run ((self Screen))
+(defmethod read-input ((self Screen))
   "Returns the transformation matrix of the screen"
   (with-slots (o x y) self
     (let* ((x-> (sb-cga:vec- o x))
@@ -239,7 +239,7 @@ left eye the right eye and the center"
           (sb-cga:matrix* trans rot))))))
 
 ;; ----------------------------------------------------------------------------
-(defmethod run ((self User-Head))
+(defmethod read-input ((self User-Head))
   "For now there is no head transformation. And we simply return the
 identity matrix"
   (sb-cga:identity-matrix))
@@ -324,7 +324,7 @@ identity matrix"
         (setf trans-z (+ orig-trans distance))))))
 
 ;; ----------------------------------------------------------------------------
-(defmethod run ((self 2d-mouse))
+(defmethod read-input ((self 2d-mouse))
   "multiplies the translation and rotation matrices to provide a
 transformation matrix"
   (sb-cga:matrix* (translation self) (rotation self)))
