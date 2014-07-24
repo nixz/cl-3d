@@ -38,8 +38,8 @@
   ())
   
 ;; ----------------------------------------------------------------------------
-(defmethod run ((slef opengl-window))
-  (print "Inside opengl-window"))
+;; (defmethod run ((self opengl-window))
+;;   (print "Inside opengl-window"))
 
 ;; ----------------------------------------------------------------------------
 (defclass  opengl-window-mono (opengl-window)
@@ -82,11 +82,11 @@
   (gl:clear :color-buffer-bit :depth-buffer-bit)
   (gl:draw-buffer :back-right)
   (gl:clear :color-buffer-bit :depth-buffer-bit)
-  (run self)
+  ;; (run self)
   (call-next-method))
 
 ;; ----------------------------------------------------------------------------
 (defmethod glut:display ((self opengl-window-mono))
   (gl:clear :color-buffer-bit :depth-buffer-bit)
-  (run self)
+  ;; (run self)
   (call-next-method))
