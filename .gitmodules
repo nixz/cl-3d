@@ -1,3 +1,6 @@
 [submodule "XMLisp"]
 	path = XMLisp
 	url = git@github.com:nixz/XMLisp.git
+[submodule "test/X3dForWebAuthors"]
+	path = test/X3dForWebAuthors
+	url = git@github.com:nixz/X3dForWebAuthors.git

@@ -35,12 +35,12 @@
 (in-package #:x3d)
 
 (defun x3d-4wa (path)
-  (concatenate 'cl:string "/home/nikhil/X3dForWebAuthors/" path))
+  (concatenate 'cl:string "test/X3dForWebAuthors/" path))
 
 ;; ----------------------------------------------------------------------------
 ;; Loading x3d files form the X3dForWebAuthors repo
 ;; ........................................................................Ch-1
-(load-object (x3d-4wa "Chapter01-TechnicalOverview/HelloWorld.x3d"))
+(load-object (x3d-(4wa "Chapter01-TechnicalOverview/HelloWorld.x3d"))
 (load-object (x3d-4wa "Chapter01-TechnicalOverview/HeaderProfileComponentMetaExample.x3d"))
 (load-object (x3d-4wa "Chapter01-TechnicalOverview/HelloTriangle.x3d"))
 (load-object (x3d-4wa "Chapter01-TechnicalOverview/newScene.x3d"))
