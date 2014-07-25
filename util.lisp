@@ -101,7 +101,7 @@
          (mapcar (lambda (x)
                    (coerce x 'single-float))
                  (with-input-from-string (in str)
-                   (loop for x = (read in nil nil)
+                   (cl:loop for x = (read in nil nil)
                       while x
                       collect x)))))
 
@@ -116,7 +116,7 @@
          (mapcar (lambda (x)
                    (coerce x 'single-float))
                  (with-input-from-string (in str)
-                   (loop for x = (read in nil nil)
+                   (cl:loop for x = (read in nil nil)
                       while x
                       collect x)))))
 
@@ -140,7 +140,7 @@
   (mapcar (lambda (x)
             (coerce x 'single-float))
           (with-input-from-string (in str)
-            (loop for x = (read in nil nil)
+            (cl:loop for x = (read in nil nil)
                while x
                collect x))))
 
