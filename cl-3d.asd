@@ -35,6 +35,7 @@
   :depends-on (#:cl-opengl
                #:cl-glut
                #:cl-glu
+               #:cepl
                #:lispbuilder-sdl
                #:bordeaux-threads
                #:usocket
