@@ -44,49 +44,50 @@
   ((:module "XMLisp"
             :components ((:file "package")
                          (:file "XMLisp" :depends-on ("package"))))
-   (:file "package")
-   (:file "util"                 :depends-on ("package"))
-   (:file "devices"              :depends-on ("package" "util"))
-   (:file "types"                :depends-on ("util"))
-   (:file "core"                 :depends-on ("types"))
-   (:file "concepts"             :depends-on ("core"))
-   (:file "environmental-effects" :depends-on ("core"))
-   (:file "geometry-3d"          :depends-on ("rendering" "shape"))
-   (:file "grouping"             :depends-on ("core"))
-   (:file "navigation"           :depends-on ("core"))
-   (:file "networking"           :depends-on ("package"))
-   (:file "pointing-device-sensor" :depends-on ("core"))
-   (:file "programmable-shaders" :depends-on ("shape"
-                                              "rendering"
-                                              "networking"))
-   (:file "rendering"            :depends-on ("core"))
-   (:file "shape"                :depends-on ("core"))
-   (:file "text"                 :depends-on ("core"))
-   (:file "time"                 :depends-on ("core"))
-   (:file "sound"                :depends-on ("time"))
-   (:file "texturing"            :depends-on ("shape"
-                                              "rendering"
-                                              "sound"))
-   (:file "scene"                :depends-on ("package"))
-   (:file "event-utilities"      :depends-on ("core"))
-   (:file "scripting"            :depends-on ("core"))
-   (:file "interpolation"        :depends-on ("core"))
-   (:file "key-device-sensor"    :depends-on ("core"))
-   (:file "lighting"             :depends-on ("core"))
-   (:file "geometry-2d"          :depends-on ("rendering"))
-   (:file "environment-sensor"   :depends-on ("core"))
-   (:file "cad-geometry"         :depends-on ("grouping"))
-   (:file "main"                 :depends-on ("concepts"
-                                              "grouping"
-                                              "geometry-3d"
-                                              "navigation"
-                                              "environmental-effects"
-                                              "pointing-device-sensor"))
-   (:file "run"                  :depends-on ("grouping"
-                                              "geometry-3d"
-                                              "navigation"
-                                              "environmental-effects"
-                                              "pointing-device-sensor"))
-   (:file "opengl"               :depends-on ("package"))))
+   (:module "X3D"
+            :components ((:file "package")
+                         (:file "util"                 :depends-on ("package"))
+                         (:file "devices"              :depends-on ("package" "util"))
+                         (:file "types"                :depends-on ("util"))
+                         (:file "core"                 :depends-on ("types"))
+                         (:file "concepts"             :depends-on ("core"))
+                         (:file "environmental-effects" :depends-on ("core"))
+                         (:file "geometry-3d"          :depends-on ("rendering" "shape"))
+                         (:file "grouping"             :depends-on ("core"))
+                         (:file "navigation"           :depends-on ("core"))
+                         (:file "networking"           :depends-on ("package"))
+                         (:file "pointing-device-sensor" :depends-on ("core"))
+                         (:file "programmable-shaders" :depends-on ("shape"
+                                                                    "rendering"
+                                                                    "networking"))
+                         (:file "rendering"            :depends-on ("core"))
+                         (:file "shape"                :depends-on ("core"))
+                         (:file "text"                 :depends-on ("core"))
+                         (:file "time"                 :depends-on ("core"))
+                         (:file "sound"                :depends-on ("time"))
+                         (:file "texturing"            :depends-on ("shape"
+                                                                    "rendering"
+                                                                    "sound"))
+                         (:file "scene"                :depends-on ("package"))
+                         (:file "event-utilities"      :depends-on ("core"))
+                         (:file "scripting"            :depends-on ("core"))
+                         (:file "interpolation"        :depends-on ("core"))
+                         (:file "key-device-sensor"    :depends-on ("core"))
+                         (:file "lighting"             :depends-on ("core"))
+                         (:file "geometry-2d"          :depends-on ("rendering"))
+                         (:file "environment-sensor"   :depends-on ("core"))
+                         (:file "cad-geometry"         :depends-on ("grouping"))
+                         (:file "main"                 :depends-on ("concepts"
+                                                                    "grouping"
+                                                                    "geometry-3d"
+                                                                    "navigation"
+                                                                    "environmental-effects"
+                                                                    "pointing-device-sensor"))
+                         (:file "run"                  :depends-on ("grouping"
+                                                                    "geometry-3d"
+                                                                    "navigation"
+                                                                    "environmental-effects"
+                                                                    "pointing-device-sensor"))
+                         (:file "opengl"               :depends-on ("package"))))))
 ;; (:file "graphics" :depends-on("package"
 ;;                               "opengl"))
