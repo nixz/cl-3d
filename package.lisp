@@ -36,9 +36,7 @@
 (defpackage #:cl-3d
   (:nicknames #:xsd #:xmlns #:x3d)
   (:use #:cl
-        #:cl-glut
-        #:cl-glu
-        ;; #:lispbuilder-sdl ; may need this in the future
+        #:cepl
         #:bordeaux-threads
         #:xmlisp
         #:usocket
