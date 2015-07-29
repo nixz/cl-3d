@@ -36,7 +36,6 @@
 (defpackage #:cl-3d
   (:nicknames #:xsd #:xmlns #:x3d)
   (:use #:cl
-        #:cepl
         #:bordeaux-threads
         #:xmlisp
         #:usocket

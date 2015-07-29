@@ -32,7 +32,10 @@
 ;;;; ==========================================================================
 (defsystem cl-3d
   :description "x3d implementation in common lisp"
-  :depends-on (#:cepl
+  :depends-on (#:cepl-osx
+               #:cepl-default
+               #:cl-glut
+               #:cl-glu
                #:bordeaux-threads
                #:usocket
                #:cl-package-locks
