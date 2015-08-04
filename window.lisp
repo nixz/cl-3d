@@ -33,6 +33,15 @@
 
 (in-package :cl-3d)
 
+(defun begin ()
+  "initialize everything"
+  (glfw::initialize) ; Initialize the window system
+  )
+
+(defun end ()
+  "finalize everthing"
+  (glfw:terminate) ; finalize the window system
+  )
 ;; ----------------------------------------------------------------------------
 (defclass opengl-window (glut:window)
   ())

@@ -86,6 +86,7 @@
 ;; ------------------------------------------------------------------------*VR*
 (defun main (id)
   ;; (cepl-osx:start)
+  (begin)
   (setf *news* id)
   (make-instance 'VR)
 )
