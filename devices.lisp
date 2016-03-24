@@ -119,7 +119,7 @@ left eye the right eye and the center"
   (let* ((width (width screen))
          (height (height screen))
          (ipd (iod user-head))
-         (Base<-Screen (un screen)) ; In Real world
+         (Base<-Screen (run screen)) ; In Real world
          (Base<-Head (run user-head))     ; In Real world
          (Head<-Base (sb-cga:inverse-matrix Base<-Head))
          (Base<-VWorld (sb-cga:identity-matrix)) ; Virtual world (const)
