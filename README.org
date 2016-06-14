@@ -113,6 +113,7 @@
 # *** [_] Implement initialization pass
 
 * General notes and ideas
+** Use CEPL as a backend engine
 # ** [_] Check if all docmentation has note to NOTICE.txt
 #    Notes:
 #    - It looks like windowing and gl are sort of implementation details
